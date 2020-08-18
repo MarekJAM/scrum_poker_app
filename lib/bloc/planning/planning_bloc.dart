@@ -53,7 +53,7 @@ class PlanningBloc extends Bloc<PlanningEvent, PlanningState> {
   Stream<PlanningState> _mapMessageRecievedToState(event) async* {
     yield MessageLoading();
     try {
-      yield MessageLoaded(message: event.message);
+      yield MessageLoaded(message: "Message recieved: ${event.message}");
     } catch (e) {
       print(e);
     }
