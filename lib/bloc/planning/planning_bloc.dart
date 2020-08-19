@@ -23,7 +23,7 @@ class PlanningBloc extends Bloc<PlanningEvent, PlanningState> {
 
   Stream<PlanningState> _mapConnectToServerToState(event) async* {
     try {
-      channel = IOWebSocketChannel.connect(event.link);
+      channel = IOWebSocketChannel.connect(event.link,);
       channel.stream.listen((message) {
         add(MessageRecieved(message));
       }, onError: (e) {

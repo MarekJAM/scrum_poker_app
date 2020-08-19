@@ -4,8 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:scrum_poker_app/bloc/planning/bloc.dart';
 import 'package:scrum_poker_app/bloc/planning/planning_bloc.dart';
 import 'package:scrum_poker_app/bloc/planning/planning_event.dart';
+import 'package:scrum_poker_app/ui/rooms_screen.dart';
 import './bloc/simple_bloc_observer.dart';
-import 'package:web_socket_channel/io.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -34,9 +34,10 @@ class App extends StatelessWidget {
     final title = 'WebSocket Demo';
     return MaterialApp(
       title: title,
-      home: MyHomePage(
-        title: title,
-      ),
+      home: RoomsScreen(),
+      routes: {
+        RoomsScreen.routeName: (ctx) => RoomsScreen(),
+      },
     );
   }
 }
