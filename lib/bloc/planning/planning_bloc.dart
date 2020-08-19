@@ -11,7 +11,7 @@ class PlanningBloc extends Bloc<PlanningEvent, PlanningState> {
   @override
   Stream<PlanningState> mapEventToState(PlanningEvent event) async* {
     if (event is ConnectToServer) {
-      yield* _mapConnectToServerToState();
+      yield* _mapConnectToServerToState(event);
     } else if (event is MessageRecieved) {
       yield* _mapMessageRecievedToState(event);
     } else if (event is SendMessage) {
@@ -21,11 +21,13 @@ class PlanningBloc extends Bloc<PlanningEvent, PlanningState> {
     }
   }
 
-  Stream<PlanningState> _mapConnectToServerToState() async* {
+  Stream<PlanningState> _mapConnectToServerToState(event) async* {
     try {
-      channel = IOWebSocketChannel.connect('ws://echo.websocket.org');
+      channel = IOWebSocketChannel.connect(event.link);
       channel.stream.listen((message) {
         add(MessageRecieved(message));
+      }, onError: (e) {
+        print(e);
       });
       yield ConnectedToServer(message: "Connected to server");
     } catch (e) {
