@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:scrum_poker_app/bloc/planning/bloc.dart';
 import 'package:scrum_poker_app/bloc/planning/planning_bloc.dart';
 import 'package:scrum_poker_app/bloc/planning/planning_event.dart';
+import 'package:scrum_poker_app/ui/planning_screen.dart';
 import 'package:scrum_poker_app/ui/rooms_screen.dart';
 import './bloc/simple_bloc_observer.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,7 @@ class App extends StatelessWidget {
       home: RoomsScreen(),
       routes: {
         RoomsScreen.routeName: (ctx) => RoomsScreen(),
+        PlanningScreen.routeName: (ctx) => PlanningScreen(),
       },
     );
   }

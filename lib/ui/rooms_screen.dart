@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scrum_poker_app/main.dart';
+import '../ui/screens.dart';
 
 class RoomsScreen extends StatelessWidget {
   static const routeName = '/rooms';
@@ -36,6 +36,7 @@ class RoomsScreen extends StatelessWidget {
                 itemBuilder: (ctx, int i) => Card(
                   child: ListTile(
                     title: Text(rooms[i]),
+                    onTap: () => Navigator.of(context).pushNamed(PlanningScreen.routeName),
                   ),
                 ),
               ),
