@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../ui/screens.dart';
+import 'screens.dart';
 
 class RoomsScreen extends StatelessWidget {
   static const routeName = '/rooms';
