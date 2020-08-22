@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scrum_poker_app/data/repositories/websocket_repository.dart';
 import 'package:web_socket_channel/io.dart';
 import 'bloc.dart';
 
 class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
+  final WebSocketRepository webSocketRepository;
   IOWebSocketChannel channel;
 
-  WebSocketBloc({@required this.channel}) : super(WebSocketInitial());
+  WebSocketBloc({@required this.channel, @required this.webSocketRepository}) : super(WebSocketInitial());
 
   @override
   Stream<WebSocketState> mapEventToState(WebSocketEvent event) async* {
@@ -26,21 +30,19 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
   Stream<WebSocketState> _mapConnectToServerToState(event) async* {
     yield WSConnectingToServer();
     try {
-      channel = IOWebSocketChannel.connect(
-        event.link,
-      );
+      channel = await webSocketRepository.establishConnection(event.link);
       channel.stream.listen((message) {
         add(WSMessageReceivedE(message));
       }, onError: (e) {
         print(e);
         add(WSConnectionErrorReceivedE("Could not establish connection."));
       }, onDone: () {
-        print('done');
+        add(WSDisconnectFromServerE());
       });
       yield WSConnectedToServer(message: "Connected to server");
     } catch (e) {
       print(e);
-      yield WSConnectionError(message: "Connection error occured.");
+      yield WSConnectionError(message: "Could not establish connection.");
     }
   }
 
@@ -70,11 +72,12 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
   }
 
   Stream<WebSocketState> _mapMessageRecievedToState(event) async* {
-    yield WSMessageLoading();
     try {
       yield WSMessageLoaded(message: "Message recieved: ${event.message}");
     } catch (e) {
       print(e);
     }
   }
+
+  
 }

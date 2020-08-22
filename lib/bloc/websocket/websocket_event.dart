@@ -44,11 +44,7 @@ class WSMessageReceivedE extends WebSocketEvent {
 }
 
 class WSDisconnectFromServerE extends WebSocketEvent {
-  final String message;
-
-  WSDisconnectFromServerE(this.message);
-
   @override
-  String toString() => 'Disconnect from server: $message';
+  String toString() => 'WSDisconnectFromServerE';
 }
 

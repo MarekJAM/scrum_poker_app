@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scrum_poker_app/ui/widgets/app_drawer.dart';
 import 'screens.dart';
 
 class RoomsScreen extends StatelessWidget {
@@ -23,9 +24,9 @@ class RoomsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Scrum Poker'),
+        title: Text('Rooms'),
       ),
-      drawer: Text('placeholder'),
+      drawer: AppDrawer(),
       body: Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

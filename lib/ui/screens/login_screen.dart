@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../bloc/planning/bloc.dart';
+import '../../bloc/login/bloc.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -9,10 +9,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _serverController = TextEditingController(text: "ws://192.168.0.14:8080");
+  TextEditingController _serverController =
+      TextEditingController(text: "ws://192.168.0.14:8080");
   TextEditingController _userController = TextEditingController();
-
-  var _wasSubmitted = false;
 
   @override
   void initState() {
@@ -64,16 +63,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           padding: EdgeInsets.all(16),
                           child: Form(
                             key: _formKey,
-                            child: BlocConsumer<WebSocketBloc, WebSocketState>(
+                            child: BlocConsumer<LoginBloc, LoginState>(
                               listener: (ctx, state) {
-                                if (state is WSConnectionError) {
+                                if (state is LoginConnectionError) {
                                   Scaffold.of(ctx).showSnackBar(
                                     SnackBar(
                                       backgroundColor: Theme.of(ctx).errorColor,
                                       content: Text(state.message),
                                     ),
                                   );
-                                }
+                                } 
                               },
                               builder: (_, state) {
                                 return Column(
@@ -84,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       decoration: InputDecoration(
                                           labelText: 'Server address',
                                           prefixIcon: Icon(Icons.dns)),
-                                      readOnly: _wasSubmitted ? true : false,
+                                      readOnly: state is LoginConnectingToServer ? true : false,
                                       controller: _serverController,
                                     ),
                                     TextFormField(
@@ -92,13 +91,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                         labelText: 'Username',
                                         prefixIcon: Icon(Icons.person),
                                       ),
-                                      readOnly: _wasSubmitted ? true : false,
+                                      readOnly: state is LoginConnectingToServer ? true : false,
                                       controller: _userController,
                                     ),
                                     SizedBox(
                                       height: 20,
                                     ),
-                                    state is WSConnectingToServer
+                                    state is LoginConnectingToServer
                                         ? CircularProgressIndicator()
                                         : RaisedButton(
                                             child: Text('Connect'),
@@ -130,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onFormSubmitted() {
-    BlocProvider.of<WebSocketBloc>(context)
-        .add(WSConnectToServerE(_serverController.text));
+    BlocProvider.of<LoginBloc>(context)
+        .add(LoginConnectToServerE(_serverController.text));
   }
 }

@@ -15,7 +15,7 @@ class WebSocketInitial extends WebSocketState {
 
 class WSConnectingToServer extends WebSocketState {
   @override
-  String toString() => 'ConnectingToServer';
+  String toString() => 'WSConnectingToServer';
 }
 
 class WSConnectedToServer extends WebSocketState {
@@ -24,7 +24,7 @@ class WSConnectedToServer extends WebSocketState {
   const WSConnectedToServer({@required this.message}) : assert(message != null);
 
   @override
-  String toString() => 'ConnectedToServer $message';
+  String toString() => 'WSConnectedToServer $message';
 }
 
 class WSDisconnectedFromServer extends WebSocketState {
@@ -33,7 +33,7 @@ class WSDisconnectedFromServer extends WebSocketState {
   const WSDisconnectedFromServer({@required this.message}) : assert(message != null);
 
   @override
-  String toString() => 'DisconnectedFromServer $message';
+  String toString() => 'WSDisconnectedFromServer $message';
 }
 
 class WSConnectionError extends WebSocketState {
@@ -42,12 +42,7 @@ class WSConnectionError extends WebSocketState {
   const WSConnectionError({@required this.message}) : assert(message != null);
 
   @override
-  String toString() => 'DisconnectedFromServer $message';
-}
-
-class WSMessageLoading extends WebSocketState {
-  @override
-  String toString() => 'MessageLoading';
+  String toString() => 'WSConnectionError $message';
 }
 
 class WSMessageLoaded extends WebSocketState {
@@ -56,5 +51,5 @@ class WSMessageLoaded extends WebSocketState {
   const WSMessageLoaded({@required this.message}) : assert(message != null);
 
   @override
-  String toString() => 'MessageLoaded: $message';
+  String toString() => 'WSMessageLoaded: $message';
 }

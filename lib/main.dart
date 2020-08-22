@@ -1,27 +1,30 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:scrum_poker_app/bloc/planning/bloc.dart';
-import 'package:scrum_poker_app/bloc/planning/websocket_bloc.dart';
-import 'package:scrum_poker_app/bloc/planning/websocket_event.dart';
-import 'package:scrum_poker_app/ui/screens/screens.dart';
+import './bloc/websocket/bloc.dart';
+import './bloc/login/bloc.dart';
+import './bloc/websocket/websocket_bloc.dart';
+import './ui/screens/screens.dart';
 import './bloc/simple_bloc_observer.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import './data/repositories/repositories.dart';
 
 void main() {
   Bloc.observer = SimpleBlocObserver();
 
   WebSocketChannel channel;
+  final webSocketRepository = WebSocketRepository();
+
+  final webSocketBloc = WebSocketBloc(channel: channel, webSocketRepository: webSocketRepository);
 
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider<WebSocketBloc>(
-          create: (context) => WebSocketBloc(
-            channel: channel,
-          ),
+          create: (context) => webSocketBloc,
         ),
+        BlocProvider(
+          create: (context) => LoginBloc(webSocketBloc: webSocketBloc),
+        )
       ],
       child: App(),
     ),
@@ -34,9 +37,9 @@ class App extends StatelessWidget {
     final title = 'WebSocket Demo';
     return MaterialApp(
       title: title,
-      home: BlocBuilder<WebSocketBloc, WebSocketState>(
+      home: BlocBuilder<LoginBloc, LoginState>(
         builder: (_, state) {
-          if (state is WSConnectedToServer || state is WSMessageLoaded || state is WSMessageLoaded) {
+          if (state is LoginConnectedToServer) {
             return RoomsScreen();
           } else {
             return LoginScreen();
