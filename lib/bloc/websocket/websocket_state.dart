@@ -45,8 +45,13 @@ class WSConnectionError extends WebSocketState {
   String toString() => 'WSConnectionError $message';
 }
 
+class WSMessageLoading extends WebSocketState {
+  @override
+  String toString() => 'WSMessageLoading';
+}
+
 class WSMessageLoaded extends WebSocketState {
-  final String message;
+  final dynamic message;
 
   const WSMessageLoaded({@required this.message}) : assert(message != null);
 

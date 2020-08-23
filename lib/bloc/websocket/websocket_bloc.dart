@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,7 +32,7 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
     try {
       channel = await webSocketRepository.establishConnection(event.link);
       channel.stream.listen((message) {
-        add(WSMessageReceivedE(message));
+        add(WSMessageReceivedE(webSocketRepository.parseMessage(message)));
       }, onError: (e) {
         print(e);
         add(WSConnectionErrorReceivedE("Could not establish connection."));
@@ -72,8 +72,9 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
   }
 
   Stream<WebSocketState> _mapMessageRecievedToState(event) async* {
+    yield WSMessageLoading();
     try {
-      yield WSMessageLoaded(message: "Message recieved: ${event.message}");
+      yield WSMessageLoaded(message: event.message);
     } catch (e) {
       print(e);
     }

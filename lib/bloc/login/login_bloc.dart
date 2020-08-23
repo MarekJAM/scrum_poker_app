@@ -19,7 +19,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         add(LoginDisconnectedFromServerE(state.message));
       } else if (state is WSConnectionError) {
         add(LoginConnectionErrorReceivedE(state.message));
-      }
+      } 
     });
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import './bloc/rooms/bloc.dart';
 import './bloc/websocket/bloc.dart';
 import './bloc/login/bloc.dart';
 import './bloc/websocket/websocket_bloc.dart';
@@ -14,7 +15,11 @@ void main() {
   WebSocketChannel channel;
   final webSocketRepository = WebSocketRepository();
 
-  final webSocketBloc = WebSocketBloc(channel: channel, webSocketRepository: webSocketRepository);
+  // ignore: close_sinks
+  final webSocketBloc =
+      WebSocketBloc(channel: channel, webSocketRepository: webSocketRepository);
+  // ignore: close_sinks
+  final roomsBloc = RoomsBloc(webSocketBloc: webSocketBloc);
 
   runApp(
     MultiBlocProvider(
@@ -22,9 +27,12 @@ void main() {
         BlocProvider<WebSocketBloc>(
           create: (context) => webSocketBloc,
         ),
-        BlocProvider(
+        BlocProvider<LoginBloc>(
           create: (context) => LoginBloc(webSocketBloc: webSocketBloc),
-        )
+        ),
+        BlocProvider<RoomsBloc>(
+          create: (context) => roomsBloc,
+        ),
       ],
       child: App(),
     ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../bloc/rooms/bloc.dart';
 import 'package:scrum_poker_app/ui/widgets/app_drawer.dart';
 import 'screens.dart';
 
@@ -32,21 +34,48 @@ class RoomsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child: ListView.builder(
-                itemCount: rooms.length,
-                itemBuilder: (ctx, int i) => Card(
-                  child: ListTile(
-                    title: Text(rooms[i]),
-                    onTap: () => Navigator.of(context).pushNamed(PlanningScreen.routeName),
-                  ),
-                ),
+              child: BlocBuilder<RoomsBloc, RoomsState>(
+                builder: (_, state) {
+                  if (state is RoomsLoaded) {
+                    return state.rooms.roomList.length > 0
+                        ? ListView.builder(
+                            itemCount: state.rooms.roomList.length,
+                            itemBuilder: (ctx, int i) => Card(
+                              child: ListTile(
+                                title: Text(state.rooms.roomList[i]),
+                                onTap: () => Navigator.of(context)
+                                    .pushNamed(PlanningScreen.routeName),
+                              ),
+                            ),
+                          )
+                        : Center(
+                            child: Text(
+                              'There are no available rooms at the moment.\nWhy don\'t you create one?',
+                              textAlign: TextAlign.center,
+                            ),
+                          );
+                  } else if (state is RoomsLoading) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is RoomsError) {
+                    return Center(
+                      child: Text(state.message),
+                    );
+                  } else {
+                    return Container();
+                  }
+                },
               ),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Text('+', style: TextStyle(fontSize: 35),),
+        child: Text(
+          '+',
+          style: TextStyle(fontSize: 35),
+        ),
         onPressed: () {
           showDialog(
             context: context,

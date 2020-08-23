@@ -9,8 +9,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _serverController =
-      TextEditingController(text: "ws://192.168.0.14:8080");
+  TextEditingController _serverController = TextEditingController(
+    text: "ws://192.168.0.14:8080",
+  );
   TextEditingController _userController = TextEditingController();
 
   @override
@@ -72,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       content: Text(state.message),
                                     ),
                                   );
-                                } 
+                                }
                               },
                               builder: (_, state) {
                                 return Column(
@@ -83,7 +84,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                       decoration: InputDecoration(
                                           labelText: 'Server address',
                                           prefixIcon: Icon(Icons.dns)),
-                                      readOnly: state is LoginConnectingToServer ? true : false,
+                                      readOnly: state is LoginConnectingToServer
+                                          ? true
+                                          : false,
                                       controller: _serverController,
                                     ),
                                     TextFormField(
@@ -91,7 +94,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                         labelText: 'Username',
                                         prefixIcon: Icon(Icons.person),
                                       ),
-                                      readOnly: state is LoginConnectingToServer ? true : false,
+                                      readOnly: state is LoginConnectingToServer
+                                          ? true
+                                          : false,
                                       controller: _userController,
                                     ),
                                     SizedBox(
@@ -100,7 +105,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                     state is LoginConnectingToServer
                                         ? CircularProgressIndicator()
                                         : RaisedButton(
-                                            child: Text('Connect'),
+                                            child: Text(
+                                              'Connect',
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .canvasColor),
+                                            ),
                                             color:
                                                 Theme.of(context).primaryColor,
                                             shape: RoundedRectangleBorder(
@@ -129,7 +139,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onFormSubmitted() {
-    BlocProvider.of<LoginBloc>(context)
-        .add(LoginConnectToServerE(_serverController.text));
+    BlocProvider.of<LoginBloc>(context).add(
+      LoginConnectToServerE(_serverController.text),
+    );
   }
 }

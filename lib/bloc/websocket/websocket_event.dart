@@ -13,7 +13,7 @@ class WSConnectToServerE extends WebSocketEvent {
   WSConnectToServerE(this.link);
 
   @override
-  String toString() => 'ConnectToServer';
+  String toString() => 'WSConnectToServerE';
 }
 
 class WSConnectionErrorReceivedE extends WebSocketEvent {
@@ -22,7 +22,7 @@ class WSConnectionErrorReceivedE extends WebSocketEvent {
   WSConnectionErrorReceivedE(this.message);
 
   @override
-  String toString() => 'Connection error: $message';
+  String toString() => 'WSConnectionErrorReceivedE: $message';
 }
 
 class WSSendMessageE extends WebSocketEvent {
@@ -31,16 +31,16 @@ class WSSendMessageE extends WebSocketEvent {
   WSSendMessageE(this.message);
 
   @override
-  String toString() => 'SendMessage';
+  String toString() => 'WSSendMessageE';
 }
 
 class WSMessageReceivedE extends WebSocketEvent {
-  final String message;
+  final dynamic message;
 
   WSMessageReceivedE(this.message);
 
   @override
-  String toString() => 'Message recieved: $message';
+  String toString() => 'WSMessageReceivedE: $message';
 }
 
 class WSDisconnectFromServerE extends WebSocketEvent {
