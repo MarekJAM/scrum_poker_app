@@ -14,7 +14,7 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
         _webSocketBloc = webSocketBloc,
         super(RoomsInitial()) {
     webSocketSubscription = _webSocketBloc.listen((state) {
-      if (state is WSMessageLoaded) {
+      if (state is WSMessageLoaded && state.message is Rooms) {
         add(RoomsLoadedE(state.message));
       }
     });
