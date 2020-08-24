@@ -11,12 +11,12 @@ class WebSocketRepository {
 
   dynamic parseMessage(dynamic message) {
     final decodedMessage = json.decode(message);
+    dynamic obj;
     if (decodedMessage.containsKey("rooms")) {
-      final obj = Rooms.fromJson(decodedMessage);
-      return obj;
+      obj = Rooms.fromJson(decodedMessage);
     } else if (decodedMessage.containsKey("roomies")) {
-      final obj = Roomies.fromJson(decodedMessage);
-      return obj;
+      obj = Roomies.fromJson(decodedMessage);
     }
+    return obj;
   }
 }
