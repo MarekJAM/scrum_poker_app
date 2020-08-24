@@ -14,6 +14,9 @@ class WebSocketRepository {
     if (decodedMessage.containsKey("rooms")) {
       final obj = Rooms.fromJson(decodedMessage);
       return obj;
+    } else if (decodedMessage.containsKey("roomies")) {
+      final obj = Roomies.fromJson(decodedMessage);
+      return obj;
     }
   }
 }
