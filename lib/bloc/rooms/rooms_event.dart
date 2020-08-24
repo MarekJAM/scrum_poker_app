@@ -17,13 +17,22 @@ class RoomsLoadedE extends RoomsEvent {
   String toString() => 'RoomsLoadedE $rooms';
 }
 
-class RoomsSendMessageE extends RoomsEvent {
-  final String message;
+class RoomsCreateRoomE extends RoomsEvent {
+  final String roomName;
 
-  RoomsSendMessageE(this.message);
+  RoomsCreateRoomE(this.roomName);
 
   @override
-  String toString() => 'RoomsSendMessageE';
+  String toString() => 'RoomsCreateRoomE';
+}
+
+class RoomsConnectToRoomE extends RoomsEvent {
+  final String roomName;
+
+  RoomsConnectToRoomE(this.roomName);
+
+  @override
+  String toString() => 'RoomsConnectToRoomE';
 }
 
 class RoomsErrorReceivedE extends RoomsEvent {

@@ -10,19 +10,10 @@ class RoomsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    TextEditingController _roomController = TextEditingController();
+    final _formKey = GlobalKey<FormState>();
 
-    List<String> rooms = [
-      'Room 1',
-      'Room 2',
-      'Room 3',
-      'Room 4',
-      'Room 7 and 3/4',
-      'There is no room 5 and 6',
-      'Room whatever',
-      'Room whatever',
-      'Room whatever',
-      'Room whatever',
-    ];
+    List<String> rooms = [];
 
     return Scaffold(
       appBar: AppBar(
@@ -37,14 +28,21 @@ class RoomsScreen extends StatelessWidget {
               child: BlocBuilder<RoomsBloc, RoomsState>(
                 builder: (_, state) {
                   if (state is RoomsLoaded) {
-                    return state.rooms.roomList.length > 0
+                    rooms = state.rooms.roomList;
+                    return rooms.length > 0
                         ? ListView.builder(
-                            itemCount: state.rooms.roomList.length,
+                            itemCount: rooms.length,
                             itemBuilder: (ctx, int i) => Card(
                               child: ListTile(
-                                title: Text(state.rooms.roomList[i]),
-                                onTap: () => Navigator.of(context)
-                                    .pushNamed(PlanningScreen.routeName),
+                                title: Text(rooms[i]),
+                                onTap: () {
+                                  BlocProvider.of<RoomsBloc>(context).add(
+                                    RoomsConnectToRoomE(rooms[i]),
+                                  );
+                                  Navigator.of(context).pushNamed(
+                                    PlanningScreen.routeName,
+                                  );
+                                },
                               ),
                             ),
                           )
@@ -98,6 +96,7 @@ class RoomsScreen extends StatelessWidget {
                       ),
                     ),
                     Form(
+                      key: _formKey,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
@@ -106,13 +105,28 @@ class RoomsScreen extends StatelessWidget {
                             child: TextFormField(
                               decoration:
                                   InputDecoration(labelText: "Room name"),
+                              controller: _roomController,
+                              validator: (value) {
+                                if (rooms.contains(value)) {
+                                  return "Room with that name already exists.";
+                                } else if (value.isEmpty) {
+                                  return "Provide room name.";
+                                }
+                                return null;
+                              },
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: RaisedButton(
                               child: Text("Create"),
-                              onPressed: () {},
+                              onPressed: () {
+                                if (_formKey.currentState.validate()) {
+                                  BlocProvider.of<RoomsBloc>(context).add(
+                                    RoomsCreateRoomE(_roomController.text),
+                                  );
+                                }
+                              },
                             ),
                           )
                         ],

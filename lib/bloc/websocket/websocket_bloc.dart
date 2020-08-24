@@ -32,6 +32,7 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
     try {
       channel = await webSocketRepository.establishConnection(event.link);
       channel.stream.listen((message) {
+        print(message);
         add(WSMessageReceivedE(webSocketRepository.parseMessage(message)));
       }, onError: (e) {
         print(e);

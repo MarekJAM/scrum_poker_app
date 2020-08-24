@@ -26,12 +26,12 @@ class WSConnectionErrorReceivedE extends WebSocketEvent {
 }
 
 class WSSendMessageE extends WebSocketEvent {
-  final String message;
+  final dynamic message;
 
   WSSendMessageE(this.message);
 
   @override
-  String toString() => 'WSSendMessageE';
+  String toString() => 'WSSendMessageE: $message';
 }
 
 class WSMessageReceivedE extends WebSocketEvent {
