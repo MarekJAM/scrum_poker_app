@@ -22,8 +22,6 @@ class RoomsApiClient extends ApiClient {
     );
 
     if (response.statusCode != 201) {
-            print(response.body);
-
       throwException(response.statusCode, 'Error while creating room');
     }
   
