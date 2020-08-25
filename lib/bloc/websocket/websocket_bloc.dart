@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scrum_poker_app/data/repositories/websocket_repository.dart';
@@ -10,7 +8,8 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
   final WebSocketRepository webSocketRepository;
   IOWebSocketChannel channel;
 
-  WebSocketBloc({@required this.channel, @required this.webSocketRepository}) : super(WebSocketInitial());
+  WebSocketBloc({@required this.channel, @required this.webSocketRepository})
+      : super(WebSocketInitial());
 
   @override
   Stream<WebSocketState> mapEventToState(WebSocketEvent event) async* {
@@ -80,6 +79,4 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
       print(e);
     }
   }
-
-  
 }

@@ -25,7 +25,17 @@ class RoomsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child: BlocBuilder<RoomsBloc, RoomsState>(
+              child: BlocConsumer<RoomsBloc, RoomsState>(
+                listener: (ctx, state) {
+                  if (state is RoomsError) {
+                    Scaffold.of(ctx).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Theme.of(ctx).errorColor,
+                        content: Text(state.message),
+                      ),
+                    );
+                  }
+                },
                 builder: (_, state) {
                   if (state is RoomsLoaded) {
                     rooms = state.rooms.roomList;
@@ -121,11 +131,11 @@ class RoomsScreen extends StatelessWidget {
                             child: RaisedButton(
                               child: Text("Create"),
                               onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  BlocProvider.of<RoomsBloc>(context).add(
-                                    RoomsCreateRoomE(_roomController.text),
-                                  );
-                                }
+                                // if (_formKey.currentState.validate()) {
+                                BlocProvider.of<RoomsBloc>(context).add(
+                                  RoomsCreateRoomE(_roomController.text),
+                                );
+                                // }
                               },
                             ),
                           )

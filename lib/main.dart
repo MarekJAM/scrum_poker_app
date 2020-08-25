@@ -8,6 +8,7 @@ import './bloc/simple_bloc_observer.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import './data/repositories/repositories.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   Bloc.observer = SimpleBlocObserver();
@@ -15,11 +16,13 @@ void main() {
   WebSocketChannel channel;
   final webSocketRepository = WebSocketRepository();
 
+  final RoomsRepository roomsRepository = RoomsRepository(roomsApiClient: RoomsApiClient(httpClient: http.Client()));
+
   // ignore: close_sinks
   final webSocketBloc =
       WebSocketBloc(channel: channel, webSocketRepository: webSocketRepository);
   // ignore: close_sinks
-  final roomsBloc = RoomsBloc(webSocketBloc: webSocketBloc);
+  final roomsBloc = RoomsBloc(webSocketBloc: webSocketBloc, roomsRepository: roomsRepository);
 
   runApp(
     MultiBlocProvider(

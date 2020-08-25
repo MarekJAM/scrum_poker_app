@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scrum_poker_app/utils/secure_storage.dart';
 import '../websocket/bloc.dart';
 import 'bloc.dart';
 
@@ -41,7 +42,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Stream<LoginState> _mapLoginConnectToServerToState(event) async* {
     yield LoginConnectingToServer();
     try {
-      _webSocketBloc.add(WSConnectToServerE(event.link));
+      //this is temporary solution only
+      SecureStorage().writeServerAddress(event.link);
+      SecureStorage().writeUsername(event.username);
+      _webSocketBloc.add(WSConnectToServerE("ws://"+event.link+"?name="+event.username));
     } catch (e) {
       print(e);
       yield LoginConnectionError(message: "Connection error occured.");

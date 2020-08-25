@@ -9,8 +9,9 @@ abstract class LoginEvent extends Equatable {
 
 class LoginConnectToServerE extends LoginEvent {
   final String link;
+  final String username;
 
-  LoginConnectToServerE(this.link);
+  LoginConnectToServerE(this.link, this.username);
 
   @override
   String toString() => 'LoginConnectToServerE';

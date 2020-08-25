@@ -10,9 +10,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _serverController = TextEditingController(
-    text: "ws://192.168.0.14:8080",
+    text: "192.168.0.14:8080",
   );
-  TextEditingController _userController = TextEditingController();
+  TextEditingController _userController = TextEditingController(
+    text: "Marek",
+  );
 
   @override
   void initState() {
@@ -88,6 +90,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ? true
                                           : false,
                                       controller: _serverController,
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return "Provide server address.";
+                                        }
+                                        return null;
+                                      },
                                     ),
                                     TextFormField(
                                       decoration: InputDecoration(
@@ -98,6 +106,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ? true
                                           : false,
                                       controller: _userController,
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return "Provide username.";
+                                        }
+                                        return null;
+                                      },
                                     ),
                                     SizedBox(
                                       height: 20,
@@ -108,8 +122,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                             child: Text(
                                               'Connect',
                                               style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .canvasColor),
+                                                color: Theme.of(context)
+                                                    .canvasColor,
+                                              ),
                                             ),
                                             color:
                                                 Theme.of(context).primaryColor,
@@ -118,7 +133,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   BorderRadius.circular(20),
                                             ),
                                             onPressed: () {
-                                              _onFormSubmitted();
+                                              if (_formKey.currentState
+                                                  .validate()) {
+                                                _onFormSubmitted();
+                                              }
                                             },
                                           )
                                   ],
@@ -140,7 +158,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _onFormSubmitted() {
     BlocProvider.of<LoginBloc>(context).add(
-      LoginConnectToServerE(_serverController.text),
+      LoginConnectToServerE(
+          _serverController.text, _userController.text),
     );
   }
 }
