@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/rooms/bloc.dart';
-import 'package:scrum_poker_app/ui/widgets/app_drawer.dart';
+import '../../ui/widgets/app_drawer.dart';
 import 'screens.dart';
 
 class RoomsScreen extends StatelessWidget {
@@ -10,7 +10,8 @@ class RoomsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    TextEditingController _roomController = TextEditingController();
+    TextEditingController _roomController =
+        TextEditingController();
     final _formKey = GlobalKey<FormState>();
 
     List<String> rooms = [];
@@ -27,13 +28,25 @@ class RoomsScreen extends StatelessWidget {
             Expanded(
               child: BlocConsumer<RoomsBloc, RoomsState>(
                 listener: (ctx, state) {
-                  if (state is RoomsError) {
+                  if (state is RoomsLoadingError) {
                     Scaffold.of(ctx).showSnackBar(
                       SnackBar(
                         backgroundColor: Theme.of(ctx).errorColor,
                         content: Text(state.message),
                       ),
                     );
+                  } else if (state is RoomsConnectedToRoom) {
+                    Navigator.of(context)
+                        .pushReplacementNamed(PlanningScreen.routeName);
+                  }
+                },
+                buildWhen: (_, state) {
+                  if (state is RoomsLoaded ||
+                      state is RoomsLoading ||
+                      state is RoomsLoadingError) {
+                    return true;
+                  } else {
+                    return false;
                   }
                 },
                 builder: (_, state) {
@@ -49,9 +62,6 @@ class RoomsScreen extends StatelessWidget {
                                   BlocProvider.of<RoomsBloc>(context).add(
                                     RoomsConnectToRoomE(rooms[i]),
                                   );
-                                  Navigator.of(context).pushNamed(
-                                    PlanningScreen.routeName,
-                                  );
                                 },
                               ),
                             ),
@@ -66,7 +76,7 @@ class RoomsScreen extends StatelessWidget {
                     return Center(
                       child: CircularProgressIndicator(),
                     );
-                  } else if (state is RoomsError) {
+                  } else if (state is RoomsLoadingError) {
                     return Center(
                       child: Text(state.message),
                     );
@@ -128,17 +138,43 @@ class RoomsScreen extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: RaisedButton(
-                              child: Text("Create"),
-                              onPressed: () {
-                                // if (_formKey.currentState.validate()) {
-                                BlocProvider.of<RoomsBloc>(context).add(
-                                  RoomsCreateRoomE(_roomController.text),
+                            child: BlocBuilder<RoomsBloc, RoomsState>(
+                              builder: (_, state) {
+                                return Column(
+                                  children: [
+                                    state is RoomsConnectionWithRoomError
+                                        ? Container(
+                                            child: Text(
+                                              state.message,
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .errorColor),
+                                            ),
+                                          )
+                                        : Container(),
+                                    state is RoomsConnectingToRoom
+                                        ? Center(
+                                            child: CircularProgressIndicator(),
+                                          )
+                                        : RaisedButton(
+                                            child: Text("Create"),
+                                            onPressed: () {
+                                              if (_formKey.currentState.validate()) {
+                                              BlocProvider.of<RoomsBloc>(
+                                                      context)
+                                                  .add(
+                                                RoomsCreateRoomE(
+                                                  _roomController.text,
+                                                ),
+                                              );
+                                              }
+                                            },
+                                          ),
+                                  ],
                                 );
-                                // }
                               },
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),

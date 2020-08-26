@@ -35,6 +35,11 @@ class RoomsConnectToRoomE extends RoomsEvent {
   String toString() => 'RoomsConnectToRoomE';
 }
 
+class RoomsDisconnectFromRoomE extends RoomsEvent {
+  @override
+  String toString() => 'RoomsDisconnectFromRoomE';
+}
+
 class RoomsErrorReceivedE extends RoomsEvent {
   final String message;
 

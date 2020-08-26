@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../ui/screens/rooms_screen.dart';
+import '../../bloc/rooms/bloc.dart';
 
 class PlanningScreen extends StatelessWidget {
   static const routeName = '/planning';
@@ -18,40 +21,56 @@ class PlanningScreen extends StatelessWidget {
     };
 
     return Scaffold(
-      appBar: AppBar(),
-      body: Container(
-        child: Row(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: users.length,
-                itemBuilder: (BuildContext context, int index) {
-                  String key = users.keys.elementAt(index);
-                  return Card(
-                    child: ListTile(
-                      title: Text("$key"),
-                      trailing: Text("${users[key]}"),
+      appBar: AppBar(
+        leading: FlatButton(
+          child: Icon(Icons.arrow_back),
+          onPressed: () {
+            BlocProvider.of<RoomsBloc>(context).add(
+              RoomsDisconnectFromRoomE(),
+            );
+          },
+        ),
+      ),
+      body: BlocListener<RoomsBloc, RoomsState>(
+        listener: (ctx, state) {
+          if (state is RoomsDisconnectedFromRoom) {
+            Navigator.of(context).pushReplacementNamed(RoomsScreen.routeName);
+          }
+        },
+        child: Container(
+          child: Row(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: users.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    String key = users.keys.elementAt(index);
+                    return Card(
+                      child: ListTile(
+                        title: Text("$key"),
+                        trailing: Text("${users[key]}"),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              VerticalDivider(),
+              Container(
+                width: deviceSize.width * 0.5,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Task: CS-512',
+                      style: TextStyle(fontSize: 20),
                     ),
-                  );
-                },
-              ),
-            ),
-            VerticalDivider(),
-            Container(
-              width: deviceSize.width * 0.5,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Task: CS-512',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Text('Average: 4.5'),
-                  Text('Median: 4'),
-                ],
-              ),
-            )
-          ],
+                    Text('Average: 4.5'),
+                    Text('Median: 4'),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

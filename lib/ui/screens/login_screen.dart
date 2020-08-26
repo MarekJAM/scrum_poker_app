@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/login/bloc.dart';
 
 class LoginScreen extends StatefulWidget {
+  static const routeName = '/login';
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -158,8 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _onFormSubmitted() {
     BlocProvider.of<LoginBloc>(context).add(
-      LoginConnectToServerE(
-          _serverController.text, _userController.text),
+      LoginConnectToServerE(_serverController.text, _userController.text),
     );
   }
 }

@@ -35,6 +35,8 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
       yield* _mapRoomsCreateRoomEToState(event);
     } else if (event is RoomsConnectToRoomE) {
       yield* _mapRoomsConnectToRoomEToState(event);
+    } else if (event is RoomsDisconnectFromRoomE) {
+      yield* _mapRoomsDisconnectFromRoomEToState();
     }
   }
 
@@ -44,34 +46,66 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
       yield RoomsLoaded(rooms: event.rooms);
     } catch (e) {
       print(e);
-      yield RoomsError(message: "Could not load list of rooms.");
+      yield RoomsLoadingError(message: "Could not load list of rooms.");
     }
   }
 
   Stream<RoomsState> _mapRoomsCreateRoomEToState(event) async* {
+    yield RoomsConnectingToRoom();
     try {
       await _roomsRepository.createRoom(event.roomName);
+      yield RoomsConnectedToRoom(roomName: event.roomName);
     } on BadRequestException catch (e) {
       print(e);
-      yield RoomsError(message: e.message);
+      yield RoomsConnectionWithRoomError(message: e.message);
     } on NotFoundException catch (e) {
       print(e);
-      yield RoomsError(message: e.message);
+      yield RoomsConnectionWithRoomError(message: e.message);
     } on ResourceExistsException catch (e) {
       print(e);
-      yield RoomsError(message: e.message);
+      yield RoomsConnectionWithRoomError(message: e.message);
     } catch (e) {
       print(e);
-      yield RoomsError(message: "Could not create room.");
+      yield RoomsConnectionWithRoomError(message: "Could not create room.");
     }
   }
 
   Stream<RoomsState> _mapRoomsConnectToRoomEToState(event) async* {
+    yield RoomsConnectingToRoom();
     try {
-      // _webSocketBloc.add(WSSendMessageE(OutgoingMessage.createConnectRoomJsonMsg(event.roomName)));
+      await _roomsRepository.connectToRoom(event.roomName);
+      yield RoomsConnectedToRoom(roomName: event.roomName);
+    } on BadRequestException catch (e) {
+      print(e);
+      yield RoomsConnectionWithRoomError(message: e.message);
+    } on NotFoundException catch (e) {
+      print(e);
+      yield RoomsConnectionWithRoomError(message: e.message);
+    } on ResourceExistsException catch (e) {
+      print(e);
+      yield RoomsConnectionWithRoomError(message: e.message);
     } catch (e) {
       print(e);
-      yield RoomsError(message: "Could not connect to room.");
+      yield RoomsConnectionWithRoomError(message: "Could not connect to room.");
+    }
+  }
+
+  Stream<RoomsState> _mapRoomsDisconnectFromRoomEToState() async* {
+    try {
+      await _roomsRepository.disconnectFromRoom();
+      yield RoomsDisconnectedFromRoom();
+    } on BadRequestException catch (e) {
+      print(e);
+      yield RoomsConnectionWithRoomError(message: e.message);
+    } on NotFoundException catch (e) {
+      print(e);
+      yield RoomsConnectionWithRoomError(message: e.message);
+    } on ResourceExistsException catch (e) {
+      print(e);
+      yield RoomsConnectionWithRoomError(message: e.message);
+    } catch (e) {
+      print(e);
+      yield RoomsConnectionWithRoomError(message: "Could not connect to room.");
     }
   }
 

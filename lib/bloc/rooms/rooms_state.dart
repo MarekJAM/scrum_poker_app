@@ -28,11 +28,39 @@ class RoomsLoaded extends RoomsState {
   String toString() => 'RoomsLoaded ${rooms.roomList}';
 }
 
-class RoomsError extends RoomsState {
+class RoomsLoadingError extends RoomsState {
   final String message;
 
-  const RoomsError({@required this.message}) : assert(message != null);
+  const RoomsLoadingError({@required this.message}) : assert(message != null);
 
   @override
-  String toString() => 'RoomsError $message';
+  String toString() => 'RoomsLoadingError $message';
+}
+
+class RoomsConnectingToRoom extends RoomsState {
+  @override
+  String toString() => 'RoomsConnectingToRoom';
+}
+
+class RoomsConnectedToRoom extends RoomsState {
+  final String roomName;
+
+  const RoomsConnectedToRoom({@required this.roomName}) : assert(roomName != null);
+
+  @override
+  String toString() => 'RoomsConnectedToRoom $roomName';
+}
+
+class RoomsConnectionWithRoomError extends RoomsState {
+  final String message;
+
+  const RoomsConnectionWithRoomError({@required this.message}) : assert(message != null);
+
+  @override
+  String toString() => 'RoomsConnectionWithRoomError $message';
+}
+
+class RoomsDisconnectedFromRoom extends RoomsState {
+  @override
+  String toString() => 'RoomsDisconnectedFromRoom';
 }

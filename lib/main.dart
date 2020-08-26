@@ -58,6 +58,7 @@ class App extends StatelessWidget {
         },
       ),
       routes: {
+        LoginScreen.routeName: (ctx) => LoginScreen(),
         RoomsScreen.routeName: (ctx) => RoomsScreen(),
         PlanningScreen.routeName: (ctx) => PlanningScreen(),
       },
