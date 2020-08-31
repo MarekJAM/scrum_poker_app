@@ -16,13 +16,15 @@ void main() {
   WebSocketChannel channel;
   final webSocketRepository = WebSocketRepository();
 
-  final RoomsRepository roomsRepository = RoomsRepository(roomsApiClient: RoomsApiClient(httpClient: http.Client()));
+  final RoomsRepository roomsRepository = RoomsRepository(
+      roomsApiClient: RoomsApiClient(httpClient: http.Client()));
 
   // ignore: close_sinks
   final webSocketBloc =
       WebSocketBloc(channel: channel, webSocketRepository: webSocketRepository);
   // ignore: close_sinks
-  final roomsBloc = RoomsBloc(webSocketBloc: webSocketBloc, roomsRepository: roomsRepository);
+  final roomsBloc =
+      RoomsBloc(webSocketBloc: webSocketBloc, roomsRepository: roomsRepository);
 
   runApp(
     MultiBlocProvider(
@@ -43,25 +45,28 @@ void main() {
 }
 
 class App extends StatelessWidget {
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     final title = 'WebSocket Demo';
-    return MaterialApp(
-      title: title,
-      home: BlocBuilder<LoginBloc, LoginState>(
-        builder: (_, state) {
-          if (state is LoginConnectedToServer) {
-            return RoomsScreen();
-          } else {
-            return LoginScreen();
-          }
+    return BlocListener<LoginBloc, LoginState>(
+      listener: (context, state) {
+        if (state is LoginConnectedToServer) {
+          Navigator.of(context).pushReplacementNamed(RoomsScreen.routeName);
+        } else {
+          Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+        }
+      },
+      child: MaterialApp(
+        title: title,
+        home: LoginScreen(),
+        routes: {
+          LoginScreen.routeName: (ctx) => LoginScreen(),
+          RoomsScreen.routeName: (ctx) => RoomsScreen(),
+          PlanningScreen.routeName: (ctx) => PlanningScreen(),
         },
       ),
-      routes: {
-        LoginScreen.routeName: (ctx) => LoginScreen(),
-        RoomsScreen.routeName: (ctx) => RoomsScreen(),
-        PlanningScreen.routeName: (ctx) => PlanningScreen(),
-      },
     );
   }
 }
