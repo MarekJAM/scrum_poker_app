@@ -20,7 +20,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         add(LoginDisconnectedFromServerE(state.message));
       } else if (state is WSConnectionError) {
         add(LoginConnectionErrorReceivedE(state.message));
-      } 
+      }
     });
   }
 
@@ -36,6 +36,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield* _mapLoginDisconnectFromServerToState(event);
     } else if (event is LoginDisconnectedFromServerE) {
       yield* _mapLoginDisconnectedFromServerToState();
+    } else if (event is AppStarted) {
+      yield* _mapAppStartedToState();
+    }
+  }
+
+  Stream<LoginState> _mapAppStartedToState() async* {
+    try {
+      yield LoginDisconnectedFromServer(message: "App started");
+    } catch (e) {
+      print(e);
+      yield LoginConnectionError(message: "Connection error occured.");
     }
   }
 
@@ -45,7 +56,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       //this is temporary solution only
       SecureStorage().writeServerAddress(event.link);
       SecureStorage().writeUsername(event.username);
-      _webSocketBloc.add(WSConnectToServerE("ws://"+event.link+"?name="+event.username));
+      _webSocketBloc.add(
+          WSConnectToServerE("ws://" + event.link + "?name=" + event.username));
     } catch (e) {
       print(e);
       yield LoginConnectionError(message: "Connection error occured.");

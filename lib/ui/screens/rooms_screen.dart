@@ -6,6 +6,9 @@ import 'screens.dart';
 
 class RoomsScreen extends StatelessWidget {
   static const routeName = '/rooms';
+  static Route route() {
+    return MaterialPageRoute<void>(builder: (_) => RoomsScreen());
+  }
 
   @override
   Widget build(BuildContext context) {

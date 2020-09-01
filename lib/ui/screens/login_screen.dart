@@ -4,6 +4,9 @@ import '../../bloc/login/bloc.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
+  static Route route() {
+    return MaterialPageRoute<void>(builder: (_) => LoginScreen());
+  }
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
