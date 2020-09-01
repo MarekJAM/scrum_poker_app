@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scrum_poker_app/ui/screens/splash_screen.dart';
 import './bloc/rooms/bloc.dart';
 import './bloc/websocket/bloc.dart';
 import './bloc/login/bloc.dart';
