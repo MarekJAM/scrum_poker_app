@@ -47,18 +47,9 @@ class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
   Stream<PlanningRoomState> _mapPlanningRoomCreateRoomEToState(event) async* {
     try {
       await _roomsRepository.createRoom(event.roomName);
-    } on BadRequestException catch (e) {
-      print(e);
-      yield PlanningRoomError(message: e.message);
-    } on NotFoundException catch (e) {
-      print(e);
-      yield PlanningRoomError(message: e.message);
-    } on ResourceExistsException catch (e) {
-      print(e);
-      yield PlanningRoomError(message: e.message);
     } catch (e) {
       print(e);
-      yield PlanningRoomError(message: "Could not create room.");
+      yield PlanningRoomError(message: e.message);
     }
   }
 

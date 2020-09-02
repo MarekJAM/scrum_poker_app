@@ -13,8 +13,7 @@ class RoomsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    TextEditingController _roomController =
-        TextEditingController();
+    TextEditingController _roomController = TextEditingController();
     final _formKey = GlobalKey<FormState>();
 
     List<String> rooms = [];
@@ -162,7 +161,8 @@ class RoomsScreen extends StatelessWidget {
                                         : RaisedButton(
                                             child: Text("Create"),
                                             onPressed: () {
-                                              if (_formKey.currentState.validate()) {
+                                              // if (_formKey.currentState
+                                              // .validate()) {
                                               BlocProvider.of<RoomsBloc>(
                                                       context)
                                                   .add(
@@ -170,9 +170,9 @@ class RoomsScreen extends StatelessWidget {
                                                   _roomController.text,
                                                 ),
                                               );
-                                              }
-                                            },
-                                          ),
+                                            }
+                                            // },
+                                            ),
                                   ],
                                 );
                               },

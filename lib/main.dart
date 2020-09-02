@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import './bloc/rooms/bloc.dart';
 import './bloc/websocket/bloc.dart';
@@ -51,6 +52,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MultiBlocProvider(
       providers: [
         BlocProvider<WebSocketBloc>(
@@ -88,32 +93,31 @@ class _AppViewState extends State<AppView> {
   Widget build(BuildContext context) {
     final title = 'WebSocket Demo';
     return MaterialApp(
-      title: title,
-      navigatorKey: _navigatorKey,
-      builder: (context, child) {
-        return BlocListener<LoginBloc, LoginState>(
-          listener: (context, state) {
-            if (state is LoginConnectedToServer) {
-              _navigator.pushAndRemoveUntil<void>(
-                RoomsScreen.route(),
-                (route) => false,
-              );
-            } else if (state is LoginDisconnectedFromServer) {
-              _navigator.pushAndRemoveUntil<void>(
-                LoginScreen.route(),
-                (route) => false,
-              );
-            }
-          },
-          child: child,
-        );
-      },
-      routes: {
-        LoginScreen.routeName: (ctx) => LoginScreen(),
-        RoomsScreen.routeName: (ctx) => RoomsScreen(),
-        PlanningScreen.routeName: (ctx) => PlanningScreen(),
-      },
-      onGenerateRoute: (_) => SplashScreen.route()
-    );
+        title: title,
+        navigatorKey: _navigatorKey,
+        builder: (context, child) {
+          return BlocListener<LoginBloc, LoginState>(
+            listener: (context, state) {
+              if (state is LoginConnectedToServer) {
+                _navigator.pushAndRemoveUntil<void>(
+                  RoomsScreen.route(),
+                  (route) => false,
+                );
+              } else if (state is LoginDisconnectedFromServer) {
+                _navigator.pushAndRemoveUntil<void>(
+                  LoginScreen.route(),
+                  (route) => false,
+                );
+              }
+            },
+            child: child,
+          );
+        },
+        routes: {
+          LoginScreen.routeName: (ctx) => LoginScreen(),
+          RoomsScreen.routeName: (ctx) => RoomsScreen(),
+          PlanningScreen.routeName: (ctx) => PlanningScreen(),
+        },
+        onGenerateRoute: (_) => SplashScreen.route());
   }
 }

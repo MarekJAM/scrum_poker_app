@@ -20,7 +20,7 @@ class RoomsApiClient extends ApiClient {
     );
 
     if (response.statusCode != 201) {
-      throwException(response.statusCode, 'Error while creating room');
+      throwException(response.statusCode, decodeErrorMessage(response) ?? "Error while creating room");
     }
   
     return true;
@@ -34,7 +34,7 @@ class RoomsApiClient extends ApiClient {
     );
 
     if (response.statusCode != 200) {
-      throwException(response.statusCode, 'Error while connecting to room');
+      throwException(response.statusCode, decodeErrorMessage(response) ?? 'Error while connecting to room');
     }
   
     return true;
@@ -48,7 +48,7 @@ class RoomsApiClient extends ApiClient {
     );
 
     if (response.statusCode != 200) {
-      throwException(response.statusCode, 'Error while disconnecting from room');
+      throwException(response.statusCode, decodeErrorMessage(response) ?? 'Error while disconnecting from room');
     }
   
     return true;

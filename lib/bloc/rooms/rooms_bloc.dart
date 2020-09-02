@@ -55,18 +55,9 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
     try {
       await _roomsRepository.createRoom(event.roomName);
       yield RoomsConnectedToRoom(roomName: event.roomName);
-    } on BadRequestException catch (e) {
-      print(e);
-      yield RoomsConnectionWithRoomError(message: e.message);
-    } on NotFoundException catch (e) {
-      print(e);
-      yield RoomsConnectionWithRoomError(message: e.message);
-    } on ResourceExistsException catch (e) {
-      print(e);
-      yield RoomsConnectionWithRoomError(message: e.message);
     } catch (e) {
       print(e);
-      yield RoomsConnectionWithRoomError(message: "Could not create room.");
+      yield RoomsConnectionWithRoomError(message: e.message);
     }
   }
 
@@ -75,18 +66,9 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
     try {
       await _roomsRepository.connectToRoom(event.roomName);
       yield RoomsConnectedToRoom(roomName: event.roomName);
-    } on BadRequestException catch (e) {
-      print(e);
-      yield RoomsConnectionWithRoomError(message: e.message);
-    } on NotFoundException catch (e) {
-      print(e);
-      yield RoomsConnectionWithRoomError(message: e.message);
-    } on ResourceExistsException catch (e) {
-      print(e);
-      yield RoomsConnectionWithRoomError(message: e.message);
     } catch (e) {
       print(e);
-      yield RoomsConnectionWithRoomError(message: "Could not connect to room.");
+      yield RoomsConnectionWithRoomError(message: e.message);
     }
   }
 
@@ -94,18 +76,9 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
     try {
       await _roomsRepository.disconnectFromRoom();
       yield RoomsDisconnectedFromRoom();
-    } on BadRequestException catch (e) {
-      print(e);
-      yield RoomsConnectionWithRoomError(message: e.message);
-    } on NotFoundException catch (e) {
-      print(e);
-      yield RoomsConnectionWithRoomError(message: e.message);
-    } on ResourceExistsException catch (e) {
-      print(e);
-      yield RoomsConnectionWithRoomError(message: e.message);
     } catch (e) {
       print(e);
-      yield RoomsConnectionWithRoomError(message: "Could not connect to room.");
+      yield RoomsConnectionWithRoomError(message: e.message);
     }
   }
 
