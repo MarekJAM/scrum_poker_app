@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scrum_poker_app/data/models/models.dart';
-import 'package:scrum_poker_app/data/repositories/repositories.dart';
-import 'package:scrum_poker_app/data/repositories/rooms_repository.dart';
+import '../../data/models/models.dart';
+import '../../data/repositories/repositories.dart';
+import '../../data/repositories/rooms_repository.dart';
 import '../../data/models/rooms.dart';
 import '../websocket/bloc.dart';
 import 'bloc.dart';

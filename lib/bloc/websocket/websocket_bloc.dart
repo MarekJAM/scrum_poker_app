@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scrum_poker_app/data/repositories/websocket_repository.dart';
+import '../../data/repositories/websocket_repository.dart';
 import 'package:web_socket_channel/io.dart';
 import 'bloc.dart';
 

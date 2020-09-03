@@ -34,6 +34,7 @@ void main() {
       webSocketBloc: webSocketBloc,
       roomsBloc: roomsBloc,
       loginBloc: loginBloc,
+      roomsRepository: roomsRepository,
     ),
   );
 }
@@ -43,12 +44,14 @@ class App extends StatelessWidget {
       {Key key,
       @required this.webSocketBloc,
       @required this.roomsBloc,
-      @required this.loginBloc})
+      @required this.loginBloc,
+      @required this.roomsRepository})
       : super(key: key);
 
   final WebSocketBloc webSocketBloc;
   final RoomsBloc roomsBloc;
   final LoginBloc loginBloc;
+  final RoomsRepository roomsRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -56,20 +59,22 @@ class App extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<WebSocketBloc>(
-          create: (context) => webSocketBloc,
-        ),
-        BlocProvider<LoginBloc>(
-          create: (context) => LoginBloc(webSocketBloc: webSocketBloc),
-        ),
-        BlocProvider<RoomsBloc>(
-          create: (context) => roomsBloc,
-        ),
-      ],
-      child: AppView(),
-    );
+    return RepositoryProvider(
+        create: (context) => roomsRepository,
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider<WebSocketBloc>(
+              create: (context) => webSocketBloc,
+            ),
+            BlocProvider<LoginBloc>(
+              create: (context) => LoginBloc(webSocketBloc: webSocketBloc),
+            ),
+            BlocProvider<RoomsBloc>(
+              create: (context) => roomsBloc,
+            ),
+          ],
+          child: AppView(),
+        ));
   }
 }
 
@@ -91,7 +96,7 @@ class _AppViewState extends State<AppView> {
 
   @override
   Widget build(BuildContext context) {
-    final title = 'WebSocket Demo';
+    final title = 'Scrum Poker';
     return MaterialApp(
         title: title,
         navigatorKey: _navigatorKey,
@@ -117,6 +122,7 @@ class _AppViewState extends State<AppView> {
           LoginScreen.routeName: (ctx) => LoginScreen(),
           RoomsScreen.routeName: (ctx) => RoomsScreen(),
           PlanningScreen.routeName: (ctx) => PlanningScreen(),
+          CreateRoomScreen.routeName: (ctx) => CreateRoomScreen(),
         },
         onGenerateRoute: (_) => SplashScreen.route());
   }
