@@ -27,8 +27,8 @@ class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
     }
   }
 
-  Stream<PlanningRoomState> _mapPlanningRoomRoomiesReceivedEToState(
-      event) async* {
+  Stream<PlanningRoomState> _mapPlanningRoomRoomiesReceivedEToState(event) async* {
+    yield PlanningRoomRoomiesLoading();
     try {
       yield PlanningRoomRoomiesLoaded(roomies: event.roomies);
     } catch (e) {

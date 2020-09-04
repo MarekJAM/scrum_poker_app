@@ -14,9 +14,9 @@ class PlanningRoomInitial extends PlanningRoomState {
   String toString() => 'PlanningRoomInitial';
 }
 
-class PlanningRoomLoading extends PlanningRoomState {
+class PlanningRoomRoomiesLoading extends PlanningRoomState {
   @override
-  String toString() => 'PlanningRoomLoading';
+  String toString() => 'PlanningRoomRoomiesLoading';
 }
 
 class PlanningRoomRoomiesLoaded extends PlanningRoomState {

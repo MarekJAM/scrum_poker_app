@@ -12,18 +12,6 @@ class PlanningScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
 
-    final planningBloc = BlocProvider.of<PlanningRoomBloc>(context);
-
-    Map<String, int> users = {
-      'John': 5,
-      'Andrew': 2,
-      'Tim': 3,
-      'Samuel': 4,
-      'Pit': 5,
-      'Michael': 6,
-      'Alex': 4,
-    };
-
     return BlocProvider(
         create: (BuildContext context) => RoomConnectionBloc(
               roomsRepository: RepositoryProvider.of<RoomsRepository>(context),
@@ -52,10 +40,9 @@ class PlanningScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
-                        cubit: planningBloc,
                         builder: (_, state) {
                           if (state is PlanningRoomRoomiesLoaded) {
-                            var users = state.roomies.admins;
+                            var users = state.roomies.admins + state.roomies.users;
                             return ListView.builder(
                               itemCount: users.length,
                               itemBuilder: (BuildContext context, int index) {

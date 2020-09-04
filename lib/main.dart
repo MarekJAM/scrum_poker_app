@@ -39,6 +39,7 @@ void main() {
       roomsBloc: roomsBloc,
       loginBloc: loginBloc,
       roomsRepository: roomsRepository,
+      planningRoomBloc: planningRoomBloc,
     ),
   );
 }
