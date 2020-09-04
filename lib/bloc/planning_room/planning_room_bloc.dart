@@ -1,63 +1,39 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scrum_poker_app/data/repositories/repositories.dart';
-import 'package:scrum_poker_app/data/repositories/rooms_repository.dart';
+import '../../data/models/roomies.dart';
 import '../websocket/bloc.dart';
 import 'bloc.dart';
 
 class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
   final WebSocketBloc _webSocketBloc;
   StreamSubscription webSocketSubscription;
-  final RoomsRepository _roomsRepository;
 
-  PlanningRoomBloc(
-      {@required WebSocketBloc webSocketBloc,
-      @required RoomsRepository roomsRepository})
+  PlanningRoomBloc({@required WebSocketBloc webSocketBloc})
       : assert(webSocketBloc != null),
         _webSocketBloc = webSocketBloc,
-        _roomsRepository = roomsRepository,
         super(PlanningRoomInitial()) {
     webSocketSubscription = _webSocketBloc.listen((state) {
-
+      if (state is WSMessageLoaded && state.message is Roomies) {
+        add(PlanningRoomRoomiesReceivedE(state.message));
+      }
     });
   }
 
   @override
   Stream<PlanningRoomState> mapEventToState(PlanningRoomEvent event) async* {
-    if (event is PlanningRoomLoadedE) {
-      yield* _mapPlanningRoomLoadedEToState(event);
-    } else if (event is PlanningRoomCreateRoomE) {
-      yield* _mapPlanningRoomCreateRoomEToState(event);
-    } else if (event is PlanningRoomConnectToRoomE) {
-      yield* _mapPlanningRoomConnectToRoomEToState(event);
+    if (event is PlanningRoomRoomiesReceivedE) {
+      yield* _mapPlanningRoomRoomiesReceivedEToState(event);
     }
   }
 
-  Stream<PlanningRoomState> _mapPlanningRoomLoadedEToState(event) async* {
-    yield PlanningRoomLoading();
+  Stream<PlanningRoomState> _mapPlanningRoomRoomiesReceivedEToState(
+      event) async* {
     try {
-      yield PlanningRoomLoaded(rooms: event.rooms);
+      yield PlanningRoomRoomiesLoaded(roomies: event.roomies);
     } catch (e) {
       print(e);
-      yield PlanningRoomError(message: "Could not load list of rooms.");
-    }
-  }
-
-  Stream<PlanningRoomState> _mapPlanningRoomCreateRoomEToState(event) async* {
-    try {
-      await _roomsRepository.createRoom(event.roomName);
-    } catch (e) {
-      print(e);
-      yield PlanningRoomError(message: e.message);
-    }
-  }
-
-  Stream<PlanningRoomState> _mapPlanningRoomConnectToRoomEToState(event) async* {
-    try {
-    } catch (e) {
-      print(e);
-      yield PlanningRoomError(message: "Could not connect to room.");
+      yield PlanningRoomError(message: "Could not load list of roomies.");
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import './bloc/planning_room/planning_room_bloc.dart';
 import './bloc/rooms/bloc.dart';
 import './bloc/websocket/bloc.dart';
 import './bloc/login/bloc.dart';
@@ -28,6 +29,9 @@ void main() {
       RoomsBloc(webSocketBloc: webSocketBloc, roomsRepository: roomsRepository);
   // ignore: close_sinks
   final loginBloc = LoginBloc(webSocketBloc: webSocketBloc);
+  // ignore: close_sinks
+  final planningRoomBloc =
+      PlanningRoomBloc(webSocketBloc: webSocketBloc);
 
   runApp(
     App(
@@ -45,13 +49,15 @@ class App extends StatelessWidget {
       @required this.webSocketBloc,
       @required this.roomsBloc,
       @required this.loginBloc,
-      @required this.roomsRepository})
+      @required this.roomsRepository,
+      @required this.planningRoomBloc})
       : super(key: key);
 
   final WebSocketBloc webSocketBloc;
   final RoomsBloc roomsBloc;
   final LoginBloc loginBloc;
   final RoomsRepository roomsRepository;
+  final PlanningRoomBloc planningRoomBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +77,9 @@ class App extends StatelessWidget {
             ),
             BlocProvider<RoomsBloc>(
               create: (context) => roomsBloc,
+            ),
+            BlocProvider<PlanningRoomBloc>(
+              create: (context) => planningRoomBloc,
             ),
           ],
           child: AppView(),

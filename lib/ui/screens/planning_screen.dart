@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../bloc/planning_room/bloc.dart';
 import '../../data/repositories/repositories.dart';
 import '../../bloc/room_connection/bloc.dart';
 import '../../ui/screens/rooms_screen.dart';
@@ -10,6 +11,8 @@ class PlanningScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+
+    final planningBloc = BlocProvider.of<PlanningRoomBloc>(context);
 
     Map<String, int> users = {
       'John': 5,
@@ -23,7 +26,8 @@ class PlanningScreen extends StatelessWidget {
 
     return BlocProvider(
         create: (BuildContext context) => RoomConnectionBloc(
-            roomsRepository: RepositoryProvider.of<RoomsRepository>(context)),
+              roomsRepository: RepositoryProvider.of<RoomsRepository>(context),
+            ),
         child: Builder(builder: (context) {
           return Scaffold(
             appBar: AppBar(
@@ -47,16 +51,25 @@ class PlanningScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: users.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          String key = users.keys.elementAt(index);
-                          return Card(
-                            child: ListTile(
-                              title: Text("$key"),
-                              trailing: Text("${users[key]}"),
-                            ),
-                          );
+                      child: BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
+                        cubit: planningBloc,
+                        builder: (_, state) {
+                          if (state is PlanningRoomRoomiesLoaded) {
+                            var users = state.roomies.admins;
+                            return ListView.builder(
+                              itemCount: users.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Card(
+                                  child: ListTile(
+                                    title: Text(users[index]),
+                                    // trailing: Text("${users[key]}"),
+                                  ),
+                                );
+                              },
+                            );
+                          } else {
+                            return Container();
+                          }
                         },
                       ),
                     ),

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../data/models/roomies.dart';
 
 abstract class PlanningRoomEvent extends Equatable {
   const PlanningRoomEvent();
@@ -7,31 +8,49 @@ abstract class PlanningRoomEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class PlanningRoomLoadedE extends PlanningRoomEvent {
-  final String rooms;
+class PlanningRoomRoomiesReceivedE extends PlanningRoomEvent {
+  final Roomies roomies;
 
-  PlanningRoomLoadedE(this.rooms);
+  PlanningRoomRoomiesReceivedE(this.roomies);
 
   @override
-  String toString() => 'PlanningRoomLoadedE $rooms';
+  String toString() => 'PlanningRoomRoomiesReceivedE $roomies';
 }
 
-class PlanningRoomCreateRoomE extends PlanningRoomEvent {
-  final String roomName;
+class PlanningRoomSendEstimateRequestE extends PlanningRoomEvent {
+  final String task;
 
-  PlanningRoomCreateRoomE(this.roomName);
+  PlanningRoomSendEstimateRequestE(this.task);
 
   @override
-  String toString() => 'PlanningRoomCreateRoomE';
+  String toString() => 'PlanningRoomSendEstimateRequestE';
 }
 
-class PlanningRoomConnectToRoomE extends PlanningRoomEvent {
-  final String roomName;
+class PlanningRoomEstimateRequestReceivedE extends PlanningRoomEvent {
+  final String task;
 
-  PlanningRoomConnectToRoomE(this.roomName);
+  PlanningRoomEstimateRequestReceivedE(this.task);
 
   @override
-  String toString() => 'PlanningRoomConnectToRoomE';
+  String toString() => 'PlanningRoomEstimateRequestReceivedE';
+}
+
+class PlanningRoomSendEstimateE extends PlanningRoomEvent {
+  final String estimate;
+
+  PlanningRoomSendEstimateE(this.estimate);
+
+  @override
+  String toString() => 'PlanningRoomSendEstimateE';
+}
+
+class PlanningRoomEstimatesReceivedE extends PlanningRoomEvent {
+  final String estimates;
+
+  PlanningRoomEstimatesReceivedE(this.estimates);
+
+  @override
+  String toString() => 'PlanningRoomEstimatesReceivedE';
 }
 
 class PlanningRoomErrorReceivedE extends PlanningRoomEvent {
