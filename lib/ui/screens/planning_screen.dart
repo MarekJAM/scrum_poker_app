@@ -11,6 +11,7 @@ class PlanningScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    final roomName = ModalRoute.of(context).settings.arguments;
 
     return BlocProvider(
         create: (BuildContext context) => RoomConnectionBloc(
@@ -20,13 +21,17 @@ class PlanningScreen extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               leading: FlatButton(
-                child: Icon(Icons.arrow_back),
+                child: Icon(
+                  Icons.arrow_back,
+                  color: Theme.of(context).buttonColor,
+                ),
                 onPressed: () {
                   BlocProvider.of<RoomConnectionBloc>(context).add(
                     RoomConnectionDisconnectFromRoomE(),
                   );
                 },
               ),
+              title: Text(roomName),
             ),
             body: BlocListener<RoomConnectionBloc, RoomConnectionState>(
               listener: (ctx, state) {
@@ -42,7 +47,8 @@ class PlanningScreen extends StatelessWidget {
                       child: BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
                         builder: (_, state) {
                           if (state is PlanningRoomRoomiesLoaded) {
-                            var users = state.roomies.admins + state.roomies.users;
+                            var users =
+                                state.roomies.admins + state.roomies.users;
                             return ListView.builder(
                               itemCount: users.length,
                               itemBuilder: (BuildContext context, int index) {

@@ -43,7 +43,7 @@ class RoomsScreen extends StatelessWidget {
                         );
                       } else if (state is RoomConnectionConnectedToRoom) {
                         Navigator.of(context)
-                            .pushReplacementNamed(PlanningScreen.routeName);
+                            .pushReplacementNamed(PlanningScreen.routeName, arguments: state.roomName);
                       }
                     },
                     child: BlocBuilder<RoomsBloc, RoomsState>(

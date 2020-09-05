@@ -52,8 +52,10 @@ class CreateRoomScreen extends StatelessWidget {
                           BlocConsumer<RoomConnectionBloc, RoomConnectionState>(
                         listener: (_, state) {
                           if (state is RoomConnectionConnectedToRoom) {
-                            Navigator.of(context)
-                                .pushReplacementNamed(PlanningScreen.routeName);
+                            Navigator.of(context).pushReplacementNamed(
+                              PlanningScreen.routeName,
+                              arguments: _roomController.text,
+                            );
                           }
                         },
                         builder: (_, state) {
