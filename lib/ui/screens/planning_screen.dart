@@ -46,23 +46,7 @@ class PlanningScreen extends StatelessWidget {
                     Expanded(
                       child: BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
                         builder: (_, state) {
-                          if (state is PlanningRoomRoomiesLoaded) {
-                            var users =
-                                state.roomies.admins + state.roomies.users;
-                            return ListView.builder(
-                              itemCount: users.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Card(
-                                  child: ListTile(
-                                    title: Text(users[index]),
-                                    // trailing: Text("${users[key]}"),
-                                  ),
-                                );
-                              },
-                            );
-                          } else {
-                            return Container();
-                          }
+                          return _buildUserList(context, state);
                         },
                       ),
                     ),
@@ -87,5 +71,24 @@ class PlanningScreen extends StatelessWidget {
             ),
           );
         }));
+  }
+
+  Widget _buildUserList(BuildContext context, state) {
+    if (state is PlanningRoomRoomiesLoaded) {
+      var users = state.roomies.admins + state.roomies.users;
+      return ListView.builder(
+        itemCount: users.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Card(
+            child: ListTile(
+              title: Text(users[index]),
+              // trailing: Text("${users[key]}"),
+            ),
+          );
+        },
+      );
+    } else {
+      return Container();
+    }
   }
 }
