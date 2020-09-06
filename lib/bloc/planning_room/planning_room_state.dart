@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import '../../data/models/roomies.dart';
+import '../../data/models/room_status.dart';
 
 abstract class PlanningRoomState extends Equatable {
   const PlanningRoomState();
@@ -14,18 +14,18 @@ class PlanningRoomInitial extends PlanningRoomState {
   String toString() => 'PlanningRoomInitial';
 }
 
-class PlanningRoomRoomiesLoading extends PlanningRoomState {
+class PlanningRoomRoomStatusLoading extends PlanningRoomState {
   @override
-  String toString() => 'PlanningRoomRoomiesLoading';
+  String toString() => 'PlanningRoomRoomStatusLoading';
 }
 
-class PlanningRoomRoomiesLoaded extends PlanningRoomState {
-  final Roomies roomies;
+class PlanningRoomRoomStatusLoaded extends PlanningRoomState {
+  final RoomStatus roomStatus;
 
-  const PlanningRoomRoomiesLoaded({@required this.roomies}) : assert(roomies != null);
+  const PlanningRoomRoomStatusLoaded({@required this.roomStatus}) : assert(roomStatus != null);
 
   @override
-  String toString() => 'PlanningRoomRoomiesLoaded $roomies';
+  String toString() => 'PlanningRoomRoomStatusLoaded $roomStatus';
 }
 
 class PlanningRoomError extends PlanningRoomState {

@@ -14,8 +14,8 @@ class WebSocketRepository {
     dynamic obj;
     if (decodedMessage.containsKey("rooms")) {
       obj = Rooms.fromJson(decodedMessage);
-    } else if (decodedMessage.containsKey("roomies")) {
-      obj = Roomies.fromJson(decodedMessage);
+    } else if (decodedMessage.containsKey("room_status")) {
+      obj = RoomStatus.fromJson(decodedMessage);
     }
     return obj;
   }

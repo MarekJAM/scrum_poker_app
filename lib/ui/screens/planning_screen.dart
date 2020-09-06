@@ -13,6 +13,28 @@ class PlanningScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     final roomName = ModalRoute.of(context).settings.arguments;
+    final estimates = [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      20,
+      25,
+      30,
+      40,
+      50
+    ];
 
     return BlocProvider(
       create: (BuildContext context) => RoomConnectionBloc(
@@ -56,34 +78,32 @@ class PlanningScreen extends StatelessWidget {
               ],
               child: Stack(
                 children: [
-                  Container(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child:
-                              BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
-                            builder: (_, state) {
-                              return _buildUserList(context, state);
-                            },
-                          ),
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Container(
+                          child: Center(
+                              child: Text(
+                            'Task: CS-345',
+                            style: TextStyle(fontSize: 20),
+                          )),
+                          height: deviceSize.height * 0.1,
+                          width: deviceSize.width * 0.8,
                         ),
-                        VerticalDivider(),
-                        Container(
-                          width: deviceSize.width * 0.5,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Task: CS-512',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                              Text('Average: 4.5'),
-                              Text('Median: 4'),
-                            ],
-                          ),
+                      ),
+                      Divider(),
+                      Container(
+                        width: double.infinity,
+                        child: BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
+                          builder: (_, state) {
+                            return _buildUserList(context, state, deviceSize);
+                          },
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   Positioned(
                     bottom: 0,
@@ -96,6 +116,7 @@ class PlanningScreen extends StatelessWidget {
                       width: deviceSize.width,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
+                        itemCount: estimates.length,
                         itemBuilder: (context, index) => GestureDetector(
                           onTap: () {
                             print('$index');
@@ -105,7 +126,7 @@ class PlanningScreen extends StatelessWidget {
                             child: Container(
                               child: Center(
                                 child: Text(
-                                  '$index',
+                                  '${estimates[index]}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -133,19 +154,26 @@ class PlanningScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildUserList(BuildContext context, state) {
-    if (state is PlanningRoomRoomiesLoaded) {
-      var users = state.roomies.admins + state.roomies.users;
-      return ListView.builder(
-        itemCount: users.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Card(
-            child: ListTile(
-              title: Text(users[index]),
-              // trailing: Text("${users[key]}"),
+  Widget _buildUserList(BuildContext context, state, Size deviceSize) {
+    if (state is PlanningRoomRoomStatusLoaded) {
+      print(state.roomStatus.estimateRequest);
+      var users = state.roomStatus.admins + state.roomStatus.users;
+      return Wrap(
+        alignment: WrapAlignment.start,
+        direction: Axis.horizontal,
+        children: [
+          for (var user in users)
+            Container(
+              width: deviceSize.width * 1/3,
+              child: Card(
+                child: ListTile(
+                  // leading: Icon(Icons.star),
+                  title: Text(user),
+                  // trailing: Text("${users[key]}"),
+                ),
+              ),
             ),
-          );
-        },
+        ],
       );
     } else {
       return Container();

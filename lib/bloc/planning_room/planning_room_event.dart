@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../data/models/roomies.dart';
+import '../../data/models/room_status.dart';
 
 abstract class PlanningRoomEvent extends Equatable {
   const PlanningRoomEvent();
@@ -8,13 +8,13 @@ abstract class PlanningRoomEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class PlanningRoomRoomiesReceivedE extends PlanningRoomEvent {
-  final Roomies roomies;
+class PlanningRoomRoomStatusReceivedE extends PlanningRoomEvent {
+  final RoomStatus roomStatus;
 
-  PlanningRoomRoomiesReceivedE(this.roomies);
+  PlanningRoomRoomStatusReceivedE(this.roomStatus);
 
   @override
-  String toString() => 'PlanningRoomRoomiesReceivedE $roomies';
+  String toString() => 'PlanningRoomRoomStatusReceivedE $roomStatus';
 }
 
 class PlanningRoomSendEstimateRequestE extends PlanningRoomEvent {
