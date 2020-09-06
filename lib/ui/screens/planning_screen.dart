@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scrum_poker_app/bloc/rooms/rooms_bloc.dart';
-import 'package:scrum_poker_app/bloc/rooms/rooms_state.dart';
+import '../../bloc/rooms/bloc.dart';
 import '../../bloc/planning_room/bloc.dart';
 import '../../data/repositories/repositories.dart';
 import '../../bloc/room_connection/bloc.dart';
