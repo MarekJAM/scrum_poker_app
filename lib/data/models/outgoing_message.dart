@@ -12,4 +12,8 @@ class OutgoingMessage {
   static String createDisconnectFromRoomJsonMsg(String username) {
     return json.encode({"username": username});
   }
+
+  static String createRequestEstimateJsonMsg(String taskNumber) {
+    return json.encode({"request_estimate": taskNumber});
+  }
 }

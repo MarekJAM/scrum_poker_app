@@ -35,6 +35,8 @@ class PlanningScreen extends StatelessWidget {
       40,
       50
     ];
+    var estimatedTask = "";
+    var amAdmin = false;
 
     return BlocProvider(
       create: (BuildContext context) => RoomConnectionBloc(
@@ -86,12 +88,40 @@ class PlanningScreen extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Container(
                           child: Center(
-                              child: Text(
-                            'Task: CS-345',
-                            style: TextStyle(fontSize: 20),
-                          )),
+                            child: BlocBuilder<PlanningRoomBloc,
+                                PlanningRoomState>(builder: (_, state) {
+                              if (state is PlanningRoomRoomStatusLoaded) {
+                                estimatedTask =
+                                    state.roomStatus.estimateRequest;
+                                amAdmin = state.amAdmin;
+                              }
+                              return amAdmin
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        _buildTaskEstimateText(
+                                            context, estimatedTask),
+                                        RaisedButton(
+                                          color: Theme.of(context).primaryColor,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Text(
+                                            'Request Estimate',
+                                          ),
+                                          onPressed: () {
+                                            _showRequestEstimateDialog(context);
+                                          },
+                                        )
+                                      ],
+                                    )
+                                  : _buildTaskEstimateText(
+                                      context, estimatedTask);
+                            }),
+                          ),
                           height: deviceSize.height * 0.1,
-                          width: deviceSize.width * 0.8,
                         ),
                       ),
                       Divider(),
@@ -156,7 +186,6 @@ class PlanningScreen extends StatelessWidget {
 
   Widget _buildUserList(BuildContext context, state, Size deviceSize) {
     if (state is PlanningRoomRoomStatusLoaded) {
-      print(state.roomStatus.estimateRequest);
       var users = state.roomStatus.admins + state.roomStatus.users;
       return Wrap(
         alignment: WrapAlignment.start,
@@ -164,11 +193,12 @@ class PlanningScreen extends StatelessWidget {
         children: [
           for (var user in users)
             Container(
-              width: deviceSize.width * 1/3,
+              width: deviceSize.width * 1 / 3,
               child: Card(
                 child: ListTile(
                   // leading: Icon(Icons.star),
                   title: Text(user),
+                  trailing: Text('1'),
                   // trailing: Text("${users[key]}"),
                 ),
               ),
@@ -178,5 +208,69 @@ class PlanningScreen extends StatelessWidget {
     } else {
       return Container();
     }
+  }
+
+  Widget _buildTaskEstimateText(BuildContext context, String taskNumber) {
+    return Flexible(
+      child: Text(
+        'Task: $taskNumber',
+        style: TextStyle(fontSize: 20),
+      ),
+    );
+  }
+
+  void _showRequestEstimateDialog(BuildContext context) {
+    TextEditingController _taskController = TextEditingController();
+    final _reqestEstimateKey = GlobalKey<FormState>();
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)), //this right here
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: Form(
+                key: _reqestEstimateKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        decoration: InputDecoration(labelText: "Task number"),
+                        controller: _taskController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Provide task number.";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    RaisedButton(
+                      color: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text("Send request"),
+                      onPressed: () {
+                        if (_reqestEstimateKey.currentState.validate()) {
+                          BlocProvider.of<PlanningRoomBloc>(context).add(
+                            PlanningRoomSendEstimateRequestE(
+                              _taskController.text,
+                            ),
+                          );
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 }
