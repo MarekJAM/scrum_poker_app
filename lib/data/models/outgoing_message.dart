@@ -16,4 +16,8 @@ class OutgoingMessage {
   static String createRequestEstimateJsonMsg(String taskNumber) {
     return json.encode({"request_estimate": taskNumber});
   }
+
+  static String createEstimateJsonMsg(int estimate) {
+    return json.encode({"estimate": estimate});
+  }
 }

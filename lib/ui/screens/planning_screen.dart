@@ -135,40 +135,7 @@ class PlanningScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Positioned(
-                    bottom: 0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      padding: EdgeInsets.all(3),
-                      height: deviceSize.height * 0.12,
-                      width: deviceSize.width,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: estimates.length,
-                        itemBuilder: (context, index) => GestureDetector(
-                          onTap: () {
-                            print('$index');
-                          },
-                          child: Card(
-                            elevation: 5,
-                            child: Container(
-                              child: Center(
-                                child: Text(
-                                  '${estimates[index]}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              width: deviceSize.width * 0.12,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  _buildBottomCardsBar(context, deviceSize, estimates)
                 ],
               ),
             ),
@@ -210,12 +177,50 @@ class PlanningScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildTaskEstimateText(BuildContext context, String taskNumber) {
-    return Flexible(
-      child: Text(
-        'Task: $taskNumber',
-        style: TextStyle(fontSize: 20),
+  Widget _buildBottomCardsBar(
+      BuildContext context, Size deviceSize, List<int> estimates) {
+    return Positioned(
+      bottom: 0,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+        ),
+        padding: EdgeInsets.all(3),
+        height: deviceSize.height * 0.12,
+        width: deviceSize.width,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: estimates.length,
+          itemBuilder: (context, index) => GestureDetector(
+            onTap: () {
+              BlocProvider.of<PlanningRoomBloc>(context).add(
+                PlanningRoomSendEstimateE(estimates[index]),
+              );
+            },
+            child: Card(
+              elevation: 5,
+              child: Container(
+                child: Center(
+                  child: Text(
+                    '${estimates[index]}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                width: deviceSize.width * 0.12,
+              ),
+            ),
+          ),
+        ),
       ),
+    );
+  }
+
+  Widget _buildTaskEstimateText(BuildContext context, String taskNumber) {
+    return Text(
+      'Task: $taskNumber',
+      style: TextStyle(fontSize: 20),
     );
   }
 

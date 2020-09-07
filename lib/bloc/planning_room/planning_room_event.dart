@@ -26,22 +26,13 @@ class PlanningRoomSendEstimateRequestE extends PlanningRoomEvent {
   String toString() => 'PlanningRoomSendEstimateRequestE: $taskNumber';
 }
 
-class PlanningRoomEstimateRequestReceivedE extends PlanningRoomEvent {
-  final String task;
-
-  PlanningRoomEstimateRequestReceivedE(this.task);
-
-  @override
-  String toString() => 'PlanningRoomEstimateRequestReceivedE';
-}
-
 class PlanningRoomSendEstimateE extends PlanningRoomEvent {
-  final String estimate;
+  final int estimate;
 
   PlanningRoomSendEstimateE(this.estimate);
 
   @override
-  String toString() => 'PlanningRoomSendEstimateE';
+  String toString() => 'PlanningRoomSendEstimateE: $estimate';
 }
 
 class PlanningRoomEstimatesReceivedE extends PlanningRoomEvent {

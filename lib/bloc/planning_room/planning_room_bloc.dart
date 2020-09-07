@@ -28,6 +28,8 @@ class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
       yield* _mapPlanningRoomRoomiesReceivedEToState(event);
     } else if (event is PlanningRoomSendEstimateRequestE) {
       yield* _mapPlanningRoomSendEstimateRequestEToState(event);
+    } else if (event is PlanningRoomSendEstimateE) {
+      yield* _mapPlanningRoomSendEstimateEToState(event);
     }
   }
 
@@ -48,6 +50,15 @@ class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
     } catch (e) {
       print(e);
       yield PlanningRoomError(message: "Could not send estimate request.");
+    }
+  }
+
+  Stream<PlanningRoomState> _mapPlanningRoomSendEstimateEToState(event) async* {
+    try {
+      _webSocketBloc.add(WSSendMessageE(OutgoingMessage.createEstimateJsonMsg(event.estimate)));
+    } catch (e) {
+      print(e);
+      yield PlanningRoomError(message: "Could not send estimate.");
     }
   }
 
