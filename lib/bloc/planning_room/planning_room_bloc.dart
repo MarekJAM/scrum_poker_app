@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/models/models.dart';
 import '../../utils/secure_storage.dart';
-import '../../data/models/room_status.dart';
 import '../websocket/bloc.dart';
+import '../../ui/ui_models/ui_models.dart';
 import 'bloc.dart';
 
 class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
@@ -33,20 +33,56 @@ class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
     }
   }
 
-  Stream<PlanningRoomState> _mapPlanningRoomRoomiesReceivedEToState(event) async* {
+  Stream<PlanningRoomState> _mapPlanningRoomRoomiesReceivedEToState(
+      event) async* {
     yield PlanningRoomRoomStatusLoading();
     try {
-      var amAdmin = event.roomStatus.admins.contains(await SecureStorage().readUsername());
-      yield PlanningRoomRoomStatusLoaded(roomStatus: event.roomStatus, amAdmin: amAdmin);
+      final myUsername = await SecureStorage().readUsername();
+      final amAdmin = event.roomStatus.admins.contains(myUsername);
+      bool alreadyEstimated;
+      alreadyEstimated = ((event.roomStatus.estimates.singleWhere(
+              (estimate) => estimate.name == myUsername,
+              orElse: () => null)) !=
+          null);
+
+      List<UserEstimationCard> userEstimationCardsUI = [];
+
+      event.roomStatus.admins.forEach((admin) {
+        userEstimationCardsUI
+            .add(UserEstimationCard(username: admin, isAdmin: true));
+      });
+      event.roomStatus.estimators.forEach((estimator) {
+        userEstimationCardsUI
+            .add(UserEstimationCard(username: estimator, isAdmin: false));
+      });
+      event.roomStatus.estimates.forEach((estimate) {
+        var index = userEstimationCardsUI
+            .indexWhere((card) => card.username == estimate.name);
+        if (index >= 0) {
+          userEstimationCardsUI[index]
+            ..isInRoom = true
+            ..estimate = estimate.estimate;
+        } else {
+          userEstimationCardsUI.add(UserEstimationCard(username: estimate.name, estimate: estimate.estimate));
+        }
+      });
+
+      yield PlanningRoomRoomStatusLoaded(
+          roomStatus: event.roomStatus,
+          amAdmin: amAdmin,
+          alreadyEstimated: alreadyEstimated,
+          userEstimationCards: userEstimationCardsUI);
     } catch (e) {
       print(e);
-      yield PlanningRoomError(message: "Could not load list of room status.");
+      yield PlanningRoomError(message: "Could not load room status.");
     }
   }
 
-  Stream<PlanningRoomState> _mapPlanningRoomSendEstimateRequestEToState(event) async* {
+  Stream<PlanningRoomState> _mapPlanningRoomSendEstimateRequestEToState(
+      event) async* {
     try {
-      _webSocketBloc.add(WSSendMessageE(OutgoingMessage.createRequestEstimateJsonMsg(event.taskNumber)));
+      _webSocketBloc.add(WSSendMessageE(
+          OutgoingMessage.createRequestEstimateJsonMsg(event.taskNumber)));
     } catch (e) {
       print(e);
       yield PlanningRoomError(message: "Could not send estimate request.");
@@ -55,7 +91,8 @@ class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
 
   Stream<PlanningRoomState> _mapPlanningRoomSendEstimateEToState(event) async* {
     try {
-      _webSocketBloc.add(WSSendMessageE(OutgoingMessage.createEstimateJsonMsg(event.estimate)));
+      _webSocketBloc.add(WSSendMessageE(
+          OutgoingMessage.createEstimateJsonMsg(event.estimate)));
     } catch (e) {
       print(e);
       yield PlanningRoomError(message: "Could not send estimate.");

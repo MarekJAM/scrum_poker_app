@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../widgets/planning_room/widgets.dart';
 import '../../bloc/rooms/bloc.dart';
 import '../../bloc/planning_room/bloc.dart';
 import '../../data/repositories/repositories.dart';
@@ -91,8 +92,7 @@ class PlanningScreen extends StatelessWidget {
                             child: BlocBuilder<PlanningRoomBloc,
                                 PlanningRoomState>(builder: (_, state) {
                               if (state is PlanningRoomRoomStatusLoaded) {
-                                estimatedTask =
-                                    state.roomStatus.estimateRequest;
+                                estimatedTask = state.roomStatus.taskId;
                                 amAdmin = state.amAdmin;
                               }
                               return amAdmin
@@ -128,14 +128,29 @@ class PlanningScreen extends StatelessWidget {
                       Container(
                         width: double.infinity,
                         child: BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
+                          buildWhen: (_, state) {
+                            return state is PlanningRoomRoomStatusLoaded
+                                ? true
+                                : false;
+                          },
                           builder: (_, state) {
-                            return _buildUserList(context, state, deviceSize);
+                            return _buildUserEstimationCards(
+                                context, state, deviceSize);
                           },
                         ),
                       ),
                     ],
                   ),
-                  _buildBottomCardsBar(context, deviceSize, estimates)
+                  BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
+                    builder: (_, state) {
+                      if (state is PlanningRoomRoomStatusLoaded &&
+                          !state.alreadyEstimated && state.roomStatus.taskId.isNotEmpty) {
+                        return _buildBottomCardsBar(context, deviceSize,
+                            estimates, state.roomStatus.taskId);
+                      }
+                      return Container();
+                    },
+                  ),
                 ],
               ),
             ),
@@ -151,22 +166,24 @@ class PlanningScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildUserList(BuildContext context, state, Size deviceSize) {
+  Widget _buildUserEstimationCards(
+    BuildContext context,
+    state,
+    Size deviceSize,
+  ) {
     if (state is PlanningRoomRoomStatusLoaded) {
-      var users = state.roomStatus.admins + state.roomStatus.users;
       return Wrap(
         alignment: WrapAlignment.start,
         direction: Axis.horizontal,
         children: [
-          for (var user in users)
+          for (var card in state.userEstimationCards)
             Container(
               width: deviceSize.width * 1 / 3,
               child: Card(
                 child: ListTile(
-                  // leading: Icon(Icons.star),
-                  title: Text(user),
-                  trailing: Text('1'),
-                  // trailing: Text("${users[key]}"),
+                  title: Text(card.username),
+                  trailing:
+                      Text(card.estimate == null ? '' : '${card.estimate}'),
                 ),
               ),
             ),
@@ -178,7 +195,11 @@ class PlanningScreen extends StatelessWidget {
   }
 
   Widget _buildBottomCardsBar(
-      BuildContext context, Size deviceSize, List<int> estimates) {
+    BuildContext context,
+    Size deviceSize,
+    List<int> estimates,
+    String estimatedTask,
+  ) {
     return Positioned(
       bottom: 0,
       child: Container(
@@ -193,9 +214,7 @@ class PlanningScreen extends StatelessWidget {
           itemCount: estimates.length,
           itemBuilder: (context, index) => GestureDetector(
             onTap: () {
-              BlocProvider.of<PlanningRoomBloc>(context).add(
-                PlanningRoomSendEstimateE(estimates[index]),
-              );
+              _showConfirmationDialog(context, estimatedTask, estimates[index]);
             },
             child: Card(
               elevation: 5,
@@ -229,53 +248,34 @@ class PlanningScreen extends StatelessWidget {
     final _reqestEstimateKey = GlobalKey<FormState>();
 
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0)), //this right here
-            child: Padding(
-              padding: EdgeInsets.all(8),
-              child: Form(
-                key: _reqestEstimateKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        decoration: InputDecoration(labelText: "Task number"),
-                        controller: _taskController,
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return "Provide task number.";
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    RaisedButton(
-                      color: Theme.of(context).primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text("Send request"),
-                      onPressed: () {
-                        if (_reqestEstimateKey.currentState.validate()) {
-                          BlocProvider.of<PlanningRoomBloc>(context).add(
-                            PlanningRoomSendEstimateRequestE(
-                              _taskController.text,
-                            ),
-                          );
-                          Navigator.of(context).pop();
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return RequestEstimateDialog(
+          reqestEstimateKey: _reqestEstimateKey,
+          taskController: _taskController,
+        );
+      },
+    );
+  }
+
+  void _showConfirmationDialog(
+    BuildContext context,
+    String estimatedTask,
+    int estimate,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return BlocListener<PlanningRoomBloc, PlanningRoomState>(
+          listener: (context, state) {
+            if (state is PlanningRoomRoomStatusLoaded &&
+                state.roomStatus.taskId != estimatedTask) {
+              Navigator.of(context).pop();
+            }
+          },
+          child: ConfirmSendEstimateDialog(estimatedTask, estimate),
+        );
+      },
+    );
   }
 }
