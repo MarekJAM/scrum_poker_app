@@ -57,7 +57,7 @@ class ConfirmSendEstimateDialog extends StatelessWidget {
                   ),
                   child: Text(
                     "Send",
-                    style: TextStyle(color: Theme.of(context).buttonColor),
+                    style: TextStyle(color: Theme.of(context).canvasColor),
                   ),
                   onPressed: () {
                     BlocProvider.of<PlanningRoomBloc>(context).add(

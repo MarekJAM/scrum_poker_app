@@ -45,7 +45,7 @@ class RequestEstimateDialog extends StatelessWidget {
                 ),
                 child: Text(
                   "Send request",
-                  style: TextStyle(color: Theme.of(context).buttonColor),
+                  style: TextStyle(color: Theme.of(context).canvasColor),
                 ),
                 onPressed: () {
                   if (_reqestEstimateKey.currentState.validate()) {

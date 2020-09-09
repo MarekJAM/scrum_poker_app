@@ -51,7 +51,7 @@ class PlanningScreen extends StatelessWidget {
               leading: FlatButton(
                 child: Icon(
                   Icons.arrow_back,
-                  color: Theme.of(context).buttonColor,
+                  color: Theme.of(context).canvasColor,
                 ),
                 onPressed: () {
                   _leaveRoom(context);
@@ -111,7 +111,7 @@ class PlanningScreen extends StatelessWidget {
                                           ),
                                           child: Text(
                                             'Request Estimate',
-                                            style: TextStyle(color: Theme.of(context).buttonColor),
+                                            style: TextStyle(color: Theme.of(context).canvasColor),
                                           ),
                                           onPressed: () {
                                             _showRequestEstimateDialog(context);
