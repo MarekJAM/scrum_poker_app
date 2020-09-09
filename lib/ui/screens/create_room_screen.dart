@@ -20,7 +20,7 @@ class CreateRoomScreen extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               leading: FlatButton(
-                child: Icon(Icons.arrow_back),
+                child: Icon(Icons.arrow_back, color: Theme.of(context).buttonColor,),
                 onPressed: () {
                   Navigator.of(context)
                       .pushReplacementNamed(RoomsScreen.routeName);
@@ -74,7 +74,16 @@ class CreateRoomScreen extends StatelessWidget {
                                       child: CircularProgressIndicator(),
                                     )
                                   : RaisedButton(
-                                      child: Text("Create"),
+                                      child: Text(
+                                        "Create",
+                                        style: TextStyle(
+                                          color: Theme.of(context).buttonColor,
+                                        ),
+                                      ),
+                                      color: Theme.of(context).primaryColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
                                       onPressed: () {
                                         if (_formKey.currentState.validate()) {
                                           BlocProvider.of<RoomConnectionBloc>(

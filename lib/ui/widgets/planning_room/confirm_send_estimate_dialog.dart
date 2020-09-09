@@ -55,7 +55,10 @@ class ConfirmSendEstimateDialog extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Text("Send"),
+                  child: Text(
+                    "Send",
+                    style: TextStyle(color: Theme.of(context).buttonColor),
+                  ),
                   onPressed: () {
                     BlocProvider.of<PlanningRoomBloc>(context).add(
                       PlanningRoomSendEstimateE(

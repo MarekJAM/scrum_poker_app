@@ -43,7 +43,10 @@ class RequestEstimateDialog extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Text("Send request"),
+                child: Text(
+                  "Send request",
+                  style: TextStyle(color: Theme.of(context).buttonColor),
+                ),
                 onPressed: () {
                   if (_reqestEstimateKey.currentState.validate()) {
                     BlocProvider.of<PlanningRoomBloc>(context).add(

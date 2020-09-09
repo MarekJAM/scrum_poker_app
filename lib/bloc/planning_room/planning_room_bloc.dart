@@ -55,6 +55,8 @@ class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
         userEstimationCardsUI
             .add(UserEstimationCard(username: estimator, isAdmin: false));
       });
+
+      //checks if all users who estimated are still in the room, and if not adds them at the end of the list
       event.roomStatus.estimates.forEach((estimate) {
         var index = userEstimationCardsUI
             .indexWhere((card) => card.username == estimate.name);
@@ -63,15 +65,19 @@ class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
             ..isInRoom = true
             ..estimate = estimate.estimate;
         } else {
-          userEstimationCardsUI.add(UserEstimationCard(username: estimate.name, estimate: estimate.estimate));
+          userEstimationCardsUI.add(UserEstimationCard(
+            username: estimate.name,
+            estimate: estimate.estimate,
+          ));
         }
       });
 
       yield PlanningRoomRoomStatusLoaded(
-          roomStatus: event.roomStatus,
-          amAdmin: amAdmin,
-          alreadyEstimated: alreadyEstimated,
-          userEstimationCards: userEstimationCardsUI);
+        roomStatus: event.roomStatus,
+        amAdmin: amAdmin,
+        alreadyEstimated: alreadyEstimated,
+        userEstimationCards: userEstimationCardsUI,
+      );
     } catch (e) {
       print(e);
       yield PlanningRoomError(message: "Could not load room status.");

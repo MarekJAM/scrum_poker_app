@@ -6,6 +6,7 @@ import '../../bloc/planning_room/bloc.dart';
 import '../../data/repositories/repositories.dart';
 import '../../bloc/room_connection/bloc.dart';
 import '../../ui/screens/rooms_screen.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class PlanningScreen extends StatelessWidget {
   static const routeName = '/planning';
@@ -110,6 +111,7 @@ class PlanningScreen extends StatelessWidget {
                                           ),
                                           child: Text(
                                             'Request Estimate',
+                                            style: TextStyle(color: Theme.of(context).buttonColor),
                                           ),
                                           onPressed: () {
                                             _showRequestEstimateDialog(context);
@@ -220,8 +222,9 @@ class PlanningScreen extends StatelessWidget {
               elevation: 5,
               child: Container(
                 child: Center(
-                  child: Text(
+                  child: AutoSizeText(
                     '${estimates[index]}',
+                    minFontSize: 24,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
