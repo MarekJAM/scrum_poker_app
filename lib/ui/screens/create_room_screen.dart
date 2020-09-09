@@ -23,7 +23,7 @@ class CreateRoomScreen extends StatelessWidget {
                 child: Icon(Icons.arrow_back, color: Theme.of(context).canvasColor),
                 onPressed: () {
                   Navigator.of(context)
-                      .pushReplacementNamed(RoomsScreen.routeName);
+                      .pushReplacementNamed(LobbyScreen.routeName);
                 },
               ),
             ),

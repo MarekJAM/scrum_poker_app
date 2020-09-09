@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scrum_poker_app/ui/icons/custom_icons.dart';
 import '../widgets/planning_room/widgets.dart';
-import '../../bloc/rooms/bloc.dart';
+import '../../bloc/lobby/bloc.dart';
 import '../../bloc/planning_room/bloc.dart';
 import '../../data/repositories/repositories.dart';
 import '../../bloc/room_connection/bloc.dart';
-import '../../ui/screens/rooms_screen.dart';
+import 'lobby_screen.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class PlanningScreen extends StatelessWidget {
@@ -47,21 +47,21 @@ class PlanningScreen extends StatelessWidget {
         builder: (context) {
           return MultiBlocListener(
             listeners: [
-              //handles navigating to room list screen
+              //handles navigating to lobby screen
               BlocListener<RoomConnectionBloc, RoomConnectionState>(
                 listener: (context, state) {
                   if (state is RoomConnectionDisconnectedFromRoom) {
                     Navigator.of(context)
-                        .pushReplacementNamed(RoomsScreen.routeName);
+                        .pushReplacementNamed(LobbyScreen.routeName);
                   }
                 },
               ),
               //handles situation when room gets disbanded
-              BlocListener<RoomsBloc, RoomsState>(
+              BlocListener<LobbyBloc, LobbyState>(
                 listener: (context, state) {
-                  if (state is RoomsLoaded) {
+                  if (state is LobbyStatusLoaded) {
                     Navigator.of(context)
-                        .pushReplacementNamed(RoomsScreen.routeName);
+                        .pushReplacementNamed(LobbyScreen.routeName);
                   }
                 },
               ),

@@ -12,8 +12,8 @@ class WebSocketRepository {
   dynamic parseMessage(dynamic message) {
     final decodedMessage = json.decode(message);
     dynamic obj;
-    if (decodedMessage.containsKey("rooms")) {
-      obj = Rooms.fromJson(decodedMessage);
+    if (decodedMessage.containsKey("lobby_status")) {
+      obj = LobbyStatus.fromJson(decodedMessage);
     } else if (decodedMessage.containsKey("room_status")) {
       obj = RoomStatus.fromJson(decodedMessage);
     } 

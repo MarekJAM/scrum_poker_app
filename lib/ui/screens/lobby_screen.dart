@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scrum_poker_app/data/repositories/rooms_repository.dart';
-import '../../bloc/rooms/bloc.dart';
-import '../../ui/widgets/app_drawer.dart';
+import '../../bloc/lobby/bloc.dart';
+import '../widgets/app_drawer.dart';
 import '../../bloc/room_connection/bloc.dart';
 import 'screens.dart';
 
-class RoomsScreen extends StatelessWidget {
+class LobbyScreen extends StatelessWidget {
   static const routeName = '/rooms';
   static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => RoomsScreen());
+    return MaterialPageRoute<void>(builder: (_) => LobbyScreen());
   }
 
   @override
@@ -20,7 +20,7 @@ class RoomsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Rooms'),
+        title: Text('Lobby'),
       ),
       drawer: AppDrawer(),
       body: BlocProvider(
@@ -46,19 +46,19 @@ class RoomsScreen extends StatelessWidget {
                             .pushReplacementNamed(PlanningScreen.routeName, arguments: state.roomName);
                       }
                     },
-                    child: BlocBuilder<RoomsBloc, RoomsState>(
+                    child: BlocBuilder<LobbyBloc, LobbyState>(
                       buildWhen: (_, state) {
-                        if (state is RoomsLoaded ||
-                            state is RoomsLoading ||
-                            state is RoomsLoadingError) {
+                        if (state is LobbyStatusLoaded ||
+                            state is LobbyLoading ||
+                            state is LobbyLoadingError) {
                           return true;
                         } else {
                           return false;
                         }
                       },
                       builder: (_, state) {
-                        if (state is RoomsLoaded) {
-                          rooms = state.rooms.roomList;
+                        if (state is LobbyStatusLoaded) {
+                          rooms = state.lobbyStatus.rooms;
                           return rooms.length > 0
                               ? ListView.builder(
                                   itemCount: rooms.length,
@@ -82,11 +82,11 @@ class RoomsScreen extends StatelessWidget {
                                     textAlign: TextAlign.center,
                                   ),
                                 );
-                        } else if (state is RoomsLoading) {
+                        } else if (state is LobbyLoading) {
                           return Center(
                             child: CircularProgressIndicator(),
                           );
-                        } else if (state is RoomsLoadingError) {
+                        } else if (state is LobbyLoadingError) {
                           return Center(
                             child: Text(state.message),
                           );

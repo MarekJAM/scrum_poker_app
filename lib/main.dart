@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import './bloc/planning_room/planning_room_bloc.dart';
-import './bloc/rooms/bloc.dart';
+import './bloc/lobby/bloc.dart';
 import './bloc/websocket/bloc.dart';
 import './bloc/login/bloc.dart';
 import './bloc/websocket/websocket_bloc.dart';
@@ -26,7 +26,7 @@ void main() {
       WebSocketBloc(channel: channel, webSocketRepository: webSocketRepository);
   // ignore: close_sinks
   final roomsBloc =
-      RoomsBloc(webSocketBloc: webSocketBloc, roomsRepository: roomsRepository);
+      LobbyBloc(webSocketBloc: webSocketBloc, roomsRepository: roomsRepository);
   // ignore: close_sinks
   final loginBloc = LoginBloc(webSocketBloc: webSocketBloc);
   // ignore: close_sinks
@@ -55,7 +55,7 @@ class App extends StatelessWidget {
       : super(key: key);
 
   final WebSocketBloc webSocketBloc;
-  final RoomsBloc roomsBloc;
+  final LobbyBloc roomsBloc;
   final LoginBloc loginBloc;
   final RoomsRepository roomsRepository;
   final PlanningRoomBloc planningRoomBloc;
@@ -76,7 +76,7 @@ class App extends StatelessWidget {
             BlocProvider<LoginBloc>(
               create: (context) => LoginBloc(webSocketBloc: webSocketBloc),
             ),
-            BlocProvider<RoomsBloc>(
+            BlocProvider<LobbyBloc>(
               create: (context) => roomsBloc,
             ),
             BlocProvider<PlanningRoomBloc>(
@@ -115,7 +115,7 @@ class _AppViewState extends State<AppView> {
             listener: (context, state) {
               if (state is LoginConnectedToServer) {
                 _navigator.pushAndRemoveUntil<void>(
-                  RoomsScreen.route(),
+                  LobbyScreen.route(),
                   (route) => false,
                 );
               } else if (state is LoginDisconnectedFromServer) {
@@ -130,7 +130,7 @@ class _AppViewState extends State<AppView> {
         },
         routes: {
           LoginScreen.routeName: (ctx) => LoginScreen(),
-          RoomsScreen.routeName: (ctx) => RoomsScreen(),
+          LobbyScreen.routeName: (ctx) => LobbyScreen(),
           PlanningScreen.routeName: (ctx) => PlanningScreen(),
           CreateRoomScreen.routeName: (ctx) => CreateRoomScreen(),
         },
