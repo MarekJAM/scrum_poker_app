@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scrum_poker_app/ui/icons/custom_icons.dart';
 import '../widgets/planning_room/widgets.dart';
 import '../../bloc/rooms/bloc.dart';
 import '../../bloc/planning_room/bloc.dart';
@@ -37,8 +38,6 @@ class PlanningScreen extends StatelessWidget {
       40,
       50
     ];
-    var estimatedTask = "";
-    var amAdmin = false;
 
     return BlocProvider(
       create: (BuildContext context) => RoomConnectionBloc(
@@ -46,113 +45,55 @@ class PlanningScreen extends StatelessWidget {
       ),
       child: Builder(
         builder: (context) {
-          return Scaffold(
-            appBar: AppBar(
-              leading: FlatButton(
-                child: Icon(
-                  Icons.arrow_back,
-                  color: Theme.of(context).canvasColor,
-                ),
-                onPressed: () {
-                  _leaveRoom(context);
+          return MultiBlocListener(
+            listeners: [
+              //handles navigating to room list screen
+              BlocListener<RoomConnectionBloc, RoomConnectionState>(
+                listener: (context, state) {
+                  if (state is RoomConnectionDisconnectedFromRoom) {
+                    Navigator.of(context)
+                        .pushReplacementNamed(RoomsScreen.routeName);
+                  }
                 },
               ),
-              title: Text(roomName),
-            ),
-            body: MultiBlocListener(
-              listeners: [
-                //handles navigating to room list screen
-                BlocListener<RoomConnectionBloc, RoomConnectionState>(
-                  listener: (context, state) {
-                    if (state is RoomConnectionDisconnectedFromRoom) {
-                      Navigator.of(context)
-                          .pushReplacementNamed(RoomsScreen.routeName);
-                    }
+              //handles situation when room gets disbanded
+              BlocListener<RoomsBloc, RoomsState>(
+                listener: (context, state) {
+                  if (state is RoomsLoaded) {
+                    Navigator.of(context)
+                        .pushReplacementNamed(RoomsScreen.routeName);
+                  }
+                },
+              ),
+            ],
+            child: Scaffold(
+              appBar: AppBar(
+                leading: FlatButton(
+                  child: Icon(
+                    Icons.arrow_back,
+                    color: Theme.of(context).canvasColor,
+                  ),
+                  onPressed: () {
+                    _leaveRoom(context);
                   },
                 ),
-                //handles situation when room gets disbanded
-                BlocListener<RoomsBloc, RoomsState>(
-                  listener: (context, state) {
-                    if (state is RoomsLoaded) {
-                      Navigator.of(context)
-                          .pushReplacementNamed(RoomsScreen.routeName);
-                    }
-                  },
-                ),
-              ],
-              child: Stack(
+                actions: [
+                  _buildAdminAppBarAction(context),
+                ],
+                title: Text(roomName),
+              ),
+              body: Stack(
                 children: [
                   Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Container(
-                          child: Center(
-                            child: BlocBuilder<PlanningRoomBloc,
-                                PlanningRoomState>(builder: (_, state) {
-                              if (state is PlanningRoomRoomStatusLoaded) {
-                                estimatedTask = state.roomStatus.taskId;
-                                amAdmin = state.amAdmin;
-                              }
-                              return amAdmin
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        _buildTaskEstimateText(
-                                            context, estimatedTask),
-                                        RaisedButton(
-                                          color: Theme.of(context).primaryColor,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Text(
-                                            'Request Estimate',
-                                            style: TextStyle(color: Theme.of(context).canvasColor),
-                                          ),
-                                          onPressed: () {
-                                            _showRequestEstimateDialog(context);
-                                          },
-                                        )
-                                      ],
-                                    )
-                                  : _buildTaskEstimateText(
-                                      context, estimatedTask);
-                            }),
-                          ),
-                          height: deviceSize.height * 0.1,
-                        ),
-                      ),
+                      _buildTaskInfoBar(context, deviceSize),
                       Divider(),
-                      Container(
-                        width: double.infinity,
-                        child: BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
-                          buildWhen: (_, state) {
-                            return state is PlanningRoomRoomStatusLoaded
-                                ? true
-                                : false;
-                          },
-                          builder: (_, state) {
-                            return _buildUserEstimationCards(
-                                context, state, deviceSize);
-                          },
-                        ),
-                      ),
+                      _buildUserEstimationCards(context, deviceSize),
                     ],
                   ),
-                  BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
-                    builder: (_, state) {
-                      if (state is PlanningRoomRoomStatusLoaded &&
-                          !state.alreadyEstimated && state.roomStatus.taskId.isNotEmpty) {
-                        return _buildBottomCardsBar(context, deviceSize,
-                            estimates, state.roomStatus.taskId);
-                      }
-                      return Container();
-                    },
-                  ),
+                  _buildBottomCardsBar(context, deviceSize, estimates)
                 ],
               ),
             ),
@@ -168,81 +109,135 @@ class PlanningScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildUserEstimationCards(
-    BuildContext context,
-    state,
-    Size deviceSize,
-  ) {
-    if (state is PlanningRoomRoomStatusLoaded) {
-      return Wrap(
-        alignment: WrapAlignment.start,
-        direction: Axis.horizontal,
-        children: [
-          for (var card in state.userEstimationCards)
-            Container(
-              width: deviceSize.width * 1 / 3,
-              child: Card(
-                child: ListTile(
-                  title: Text(card.username),
-                  trailing:
-                      Text(card.estimate == null ? '' : '${card.estimate}'),
-                ),
-              ),
+  Widget _buildAdminAppBarAction(BuildContext context) {
+    return BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
+      buildWhen: (_, state) {
+        return state is PlanningRoomRoomStatusLoaded ? true : false;
+      },
+      builder: (context, state) {
+        if (state is PlanningRoomRoomStatusLoaded && state.amAdmin) {
+          return FlatButton(
+            child: Icon(
+              CustomIcons.estimate_request,
+              color: Theme.of(context).canvasColor,
             ),
-        ],
-      );
-    } else {
-      return Container();
-    }
+            onPressed: () {
+              _showRequestEstimateDialog(context);
+            },
+          );
+        }
+        return Container();
+      },
+    );
+  }
+
+  Widget _buildUserEstimationCards(BuildContext context, Size deviceSize) {
+    return Container(
+      width: double.infinity,
+      child: BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
+        buildWhen: (_, state) {
+          return state is PlanningRoomRoomStatusLoaded ? true : false;
+        },
+        builder: (_, state) {
+          if (state is PlanningRoomRoomStatusLoaded) {
+            return Wrap(
+              alignment: WrapAlignment.start,
+              direction: Axis.horizontal,
+              children: [
+                for (var card in state.userEstimationCards)
+                  Container(
+                    width: deviceSize.width * 1 / 3,
+                    child: Card(
+                      child: ListTile(
+                        title: Text(card.username),
+                        trailing: Text(
+                            card.estimate == null ? '' : '${card.estimate}'),
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          }
+          return Container();
+        },
+      ),
+    );
   }
 
   Widget _buildBottomCardsBar(
     BuildContext context,
     Size deviceSize,
     List<int> estimates,
-    String estimatedTask,
   ) {
-    return Positioned(
-      bottom: 0,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-        ),
-        padding: EdgeInsets.all(3),
-        height: deviceSize.height * 0.12,
-        width: deviceSize.width,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: estimates.length,
-          itemBuilder: (context, index) => GestureDetector(
-            onTap: () {
-              _showConfirmationDialog(context, estimatedTask, estimates[index]);
-            },
-            child: Card(
-              elevation: 5,
-              child: Container(
-                child: Center(
-                  child: AutoSizeText(
-                    '${estimates[index]}',
-                    minFontSize: 24,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
+    return BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
+      builder: (_, state) {
+        if (state is PlanningRoomRoomStatusLoaded &&
+            !state.alreadyEstimated &&
+            state.roomStatus.taskId.isNotEmpty) {
+          return Positioned(
+            bottom: 0,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+              ),
+              padding: EdgeInsets.all(3),
+              height: deviceSize.height * 0.12,
+              width: deviceSize.width,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: estimates.length,
+                itemBuilder: (context, index) => GestureDetector(
+                  onTap: () {
+                    _showConfirmationDialog(
+                        context, state.roomStatus.taskId, estimates[index]);
+                  },
+                  child: Card(
+                    elevation: 5,
+                    child: Container(
+                      child: Center(
+                        child: AutoSizeText(
+                          '${estimates[index]}',
+                          minFontSize: 24,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      width: deviceSize.width * 0.12,
                     ),
                   ),
                 ),
-                width: deviceSize.width * 0.12,
               ),
             ),
-          ),
-        ),
-      ),
+          );
+        }
+        return Container();
+      },
     );
   }
 
-  Widget _buildTaskEstimateText(BuildContext context, String taskNumber) {
-    return Text(
-      'Task: $taskNumber',
-      style: TextStyle(fontSize: 20),
+  Widget _buildTaskInfoBar(BuildContext context, Size deviceSize) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: Container(
+        child: Center(
+          child: BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
+            buildWhen: (_, state) {
+              return state is PlanningRoomRoomStatusLoaded ? true : false;
+            },
+            builder: (_, state) {
+              if (state is PlanningRoomRoomStatusLoaded) {
+                return Text(
+                  'Task: ${state.roomStatus.taskId}',
+                  style: TextStyle(fontSize: 20),
+                );
+              }
+              return Container();
+            },
+          ),
+        ),
+        height: deviceSize.height * 0.1,
+      ),
     );
   }
 
