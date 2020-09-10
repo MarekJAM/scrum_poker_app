@@ -168,7 +168,11 @@ class PlanningScreen extends StatelessWidget {
                     width: deviceSize.width * 1 / 3,
                     child: Card(
                       child: ListTile(
-                        title: Text(card.username),
+                        title: Text(
+                          card.username,
+                          maxLines: 1,
+                          overflow: TextOverflow.clip,
+                        ),
                         trailing: Text(
                             card.estimate == null ? '' : '${card.estimate}'),
                       ),
@@ -246,9 +250,13 @@ class PlanningScreen extends StatelessWidget {
             },
             builder: (_, state) {
               if (state is PlanningRoomRoomStatusLoaded) {
-                return Text(
-                  'Task: ${state.roomStatus.taskId}',
-                  style: TextStyle(fontSize: 20),
+                return SingleChildScrollView(
+                  child: Text(
+                    state.roomStatus.taskId.isNotEmpty
+                        ? '${state.roomStatus.taskId}'
+                        : "No estimation in progress.",
+                    style: TextStyle(fontSize: 20),
+                  ),
                 );
               }
               return Container();

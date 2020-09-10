@@ -41,6 +41,8 @@ class CreateRoomScreen extends StatelessWidget {
                         validator: (value) {
                           if (value.isEmpty) {
                             return "Provide room name.";
+                          } else if (value.trim().length > 20) {
+                            return "Name too long - max. 20 characters.";
                           }
                           return null;
                         },
@@ -54,7 +56,7 @@ class CreateRoomScreen extends StatelessWidget {
                           if (state is RoomConnectionConnectedToRoom) {
                             Navigator.of(context).pushReplacementNamed(
                               PlanningScreen.routeName,
-                              arguments: _roomController.text,
+                              arguments: _roomController.text.trim(),
                             );
                           }
                         },
@@ -90,7 +92,7 @@ class CreateRoomScreen extends StatelessWidget {
                                                   context)
                                               .add(
                                             RoomConnectionCreateRoomE(
-                                              _roomController.text,
+                                              _roomController.text.trim(),
                                             ),
                                           );
                                         }

@@ -33,6 +33,8 @@ class RequestEstimateDialog extends StatelessWidget {
                   validator: (value) {
                     if (value.isEmpty) {
                       return "Provide task id.";
+                    } else if (value.trim().length > 20) {
+                      return "Text too long - max. 20 characters.";
                     }
                     return null;
                   },
@@ -51,7 +53,7 @@ class RequestEstimateDialog extends StatelessWidget {
                   if (_reqestEstimateKey.currentState.validate()) {
                     BlocProvider.of<PlanningRoomBloc>(context).add(
                       PlanningRoomSendEstimateRequestE(
-                        _taskController.text,
+                        _taskController.text.trim(),
                       ),
                     );
                     Navigator.of(context).pop();
