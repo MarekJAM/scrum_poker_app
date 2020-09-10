@@ -18,14 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _serverController = TextEditingController(
     text: "192.168.0.14:8080",
   );
-  TextEditingController _userController = TextEditingController(
-    text: "Marek",
-  );
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  TextEditingController _userController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +76,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }
                               },
                               builder: (_, state) {
+                                if (state is LoginDisconnectedFromServer) {
+                                  _userController.text = state.username;
+                                  _serverController.text = state.serverAddress;
+                                }
                                 return Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [

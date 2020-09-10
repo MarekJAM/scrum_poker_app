@@ -44,7 +44,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   // temporary solution, normally some kind of autologin attempt should be here
   Stream<LoginState> _mapAppStartedToState() async* {
     try {
-      yield LoginDisconnectedFromServer(message: "App started");
+      var username = await SecureStorage().readUsername();
+      var serverAddress = await SecureStorage().readServerAddress();
+      yield LoginDisconnectedFromServer(message: "App started", username: username, serverAddress: serverAddress);
     } catch (e) {
       print(e);
       yield LoginConnectionError(message: "Connection error occured.");
@@ -91,7 +93,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   Stream<LoginState> _mapLoginDisconnectedFromServerToState() async* {
     try {
-      yield LoginDisconnectedFromServer(message: "Disconnected from server");
+      var username = await SecureStorage().readUsername();
+      var serverAddress = await SecureStorage().readServerAddress();
+      yield LoginDisconnectedFromServer(message: "Disconnected from server.", username: username, serverAddress: serverAddress);
     } catch (e) {
       print(e);
     }
