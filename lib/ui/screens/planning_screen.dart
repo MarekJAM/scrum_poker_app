@@ -168,10 +168,11 @@ class PlanningScreen extends StatelessWidget {
                     width: deviceSize.width * 1 / 3,
                     child: Card(
                       color: card.isInRoom ? null : Colors.grey[200],
-                      shape: card.isAdmin ? RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        side: BorderSide(color: Colors.yellow, width: 2)
-                      ) : null,
+                      shape: card.isAdmin
+                          ? RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              side: BorderSide(color: Colors.yellow, width: 2))
+                          : null,
                       child: ListTile(
                         title: Text(
                           card.username,
@@ -201,7 +202,7 @@ class PlanningScreen extends StatelessWidget {
       builder: (_, state) {
         if (state is PlanningRoomRoomStatusLoaded &&
             !state.alreadyEstimated &&
-            state.roomStatus.taskId.isNotEmpty) {
+            state.estimatedTaskInfo.taskId.isNotEmpty) {
           return Positioned(
             bottom: 0,
             child: Container(
@@ -216,8 +217,8 @@ class PlanningScreen extends StatelessWidget {
                 itemCount: estimates.length,
                 itemBuilder: (context, index) => GestureDetector(
                   onTap: () {
-                    _showConfirmationDialog(
-                        context, state.roomStatus.taskId, estimates[index]);
+                    _showConfirmationDialog(context,
+                        state.estimatedTaskInfo.taskId, estimates[index]);
                   },
                   child: Card(
                     elevation: 5,
@@ -256,11 +257,22 @@ class PlanningScreen extends StatelessWidget {
             builder: (_, state) {
               if (state is PlanningRoomRoomStatusLoaded) {
                 return SingleChildScrollView(
-                  child: Text(
-                    state.roomStatus.taskId.isNotEmpty
-                        ? '${state.roomStatus.taskId}'
-                        : "No estimation in progress.",
-                    style: TextStyle(fontSize: 20),
+                  child: Column(
+                    children: [
+                      Text(
+                        state.estimatedTaskInfo.taskId.isNotEmpty
+                            ? '${state.estimatedTaskInfo.taskId}'
+                            : "No estimation in progress.",
+                        style: TextStyle(fontSize: 20),
+                        textAlign: TextAlign.center,
+                      ),
+                      Padding(padding: EdgeInsets.only(top: 2)),
+                      state.estimatedTaskInfo.median != null
+                          ? Text(
+                              "Median: ${state.estimatedTaskInfo.median}, Average: ${state.estimatedTaskInfo.average}",
+                            )
+                          : Container(),
+                    ],
                   ),
                 );
               }
@@ -299,7 +311,7 @@ class PlanningScreen extends StatelessWidget {
         return BlocListener<PlanningRoomBloc, PlanningRoomState>(
           listener: (context, state) {
             if (state is PlanningRoomRoomStatusLoaded &&
-                state.roomStatus.taskId != estimatedTask) {
+                state.estimatedTaskInfo.taskId != estimatedTask) {
               Navigator.of(context).pop();
             }
           },

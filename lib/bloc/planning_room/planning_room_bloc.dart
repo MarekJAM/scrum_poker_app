@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stats/stats.dart';
 import '../../data/models/models.dart';
 import '../../utils/secure_storage.dart';
 import '../websocket/bloc.dart';
@@ -46,18 +47,20 @@ class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
           null);
 
       List<UserEstimationCard> userEstimationCardsUI = [];
+      List<int> estimates = [];
 
       event.roomStatus.admins.forEach((admin) {
-        userEstimationCardsUI
-            .add(UserEstimationCard(username: admin, isAdmin: true, isInRoom: true));
+        userEstimationCardsUI.add(
+            UserEstimationCard(username: admin, isAdmin: true, isInRoom: true));
       });
       event.roomStatus.estimators.forEach((estimator) {
-        userEstimationCardsUI
-            .add(UserEstimationCard(username: estimator, isAdmin: false, isInRoom: true));
+        userEstimationCardsUI.add(UserEstimationCard(
+            username: estimator, isAdmin: false, isInRoom: true));
       });
 
       //checks if all users who estimated are still in the room, and if not adds them at the end of the list
       event.roomStatus.estimates.forEach((estimate) {
+        estimates.add(estimate.estimate);
         var index = userEstimationCardsUI
             .indexWhere((card) => card.username == estimate.name);
         if (index >= 0) {
@@ -72,8 +75,20 @@ class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
         }
       });
 
+      if (estimates.isNotEmpty) {
+        estimates.sort();
+      }
+      
+      final estimatedTaskInfo = estimates.isEmpty
+          ? EstimatedTaskInfo(taskId: event.roomStatus.taskId)
+          : EstimatedTaskInfo(
+              taskId: event.roomStatus.taskId,
+              average: Stats.fromData(estimates).withPrecision(2).average,
+              median: Stats.fromData(estimates).withPrecision(1).median.ceil(),
+            );
+
       yield PlanningRoomRoomStatusLoaded(
-        roomStatus: event.roomStatus,
+        estimatedTaskInfo: estimatedTaskInfo,
         amAdmin: amAdmin,
         alreadyEstimated: alreadyEstimated,
         userEstimationCards: userEstimationCardsUI,

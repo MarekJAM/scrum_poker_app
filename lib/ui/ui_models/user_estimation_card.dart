@@ -6,5 +6,5 @@ class UserEstimationCard {
   bool isInRoom;
   int estimate;
 
-  UserEstimationCard({@required this.username, this.isAdmin = false, this.isInRoom = false, this.estimate});
+  UserEstimationCard({@required this.username, this.estimate, this.isAdmin = false, this.isInRoom = false});
 }

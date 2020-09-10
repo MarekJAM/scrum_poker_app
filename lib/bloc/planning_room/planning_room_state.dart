@@ -1,8 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:scrum_poker_app/data/models/models.dart';
-import 'package:scrum_poker_app/ui/ui_models/user_estimation_card.dart';
-import '../../data/models/room_status.dart';
+import '../../ui/ui_models/ui_models.dart';
 
 abstract class PlanningRoomState extends Equatable {
   const PlanningRoomState();
@@ -22,15 +20,15 @@ class PlanningRoomRoomStatusLoading extends PlanningRoomState {
 }
 
 class PlanningRoomRoomStatusLoaded extends PlanningRoomState {
-  final RoomStatus roomStatus;
+  final EstimatedTaskInfo estimatedTaskInfo;
   final bool amAdmin;
   final bool alreadyEstimated;
   final List<UserEstimationCard> userEstimationCards;
 
-  const PlanningRoomRoomStatusLoaded({@required this.roomStatus, @required this.amAdmin, @required this.alreadyEstimated, @required this.userEstimationCards}) : assert(roomStatus != null), assert(amAdmin != null), assert(alreadyEstimated != null);
+  const PlanningRoomRoomStatusLoaded({@required this.estimatedTaskInfo, @required this.amAdmin, @required this.alreadyEstimated, @required this.userEstimationCards}) : assert(estimatedTaskInfo != null), assert(amAdmin != null), assert(alreadyEstimated != null);
 
   @override
-  String toString() => 'PlanningRoomRoomStatusLoaded $roomStatus';
+  String toString() => 'PlanningRoomRoomStatusLoaded $estimatedTaskInfo';
 }
 
 class PlanningRoomError extends PlanningRoomState {
