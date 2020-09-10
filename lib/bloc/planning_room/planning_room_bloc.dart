@@ -49,11 +49,11 @@ class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
 
       event.roomStatus.admins.forEach((admin) {
         userEstimationCardsUI
-            .add(UserEstimationCard(username: admin, isAdmin: true));
+            .add(UserEstimationCard(username: admin, isAdmin: true, isInRoom: true));
       });
       event.roomStatus.estimators.forEach((estimator) {
         userEstimationCardsUI
-            .add(UserEstimationCard(username: estimator, isAdmin: false));
+            .add(UserEstimationCard(username: estimator, isAdmin: false, isInRoom: true));
       });
 
       //checks if all users who estimated are still in the room, and if not adds them at the end of the list

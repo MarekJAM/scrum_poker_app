@@ -167,6 +167,11 @@ class PlanningScreen extends StatelessWidget {
                   Container(
                     width: deviceSize.width * 1 / 3,
                     child: Card(
+                      color: card.isInRoom ? null : Colors.grey[200],
+                      shape: card.isAdmin ? RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        side: BorderSide(color: Colors.yellow, width: 2)
+                      ) : null,
                       child: ListTile(
                         title: Text(
                           card.username,
