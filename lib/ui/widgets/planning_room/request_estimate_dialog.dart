@@ -28,11 +28,11 @@ class RequestEstimateDialog extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child: TextFormField(
-                  decoration: InputDecoration(labelText: "Task number"),
+                  decoration: InputDecoration(labelText: "Task id"),
                   controller: _taskController,
                   validator: (value) {
                     if (value.isEmpty) {
-                      return "Provide task number.";
+                      return "Provide task id.";
                     }
                     return null;
                   },
@@ -44,7 +44,7 @@ class RequestEstimateDialog extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
-                  "Send request",
+                  "Start estimation",
                   style: TextStyle(color: Theme.of(context).canvasColor),
                 ),
                 onPressed: () {

@@ -56,7 +56,7 @@ class ConfirmSendEstimateDialog extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    "Send",
+                    "Yes",
                     style: TextStyle(color: Theme.of(context).canvasColor),
                   ),
                   onPressed: () {
@@ -73,7 +73,7 @@ class ConfirmSendEstimateDialog extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Text("Cancel"),
+                  child: Text("No"),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
