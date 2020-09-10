@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scrum_poker_app/ui/icons/custom_icons.dart';
+import 'package:scrum_poker_app/ui/widgets/common/common_widgets.dart';
 import '../widgets/planning_room/widgets.dart';
 import '../../bloc/lobby/bloc.dart';
 import '../../bloc/planning_room/bloc.dart';
@@ -45,56 +46,74 @@ class PlanningScreen extends StatelessWidget {
       ),
       child: Builder(
         builder: (context) {
-          return MultiBlocListener(
-            listeners: [
-              //handles navigating to lobby screen
-              BlocListener<RoomConnectionBloc, RoomConnectionState>(
-                listener: (context, state) {
-                  if (state is RoomConnectionDisconnectedFromRoom) {
-                    Navigator.of(context)
-                        .pushReplacementNamed(LobbyScreen.routeName);
-                  }
+          return Scaffold(
+            appBar: AppBar(
+              leading: FlatButton(
+                child: Icon(
+                  Icons.arrow_back,
+                  color: Theme.of(context).canvasColor,
+                ),
+                onPressed: () {
+                  _leaveRoom(context);
                 },
               ),
-              //handles situation when room gets disbanded
-              BlocListener<LobbyBloc, LobbyState>(
-                listener: (context, state) {
-                  if (state is LobbyStatusLoaded) {
-                    Navigator.of(context)
-                        .pushReplacementNamed(LobbyScreen.routeName);
-                  }
-                },
-              ),
-            ],
-            child: Scaffold(
-              appBar: AppBar(
-                leading: FlatButton(
-                  child: Icon(
-                    Icons.arrow_back,
-                    color: Theme.of(context).canvasColor,
-                  ),
-                  onPressed: () {
-                    _leaveRoom(context);
+              actions: [
+                _buildAdminAppBarAction(context),
+              ],
+              title: Text(roomName),
+            ),
+            body: MultiBlocListener(
+              listeners: [
+                //handles navigating to lobby screen
+                BlocListener<RoomConnectionBloc, RoomConnectionState>(
+                  listener: (context, state) {
+                    if (state is RoomConnectionDisconnectedFromRoom) {
+                      Navigator.of(context)
+                          .pushReplacementNamed(LobbyScreen.routeName);
+                    } else if (state
+                        is RoomConnectionDisconnectingFromRoomError) {
+                      CommonWidgets.displaySnackBar(
+                        context: context,
+                        message: "Failed to disconnect from room.",
+                        color: Theme.of(context).errorColor,
+                      );
+                    }
                   },
                 ),
-                actions: [
-                  _buildAdminAppBarAction(context),
-                ],
-                title: Text(roomName),
-              ),
-              body: Stack(
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      _buildTaskInfoBar(context, deviceSize),
-                      Divider(),
-                      _buildUserEstimationCards(context, deviceSize),
-                    ],
-                  ),
-                  _buildBottomCardsBar(context, deviceSize, estimates)
-                ],
+                //handles situation when room gets disbanded
+                BlocListener<LobbyBloc, LobbyState>(
+                  listener: (context, state) {
+                    if (state is LobbyStatusLoaded) {
+                      Navigator.of(context)
+                          .pushReplacementNamed(LobbyScreen.routeName);
+                    }
+                  },
+                ),
+              ],
+              child: BlocListener<PlanningRoomBloc, PlanningRoomState>(
+                listener: (context, state) {
+                  if (state is PlanningRoomError) {
+                    CommonWidgets.displaySnackBar(
+                      context: context,
+                      message: state.message,
+                      color: Theme.of(context).errorColor,
+                    );
+                  }
+                },
+                child: Stack(
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        _buildTaskInfoBar(context, deviceSize),
+                        Divider(),
+                        _buildUserEstimationCards(context, deviceSize),
+                      ],
+                    ),
+                    _buildBottomCardsBar(context, deviceSize, estimates)
+                  ],
+                ),
               ),
             ),
           );

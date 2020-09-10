@@ -17,29 +17,6 @@ class LobbyStatusLoadedE extends LobbyEvent {
   String toString() => 'LobbyStatusLoadedE $lobbyStatus';
 }
 
-class LobbyCreateRoomE extends LobbyEvent {
-  final String roomName;
-
-  LobbyCreateRoomE(this.roomName);
-
-  @override
-  String toString() => 'LobbyCreateRoomE';
-}
-
-class LobbyConnectToRoomE extends LobbyEvent {
-  final String roomName;
-
-  LobbyConnectToRoomE(this.roomName);
-
-  @override
-  String toString() => 'LobbyConnectToRoomE';
-}
-
-class LobbyDisconnectFromRoomE extends LobbyEvent {
-  @override
-  String toString() => 'LobbyDisconnectFromRoomE';
-}
-
 class LobbyErrorReceivedE extends LobbyEvent {
   final String message;
 

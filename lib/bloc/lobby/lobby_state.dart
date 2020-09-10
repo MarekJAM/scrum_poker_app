@@ -36,31 +36,3 @@ class LobbyLoadingError extends LobbyState {
   @override
   String toString() => 'LobbyLoadingError $message';
 }
-
-class LobbyConnectingToRoom extends LobbyState {
-  @override
-  String toString() => 'LobbyConnectingToRoom';
-}
-
-class LobbyConnectedToRoom extends LobbyState {
-  final String roomName;
-
-  const LobbyConnectedToRoom({@required this.roomName}) : assert(roomName != null);
-
-  @override
-  String toString() => 'LobbyConnectedToRoom $roomName';
-}
-
-class LobbyConnectionWithRoomError extends LobbyState {
-  final String message;
-
-  const LobbyConnectionWithRoomError({@required this.message}) : assert(message != null);
-
-  @override
-  String toString() => 'LobbyConnectionWithRoomError $message';
-}
-
-class LobbyDisconnectedFromRoom extends LobbyState {
-  @override
-  String toString() => 'LobbyDisconnectedFromRoom';
-}

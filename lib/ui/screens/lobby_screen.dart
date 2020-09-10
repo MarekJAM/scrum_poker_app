@@ -5,6 +5,7 @@ import '../../bloc/lobby/bloc.dart';
 import '../widgets/app_drawer.dart';
 import '../../bloc/room_connection/bloc.dart';
 import 'screens.dart';
+import '../../ui/widgets/common/widgets.dart';
 
 class LobbyScreen extends StatelessWidget {
   static const routeName = '/rooms';
@@ -33,17 +34,17 @@ class LobbyScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: BlocListener<RoomConnectionBloc, RoomConnectionState>(
-                    listener: (ctx, state) {
+                    listener: (context, state) {
                       if (state is RoomConnectionError) {
-                        Scaffold.of(ctx).showSnackBar(
-                          SnackBar(
-                            backgroundColor: Theme.of(ctx).errorColor,
-                            content: Text(state.message),
-                          ),
+                        CommonWidgets.displaySnackBar(
+                          context: context,
+                          message: state.message,
+                          color: Theme.of(context).errorColor,
                         );
                       } else if (state is RoomConnectionConnectedToRoom) {
-                        Navigator.of(context)
-                            .pushReplacementNamed(PlanningScreen.routeName, arguments: state.roomName);
+                        Navigator.of(context).pushReplacementNamed(
+                            PlanningScreen.routeName,
+                            arguments: state.roomName);
                       }
                     },
                     child: BlocBuilder<LobbyBloc, LobbyState>(
@@ -56,8 +57,16 @@ class LobbyScreen extends StatelessWidget {
                           return false;
                         }
                       },
-                      builder: (_, state) {
+                      builder: (context, state) {
                         if (state is LobbyStatusLoaded) {
+                          if (state.lobbyStatus.leftRoomReason.isNotEmpty) {
+                            CommonWidgets.displaySnackBar(
+                              context: context,
+                              message: "Disconnected from room.\n Reason: ${state.lobbyStatus.leftRoomReason}",
+                              color: Colors.orange[400],
+                              textColor: Colors.black
+                            );
+                          }
                           rooms = state.lobbyStatus.rooms;
                           return rooms.length > 0
                               ? ListView.builder(
@@ -70,7 +79,8 @@ class LobbyScreen extends StatelessWidget {
                                                 context)
                                             .add(
                                           RoomConnectionConnectToRoomE(
-                                              rooms[i]),
+                                            rooms[i],
+                                          ),
                                         );
                                       },
                                     ),
@@ -114,4 +124,5 @@ class LobbyScreen extends StatelessWidget {
       ),
     );
   }
+
 }

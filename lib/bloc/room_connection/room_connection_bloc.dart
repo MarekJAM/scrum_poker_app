@@ -5,16 +5,18 @@ import '../../data/repositories/repositories.dart';
 import '../../data/repositories/rooms_repository.dart';
 import 'bloc.dart';
 
-class RoomConnectionBloc extends Bloc<RoomConnectionEvent, RoomConnectionState> {
-
+class RoomConnectionBloc
+    extends Bloc<RoomConnectionEvent, RoomConnectionState> {
   final RoomsRepository _roomsRepository;
 
-  RoomConnectionBloc({@required RoomsRepository roomsRepository}) : assert(roomsRepository != null),
+  RoomConnectionBloc({@required RoomsRepository roomsRepository})
+      : assert(roomsRepository != null),
         _roomsRepository = roomsRepository,
         super(RoomConnectionInitial());
 
   @override
-  Stream<RoomConnectionState> mapEventToState(RoomConnectionEvent event) async* {
+  Stream<RoomConnectionState> mapEventToState(
+      RoomConnectionEvent event) async* {
     if (event is RoomConnectionCreateRoomE) {
       yield* _mapRoomConnectionCreateRoomEToState(event);
     } else if (event is RoomConnectionConnectToRoomE) {
@@ -24,7 +26,8 @@ class RoomConnectionBloc extends Bloc<RoomConnectionEvent, RoomConnectionState> 
     }
   }
 
-  Stream<RoomConnectionState> _mapRoomConnectionConnectToRoomEToState(event) async* {
+  Stream<RoomConnectionState> _mapRoomConnectionConnectToRoomEToState(
+      event) async* {
     yield RoomConnectionConnecting();
     try {
       await _roomsRepository.connectToRoom(event.roomName);
@@ -35,7 +38,8 @@ class RoomConnectionBloc extends Bloc<RoomConnectionEvent, RoomConnectionState> 
     }
   }
 
-  Stream<RoomConnectionState> _mapRoomConnectionCreateRoomEToState(event) async* {
+  Stream<RoomConnectionState> _mapRoomConnectionCreateRoomEToState(
+      event) async* {
     yield RoomConnectionConnecting();
     try {
       await _roomsRepository.createRoom(event.roomName);
@@ -46,13 +50,16 @@ class RoomConnectionBloc extends Bloc<RoomConnectionEvent, RoomConnectionState> 
     }
   }
 
-  Stream<RoomConnectionState> _mapRoomConnectionDisconnectFromRoomEToState() async* {
+  Stream<RoomConnectionState>
+      _mapRoomConnectionDisconnectFromRoomEToState() async* {
+    yield RoomConnectionDisconnectingFromRoom();
     try {
       await _roomsRepository.disconnectFromRoom();
       yield RoomConnectionDisconnectedFromRoom();
     } catch (e) {
       print(e);
-      yield RoomConnectionError(message: e.message);
+      yield RoomConnectionDisconnectingFromRoomError(
+          message: "Failed to disconnect from room.");
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../ui/widgets/common/common_widgets.dart';
 import '../../bloc/login/bloc.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -74,11 +75,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: BlocConsumer<LoginBloc, LoginState>(
                               listener: (ctx, state) {
                                 if (state is LoginConnectionError) {
-                                  Scaffold.of(ctx).showSnackBar(
-                                    SnackBar(
-                                      backgroundColor: Theme.of(ctx).errorColor,
-                                      content: Text(state.message),
-                                    ),
+                                  CommonWidgets.displaySnackBar(
+                                    context: ctx,
+                                    message: state.message,
+                                    color: Theme.of(ctx).errorColor,
                                   );
                                 }
                               },

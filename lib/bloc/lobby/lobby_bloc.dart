@@ -31,13 +31,7 @@ class LobbyBloc extends Bloc<LobbyEvent, LobbyState> {
   Stream<LobbyState> mapEventToState(LobbyEvent event) async* {
     if (event is LobbyStatusLoadedE) {
       yield* _mapLobbyLoadedEToState(event);
-    } else if (event is LobbyCreateRoomE) {
-      yield* _mapLobbyCreateRoomEToState(event);
-    } else if (event is LobbyConnectToRoomE) {
-      yield* _mapLobbyConnectToRoomEToState(event);
-    } else if (event is LobbyDisconnectFromRoomE) {
-      yield* _mapLobbyDisconnectFromRoomEToState();
-    }
+    } 
   }
 
   Stream<LobbyState> _mapLobbyLoadedEToState(event) async* {
@@ -47,38 +41,6 @@ class LobbyBloc extends Bloc<LobbyEvent, LobbyState> {
     } catch (e) {
       print(e);
       yield LobbyLoadingError(message: "Could not load lobby status.");
-    }
-  }
-
-  Stream<LobbyState> _mapLobbyCreateRoomEToState(event) async* {
-    yield LobbyConnectingToRoom();
-    try {
-      await _roomsRepository.createRoom(event.roomName);
-      yield LobbyConnectedToRoom(roomName: event.roomName);
-    } catch (e) {
-      print(e);
-      yield LobbyConnectionWithRoomError(message: e.message);
-    }
-  }
-
-  Stream<LobbyState> _mapLobbyConnectToRoomEToState(event) async* {
-    yield LobbyConnectingToRoom();
-    try {
-      await _roomsRepository.connectToRoom(event.roomName);
-      yield LobbyConnectedToRoom(roomName: event.roomName);
-    } catch (e) {
-      print(e);
-      yield LobbyConnectionWithRoomError(message: e.message);
-    }
-  }
-
-  Stream<LobbyState> _mapLobbyDisconnectFromRoomEToState() async* {
-    try {
-      await _roomsRepository.disconnectFromRoom();
-      yield LobbyDisconnectedFromRoom();
-    } catch (e) {
-      print(e);
-      yield LobbyConnectionWithRoomError(message: e.message);
     }
   }
 

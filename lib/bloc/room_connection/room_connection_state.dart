@@ -36,13 +36,18 @@ class RoomConnectionError extends RoomConnectionState {
   String toString() => 'RoomConnectionError $message';
 }
 
+class RoomConnectionDisconnectingFromRoom extends RoomConnectionState {
+  @override
+  String toString() => 'RoomConnectionDisconnectingFromRoom';
+}
+
 class RoomConnectionDisconnectingFromRoomError extends RoomConnectionState {
   final String message;
 
   const RoomConnectionDisconnectingFromRoomError({@required this.message}) : assert(message != null);
 
   @override
-  String toString() => 'RoomConnectionDisconnectinFromRoomError $message';
+  String toString() => 'RoomConnectionDisconnectingFromRoomError $message';
 }
 
 class RoomConnectionDisconnectedFromRoom extends RoomConnectionState {
