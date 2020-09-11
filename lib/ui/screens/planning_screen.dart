@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:wakelock/wakelock.dart';
+import 'dart:math' as math;
+
+import '../../ui/widgets/app_drawer.dart';
 import '../../ui/icons/custom_icons.dart';
 import '../../ui/widgets/common/common_widgets.dart';
 import '../widgets/planning_room/widgets.dart';
@@ -8,8 +13,6 @@ import '../../bloc/planning_room/bloc.dart';
 import '../../data/repositories/repositories.dart';
 import '../../bloc/room_connection/bloc.dart';
 import 'lobby_screen.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:wakelock/wakelock.dart';
 
 class PlanningScreen extends StatefulWidget {
   static const routeName = '/planning';
@@ -67,20 +70,23 @@ class _PlanningScreenState extends State<PlanningScreen> {
         builder: (context) {
           return Scaffold(
             appBar: AppBar(
-              leading: FlatButton(
-                child: Icon(
-                  Icons.arrow_back,
-                  color: Theme.of(context).canvasColor,
-                ),
-                onPressed: () {
-                  _leaveRoom(context);
-                },
-              ),
               actions: [
                 _buildAdminAppBarAction(context),
               ],
               title: Text(roomName),
             ),
+            drawer: AppDrawer([
+              ListTile(
+                leading: Transform.rotate(
+                  child: Icon(Icons.save_alt),
+                  angle: 90 * math.pi / 180,
+                ),
+                title: Text('Leave room'),
+                onTap: () {
+                  _leaveRoom(context);
+                },
+              ),
+            ]),
             body: MultiBlocListener(
               listeners: [
                 //handles navigating to lobby screen
