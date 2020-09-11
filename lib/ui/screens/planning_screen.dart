@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scrum_poker_app/ui/icons/custom_icons.dart';
-import 'package:scrum_poker_app/ui/widgets/common/common_widgets.dart';
+import '../../ui/icons/custom_icons.dart';
+import '../../ui/widgets/common/common_widgets.dart';
 import '../widgets/planning_room/widgets.dart';
 import '../../bloc/lobby/bloc.dart';
 import '../../bloc/planning_room/bloc.dart';
@@ -9,36 +9,55 @@ import '../../data/repositories/repositories.dart';
 import '../../bloc/room_connection/bloc.dart';
 import 'lobby_screen.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:wakelock/wakelock.dart';
 
-class PlanningScreen extends StatelessWidget {
+class PlanningScreen extends StatefulWidget {
   static const routeName = '/planning';
+
+  @override
+  _PlanningScreenState createState() => _PlanningScreenState();
+}
+
+class _PlanningScreenState extends State<PlanningScreen> {
+  final estimates = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    20,
+    25,
+    30,
+    40,
+    50
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    Wakelock.enable();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    Wakelock.disable();
+  }
 
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     final roomName = ModalRoute.of(context).settings.arguments;
-    final estimates = [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10,
-      11,
-      12,
-      13,
-      14,
-      15,
-      20,
-      25,
-      30,
-      40,
-      50
-    ];
 
     return BlocProvider(
       create: (BuildContext context) => RoomConnectionBloc(
