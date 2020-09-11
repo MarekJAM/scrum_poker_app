@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stats/stats.dart';
+import '../../utils/stats.dart';
 import '../../data/models/models.dart';
 import '../../utils/secure_storage.dart';
 import '../websocket/bloc.dart';
@@ -61,6 +61,7 @@ class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
       //checks if all users who estimated are still in the room, and if not adds them at the end of the list
       event.roomStatus.estimates.forEach((estimate) {
         estimates.add(estimate.estimate);
+
         var index = userEstimationCardsUI
             .indexWhere((card) => card.username == estimate.name);
         if (index >= 0) {
@@ -75,16 +76,12 @@ class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
         }
       });
 
-      if (estimates.isNotEmpty) {
-        estimates.sort();
-      }
-      
       final estimatedTaskInfo = estimates.isEmpty
           ? EstimatedTaskInfo(taskId: event.roomStatus.taskId)
           : EstimatedTaskInfo(
               taskId: event.roomStatus.taskId,
-              average: Stats.fromData(estimates).withPrecision(2).average,
-              median: Stats.fromData(estimates).withPrecision(1).median.ceil(),
+              average: Stats.average(estimates),
+              median: Stats.median(estimates),
             );
 
       yield PlanningRoomRoomStatusLoaded(
