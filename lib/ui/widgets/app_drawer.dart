@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../ui/screens/screens.dart';
 import '../../bloc/room_connection/bloc.dart';
 import '../../bloc/login/bloc.dart';
 
@@ -16,8 +17,8 @@ class AppDrawer extends StatelessWidget {
       },
       listener: (_, state) {
         if (state is RoomConnectionDestroyingRoomError) {
-          Navigator.of(context).pop();
-        }
+          Navigator.of(context).popUntil(ModalRoute.withName(PlanningScreen.routeName));
+        } 
       },
       child: Drawer(
         child: Column(

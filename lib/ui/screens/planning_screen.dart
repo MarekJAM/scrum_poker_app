@@ -10,7 +10,6 @@ import '../../ui/widgets/common/common_widgets.dart';
 import '../widgets/planning_room/widgets.dart';
 import '../../bloc/lobby/bloc.dart';
 import '../../bloc/planning_room/bloc.dart';
-import '../../data/repositories/repositories.dart';
 import '../../bloc/room_connection/bloc.dart';
 import 'lobby_screen.dart';
 
@@ -97,8 +96,10 @@ class _PlanningScreenState extends State<PlanningScreen> {
           BlocListener<LobbyBloc, LobbyState>(
             listener: (context, state) {
               if (state is LobbyStatusLoaded) {
-                Navigator.of(context)
-                    .pushReplacementNamed(LobbyScreen.routeName);
+                Navigator.of(context).pushAndRemoveUntil<void>(
+                  LobbyScreen.route(),
+                  (route) => false,
+                );
               }
             },
           ),

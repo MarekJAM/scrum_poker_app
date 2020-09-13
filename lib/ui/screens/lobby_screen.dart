@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scrum_poker_app/data/repositories/rooms_repository.dart';
 import '../../bloc/lobby/bloc.dart';
 import '../widgets/app_drawer.dart';
 import '../../bloc/room_connection/bloc.dart';
