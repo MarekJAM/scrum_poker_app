@@ -7,6 +7,7 @@ class RoomsApiClient extends ApiClient {
   final _createRoomEndpoint = '/rooms/create';
   final _connectToRoomEndpoint = '/rooms/connect';
   final _disconnectFromRoomEndpoint = '/rooms/disconnect';
+  final _destroyRoomEndpoint = '/rooms/destroy';
 
   final http.Client httpClient;
 
@@ -49,6 +50,21 @@ class RoomsApiClient extends ApiClient {
 
     if (response.statusCode != 200) {
       throwException(response.statusCode, decodeErrorMessage(response) ?? 'Error while disconnecting from room');
+    }
+  
+    return true;
+  }
+
+  Future<bool> destroyRoom() async {
+    final response = await httpClient.send(
+      http.Request(
+          "DELETE", Uri.parse('http://' + await SecureStorage().readServerAddress()+'$_destroyRoomEndpoint'))
+        ..headers["Content-Type"] = "application/json"
+        ..body = OutgoingMessage.createDisconnectFromRoomJsonMsg(await SecureStorage().readUsername()),
+    );
+
+    if (response.statusCode != 200) {
+      throwException(response.statusCode, decodeErrorMessage(response) ?? 'Error while destroying room');
     }
   
     return true;

@@ -23,6 +23,8 @@ class RoomConnectionBloc
       yield* _mapRoomConnectionConnectToRoomEToState(event);
     } else if (event is RoomConnectionDisconnectFromRoomE) {
       yield* _mapRoomConnectionDisconnectFromRoomEToState();
+    } else if (event is RoomConnectionDestroyRoomE) {
+      yield* _mapRoomConnectionDestroyRoomEToState();
     }
   }
 
@@ -60,6 +62,19 @@ class RoomConnectionBloc
       print(e);
       yield RoomConnectionDisconnectingFromRoomError(
           message: "Failed to disconnect from room.");
+    }
+  }
+
+  Stream<RoomConnectionState>
+      _mapRoomConnectionDestroyRoomEToState() async* {
+    yield RoomConnectionDestroyingRoom();
+    try {
+      await _roomsRepository.destroyRoom();
+      yield RoomConnectionDestroyedRoom();
+    } catch (e) {
+      print(e);
+      yield RoomConnectionDestroyingRoomError(
+          message: "Failed to destroy the room.");
     }
   }
 }

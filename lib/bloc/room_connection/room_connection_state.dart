@@ -54,3 +54,23 @@ class RoomConnectionDisconnectedFromRoom extends RoomConnectionState {
   @override
   String toString() => 'RoomConnectionDisconnectedFromRoom';
 }
+
+class RoomConnectionDestroyingRoom extends RoomConnectionState {
+  @override
+  String toString() => 'RoomConnectionDestroyingRoom';
+}
+
+class RoomConnectionDestroyedRoom extends RoomConnectionState {
+  @override
+  String toString() => 'RoomConnectionDestroyedRoom';
+}
+
+class RoomConnectionDestroyingRoomError extends RoomConnectionState {
+  final String message;
+
+  const RoomConnectionDestroyingRoomError({@required this.message}) : assert(message != null);
+  
+  @override
+  String toString() => 'RoomConnectionDestroyingRoomError';
+}
+

@@ -1,5 +1,10 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:http/http.dart' as http;
+
+import './bloc/room_connection/bloc.dart';
 import './bloc/planning_room/planning_room_bloc.dart';
 import './bloc/lobby/bloc.dart';
 import './bloc/websocket/bloc.dart';
@@ -7,10 +12,7 @@ import './bloc/login/bloc.dart';
 import './bloc/websocket/websocket_bloc.dart';
 import './ui/screens/screens.dart';
 import './bloc/simple_bloc_observer.dart';
-import 'package:flutter/material.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 import './data/repositories/repositories.dart';
-import 'package:http/http.dart' as http;
 
 void main() {
   Bloc.observer = SimpleBlocObserver();
@@ -30,8 +32,10 @@ void main() {
   // ignore: close_sinks
   final loginBloc = LoginBloc(webSocketBloc: webSocketBloc);
   // ignore: close_sinks
-  final planningRoomBloc =
-      PlanningRoomBloc(webSocketBloc: webSocketBloc);
+  final planningRoomBloc = PlanningRoomBloc(webSocketBloc: webSocketBloc);
+  // ignore: close_sinks
+  final roomConnectionBloc =
+      RoomConnectionBloc(roomsRepository: roomsRepository);
 
   runApp(
     App(
@@ -40,25 +44,28 @@ void main() {
       loginBloc: loginBloc,
       roomsRepository: roomsRepository,
       planningRoomBloc: planningRoomBloc,
+      roomConnectionBloc: roomConnectionBloc,
     ),
   );
 }
 
 class App extends StatelessWidget {
-  const App(
-      {Key key,
-      @required this.webSocketBloc,
-      @required this.roomsBloc,
-      @required this.loginBloc,
-      @required this.roomsRepository,
-      @required this.planningRoomBloc})
-      : super(key: key);
+  const App({
+    Key key,
+    @required this.webSocketBloc,
+    @required this.roomsBloc,
+    @required this.loginBloc,
+    @required this.roomsRepository,
+    @required this.planningRoomBloc,
+    @required this.roomConnectionBloc,
+  }) : super(key: key);
 
   final WebSocketBloc webSocketBloc;
   final LobbyBloc roomsBloc;
   final LoginBloc loginBloc;
   final RoomsRepository roomsRepository;
   final PlanningRoomBloc planningRoomBloc;
+  final RoomConnectionBloc roomConnectionBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +88,9 @@ class App extends StatelessWidget {
             ),
             BlocProvider<PlanningRoomBloc>(
               create: (context) => planningRoomBloc,
+            ),
+            BlocProvider<RoomConnectionBloc>(
+              create: (context) => roomConnectionBloc,
             ),
           ],
           child: AppView(),

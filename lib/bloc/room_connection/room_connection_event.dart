@@ -29,3 +29,8 @@ class RoomConnectionDisconnectFromRoomE extends RoomConnectionEvent {
   @override
   String toString() => 'RoomConnectionDisconnectFromRoomE';
 }
+
+class RoomConnectionDestroyRoomE extends RoomConnectionEvent {
+  @override
+  String toString() => 'RoomConnectionDestroyRoomE';
+}

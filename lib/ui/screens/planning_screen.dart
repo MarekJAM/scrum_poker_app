@@ -62,87 +62,72 @@ class _PlanningScreenState extends State<PlanningScreen> {
     final deviceSize = MediaQuery.of(context).size;
     final roomName = ModalRoute.of(context).settings.arguments;
 
-    return BlocProvider(
-      create: (BuildContext context) => RoomConnectionBloc(
-        roomsRepository: RepositoryProvider.of<RoomsRepository>(context),
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          _buildAdminAppBarAction(context),
+        ],
+        title: Text(roomName),
       ),
-      child: Builder(
-        builder: (context) {
-          return Scaffold(
-            appBar: AppBar(
-              actions: [
-                _buildAdminAppBarAction(context),
-              ],
-              title: Text(roomName),
-            ),
-            drawer: AppDrawer([
-              ListTile(
-                leading: Transform.rotate(
-                  child: Icon(Icons.save_alt),
-                  angle: 90 * math.pi / 180,
-                ),
-                title: Text('Leave room'),
-                onTap: () {
-                  _leaveRoom(context);
-                },
+      drawer: _buildAppDrawer(context),
+      body: MultiBlocListener(
+        listeners: [
+          //handles navigating to lobby screen
+          BlocListener<RoomConnectionBloc, RoomConnectionState>(
+            listener: (context, state) {
+              if (state is RoomConnectionDisconnectedFromRoom) {
+                Navigator.of(context)
+                    .pushReplacementNamed(LobbyScreen.routeName);
+              } else if (state is RoomConnectionDisconnectingFromRoomError) {
+                CommonWidgets.displaySnackBar(
+                  context: context,
+                  message: "Failed to disconnect from room.",
+                  color: Theme.of(context).errorColor,
+                );
+              } else if (state is RoomConnectionDestroyingRoomError) {
+                CommonWidgets.displaySnackBar(
+                  context: context,
+                  message: "Failed to destroy room.",
+                  color: Theme.of(context).errorColor,
+                );
+              }
+            },
+          ),
+          //handles situation when room gets disbanded
+          BlocListener<LobbyBloc, LobbyState>(
+            listener: (context, state) {
+              if (state is LobbyStatusLoaded) {
+                Navigator.of(context)
+                    .pushReplacementNamed(LobbyScreen.routeName);
+              }
+            },
+          ),
+        ],
+        child: BlocListener<PlanningRoomBloc, PlanningRoomState>(
+          listener: (context, state) {
+            if (state is PlanningRoomError) {
+              CommonWidgets.displaySnackBar(
+                context: context,
+                message: state.message,
+                color: Theme.of(context).errorColor,
+              );
+            }
+          },
+          child: Stack(
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  _buildTaskInfoBar(context, deviceSize),
+                  Divider(),
+                  _buildUserEstimationCards(context, deviceSize),
+                ],
               ),
-            ]),
-            body: MultiBlocListener(
-              listeners: [
-                //handles navigating to lobby screen
-                BlocListener<RoomConnectionBloc, RoomConnectionState>(
-                  listener: (context, state) {
-                    if (state is RoomConnectionDisconnectedFromRoom) {
-                      Navigator.of(context)
-                          .pushReplacementNamed(LobbyScreen.routeName);
-                    } else if (state
-                        is RoomConnectionDisconnectingFromRoomError) {
-                      CommonWidgets.displaySnackBar(
-                        context: context,
-                        message: "Failed to disconnect from room.",
-                        color: Theme.of(context).errorColor,
-                      );
-                    }
-                  },
-                ),
-                //handles situation when room gets disbanded
-                BlocListener<LobbyBloc, LobbyState>(
-                  listener: (context, state) {
-                    if (state is LobbyStatusLoaded) {
-                      Navigator.of(context)
-                          .pushReplacementNamed(LobbyScreen.routeName);
-                    }
-                  },
-                ),
-              ],
-              child: BlocListener<PlanningRoomBloc, PlanningRoomState>(
-                listener: (context, state) {
-                  if (state is PlanningRoomError) {
-                    CommonWidgets.displaySnackBar(
-                      context: context,
-                      message: state.message,
-                      color: Theme.of(context).errorColor,
-                    );
-                  }
-                },
-                child: Stack(
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        _buildTaskInfoBar(context, deviceSize),
-                        Divider(),
-                        _buildUserEstimationCards(context, deviceSize),
-                      ],
-                    ),
-                    _buildBottomCardsBar(context, deviceSize, estimates)
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
+              _buildBottomCardsBar(context, deviceSize, estimates)
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -150,6 +135,52 @@ class _PlanningScreenState extends State<PlanningScreen> {
   void _leaveRoom(BuildContext context) {
     BlocProvider.of<RoomConnectionBloc>(context).add(
       RoomConnectionDisconnectFromRoomE(),
+    );
+  }
+
+  Widget _buildAppDrawer(BuildContext context) {
+    return AppDrawer(
+      [
+        ListTile(
+          leading: Transform.rotate(
+            child: Icon(Icons.save_alt),
+            angle: 90 * math.pi / 180,
+          ),
+          title: Text('Leave room'),
+          onTap: () {
+            _leaveRoom(context);
+          },
+        ),
+        BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
+          buildWhen: (_, state) {
+            return state is PlanningRoomRoomStatusLoaded ? true : false;
+          },
+          builder: (context, state) {
+            if (state is PlanningRoomRoomStatusLoaded && state.amAdmin) {
+              return ListTile(
+                leading: Icon(
+                  Icons.remove_circle,
+                  color: Colors.red,
+                ),
+                title: Text('Destroy room'),
+                onTap: () {
+                  _showDestroyRoomConfirmationDialog(context);
+                },
+              );
+            }
+            return Container();
+          },
+        ),
+      ],
+    );
+  }
+
+  void _showDestroyRoomConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ConfirmDestroyRoomDialog();
+      },
     );
   }
 
@@ -242,7 +273,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
                 itemCount: estimates.length,
                 itemBuilder: (context, index) => GestureDetector(
                   onTap: () {
-                    _showConfirmationDialog(context,
+                    _showEstimateConfirmationDialog(context,
                         state.estimatedTaskInfo.taskId, estimates[index]);
                   },
                   child: Card(
@@ -325,7 +356,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
     );
   }
 
-  void _showConfirmationDialog(
+  void _showEstimateConfirmationDialog(
     BuildContext context,
     String estimatedTask,
     int estimate,

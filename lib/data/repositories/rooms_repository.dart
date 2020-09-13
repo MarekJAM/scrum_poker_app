@@ -18,4 +18,8 @@ class RoomsRepository {
   Future<bool> disconnectFromRoom() async {
     return await roomsApiClient.disconnectFromRoom();
   }
+
+  Future<bool> destroyRoom() async {
+    return await roomsApiClient.destroyRoom();
+  }
 }
