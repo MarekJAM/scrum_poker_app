@@ -6,7 +6,7 @@ import 'package:web_socket_channel/io.dart';
 class WebSocketRepository {
 
   Future<IOWebSocketChannel> establishConnection(String url) async {
-    return IOWebSocketChannel(await WebSocket.connect(url.toString()).timeout(Duration(seconds: 5)));
+    return IOWebSocketChannel(await WebSocket.connect(url.toString()).timeout(Duration(seconds: 5))..pingInterval = Duration(seconds: 10));
   }
 
   dynamic parseMessage(dynamic message) {

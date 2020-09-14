@@ -73,13 +73,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                     message: state.message,
                                     color: Theme.of(ctx).errorColor,
                                   );
-                                }
+                                } 
                               },
-                              builder: (_, state) {
+                              builder: (context, state) {
                                 if (state is LoginDisconnectedFromServer) {
                                   _userController.text = state.username;
                                   _serverController.text = state.serverAddress;
-                                }
+                                  if (state.message.isNotEmpty) {
+                                    CommonWidgets.displaySnackBar(context: context, message: state.message, color: Theme.of(context).errorColor);
+                                  }
+                                } 
                                 return Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [

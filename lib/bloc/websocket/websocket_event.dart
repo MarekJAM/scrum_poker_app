@@ -48,3 +48,12 @@ class WSDisconnectFromServerE extends WebSocketEvent {
   String toString() => 'WSDisconnectFromServerE';
 }
 
+class WSDisconnectedFromServerE extends WebSocketEvent {
+  final String message;
+
+  WSDisconnectedFromServerE({this.message});
+
+  @override
+  String toString() => 'WSDisconnectedFromServerE: $message';
+}
+

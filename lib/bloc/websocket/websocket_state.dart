@@ -30,7 +30,7 @@ class WSConnectedToServer extends WebSocketState {
 class WSDisconnectedFromServer extends WebSocketState {
   final String message;
 
-  const WSDisconnectedFromServer({@required this.message}) : assert(message != null);
+  const WSDisconnectedFromServer({this.message});
 
   @override
   String toString() => 'WSDisconnectedFromServer $message';

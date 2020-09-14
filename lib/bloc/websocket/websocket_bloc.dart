@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/repositories/websocket_repository.dart';
 import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/status.dart' as status;
 import 'bloc.dart';
+
+import '../../data/repositories/websocket_repository.dart';
 
 class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
   final WebSocketRepository webSocketRepository;
@@ -23,6 +25,8 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
       yield* _mapSendMessageToState(event);
     } else if (event is WSDisconnectFromServerE) {
       yield* _mapDisconnectFromServerToState(event);
+    } else if (event is WSDisconnectedFromServerE) {
+      yield* _mapDisconnectedFromServerToState(event);
     }
   }
 
@@ -36,7 +40,20 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
         print(e);
         add(WSConnectionErrorReceivedE("Could not establish connection."));
       }, onDone: () {
-        add(WSDisconnectFromServerE());
+        var message = "";
+        switch (channel.closeCode) {
+          case 1005:
+            message = "Disconnected: internal server error.";
+            break;
+          case 1002:
+            message = "Disconnected: no internet connection.";
+            break;
+          case 1001:
+            message = "Disconnected: connection with server broken.";
+            break;
+        }
+
+        add(WSDisconnectedFromServerE(message: message));
       });
       yield WSConnectedToServer(message: "Connected to server");
     } catch (e) {
@@ -55,8 +72,16 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
 
   Stream<WebSocketState> _mapDisconnectFromServerToState(event) async* {
     try {
-      channel.sink.close();
-      yield WSDisconnectedFromServer(message: "Disconnected from server");
+      //sending closeCode to distinguish whether user disconnected intentionally or not
+      channel.sink.close(4999);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Stream<WebSocketState> _mapDisconnectedFromServerToState(event) async* {
+    try {
+      yield WSDisconnectedFromServer(message: event.message);
     } catch (e) {
       print(e);
     }

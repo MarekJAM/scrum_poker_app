@@ -35,7 +35,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     } else if (event is LoginDisconnectFromServerE) {
       yield* _mapLoginDisconnectFromServerToState(event);
     } else if (event is LoginDisconnectedFromServerE) {
-      yield* _mapLoginDisconnectedFromServerToState();
+      yield* _mapLoginDisconnectedFromServerToState(event);
     } else if (event is AppStarted) {
       yield* _mapAppStartedToState();
     }
@@ -46,7 +46,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       var username = await SecureStorage().readUsername();
       var serverAddress = await SecureStorage().readServerAddress();
-      yield LoginDisconnectedFromServer(message: "App started", username: username, serverAddress: serverAddress);
+      yield LoginDisconnectedFromServer(username: username, serverAddress: serverAddress);
     } catch (e) {
       print(e);
       yield LoginConnectionError(message: "Connection error occured.");
@@ -91,11 +91,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  Stream<LoginState> _mapLoginDisconnectedFromServerToState() async* {
+  Stream<LoginState> _mapLoginDisconnectedFromServerToState(event) async* {
     try {
       var username = await SecureStorage().readUsername();
       var serverAddress = await SecureStorage().readServerAddress();
-      yield LoginDisconnectedFromServer(message: "Disconnected from server.", username: username, serverAddress: serverAddress);
+      yield LoginDisconnectedFromServer(message: event.message, username: username, serverAddress: serverAddress);
     } catch (e) {
       print(e);
     }

@@ -32,7 +32,7 @@ class LoginDisconnectedFromServer extends LoginState {
   final String username;
   final String serverAddress;
 
-  const LoginDisconnectedFromServer({@required this.message, @required this.username, @required this.serverAddress}) : assert(message != null), assert(username != null), assert(serverAddress != null);
+  const LoginDisconnectedFromServer({@required this.username, @required this.serverAddress, this.message = ""}) : assert(message != null), assert(username != null), assert(serverAddress != null);
 
   @override
   String toString() => 'LoginDisconnectedFromServer $message';
