@@ -13,6 +13,7 @@ import './bloc/websocket/websocket_bloc.dart';
 import './ui/screens/screens.dart';
 import './bloc/simple_bloc_observer.dart';
 import './data/repositories/repositories.dart';
+import './ui/widgets/common/common_widgets.dart';
 
 void main() {
   Bloc.observer = SimpleBlocObserver();
@@ -121,21 +122,30 @@ class _AppViewState extends State<AppView> {
         title: title,
         navigatorKey: _navigatorKey,
         builder: (context, child) {
-          return BlocListener<LoginBloc, LoginState>(
-            listener: (context, state) {
-              if (state is LoginConnectedToServer) {
-                _navigator.pushAndRemoveUntil<void>(
-                  LobbyScreen.route(),
-                  (route) => false,
-                );
-              } else if (state is LoginDisconnectedFromServer) {
-                _navigator.pushAndRemoveUntil<void>(
-                  LoginScreen.route(),
-                  (route) => false,
-                );
-              }
-            },
-            child: child,
+          return Scaffold(
+            body: BlocListener<LoginBloc, LoginState>(
+              listener: (context, state) {
+                if (state is LoginConnectedToServer) {
+                  _navigator.pushAndRemoveUntil<void>(
+                    LobbyScreen.route(),
+                    (route) => false,
+                  );
+                } else if (state is LoginDisconnectedFromServer) {
+                  _navigator.pushAndRemoveUntil<void>(
+                    LoginScreen.route(),
+                    (route) => false,
+                  );
+                  if (state.message.isNotEmpty) {
+                    CommonWidgets.displaySnackBar(
+                      context: context,
+                      message: state.message,
+                      color: Theme.of(context).errorColor,
+                    );
+                  }
+                }
+              },
+              child: child,
+            ),
           );
         },
         routes: {
