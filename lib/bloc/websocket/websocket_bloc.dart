@@ -42,9 +42,6 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
       }, onDone: () {
         var message = "";
         switch (channel.closeCode) {
-          case 1005:
-            message = "Disconnected: internal server error.";
-            break;
           case 1002:
             message = "Disconnected: no internet connection.";
             break;
