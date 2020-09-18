@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'exceptions.dart';
+import '../../utils/secure_storage.dart';
 
 class ApiClient {
   void throwException(int statusCode, String message) {
@@ -24,4 +25,13 @@ class ApiClient {
   String decodeErrorMessage(response) {
     return json.decode(response.body)['message'] ?? null;
   }
+
+  Future<String> getServerUrl() async {
+    return 'http://' + await SecureStorage().readServerAddress();
+  }
+
+  Future<String> getUsername() async {
+    return await SecureStorage().readUsername();
+  }
+
 }

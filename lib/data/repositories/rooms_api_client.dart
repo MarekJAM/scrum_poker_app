@@ -1,5 +1,4 @@
 import '../../data/models/models.dart';
-import '../../utils/secure_storage.dart';
 import 'repositories.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,11 +12,11 @@ class RoomsApiClient extends ApiClient {
 
   RoomsApiClient({this.httpClient}) : assert(httpClient != null);
 
-  Future<bool> createRoom(String roomName) async {
+  Future<bool> createRoom(String roomName) async {    
     http.Response response = await httpClient.put(
-      'http://' + await SecureStorage().readServerAddress()+'$_createRoomEndpoint',
+      await getServerUrl() + '$_createRoomEndpoint',
       headers: {"Content-Type": "application/json"},
-      body: OutgoingMessage.createCreateRoomJsonMsg(await SecureStorage().readUsername(), roomName)
+      body: OutgoingMessage.createCreateRoomJsonMsg(await getUsername(), roomName)
     );
 
     if (response.statusCode != 201) {
@@ -29,9 +28,9 @@ class RoomsApiClient extends ApiClient {
 
   Future<bool> connectToRoom(String roomName) async {
     http.Response response = await httpClient.patch(
-      'http://' + await SecureStorage().readServerAddress()+'$_connectToRoomEndpoint',
+      await getServerUrl() + '$_connectToRoomEndpoint',
       headers: {"Content-Type": "application/json"},
-      body: OutgoingMessage.createConnectRoomJsonMsg(await SecureStorage().readUsername(), roomName)
+      body: OutgoingMessage.createConnectRoomJsonMsg(await getUsername(), roomName)
     );
 
     if (response.statusCode != 200) {
@@ -43,9 +42,9 @@ class RoomsApiClient extends ApiClient {
 
   Future<bool> disconnectFromRoom() async {
     http.Response response = await httpClient.patch(
-      'http://' + await SecureStorage().readServerAddress()+'$_disconnectFromRoomEndpoint',
+      await getServerUrl() + '$_disconnectFromRoomEndpoint',
       headers: {"Content-Type": "application/json"},
-      body: OutgoingMessage.createDisconnectFromRoomJsonMsg(await SecureStorage().readUsername())
+      body: OutgoingMessage.createDisconnectFromRoomJsonMsg(await getUsername())
     );
 
     if (response.statusCode != 200) {
@@ -58,9 +57,9 @@ class RoomsApiClient extends ApiClient {
   Future<bool> destroyRoom() async {
     final response = await httpClient.send(
       http.Request(
-          "DELETE", Uri.parse('http://' + await SecureStorage().readServerAddress()+'$_destroyRoomEndpoint'))
+          "DELETE", Uri.parse(await getServerUrl() + '$_destroyRoomEndpoint'))
         ..headers["Content-Type"] = "application/json"
-        ..body = OutgoingMessage.createDisconnectFromRoomJsonMsg(await SecureStorage().readUsername()),
+        ..body = OutgoingMessage.createDisconnectFromRoomJsonMsg(await getUsername()),
     );
 
     if (response.statusCode != 200) {
