@@ -1,3 +1,4 @@
+import '../../utils/secure_storage.dart';
 import '../../data/models/models.dart';
 import 'repositories.dart';
 import 'package:http/http.dart' as http;
@@ -10,7 +11,7 @@ class RoomsApiClient extends ApiClient {
 
   final http.Client httpClient;
 
-  RoomsApiClient({this.httpClient}) : assert(httpClient != null);
+  RoomsApiClient({this.httpClient, SecureStorage secureStorage}) : assert(httpClient != null), super(secureStorage: secureStorage);
 
   Future<bool> createRoom(String roomName) async {    
     http.Response response = await httpClient.put(

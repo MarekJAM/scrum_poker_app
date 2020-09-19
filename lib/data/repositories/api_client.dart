@@ -1,9 +1,12 @@
 import 'dart:convert';
-
 import 'exceptions.dart';
 import '../../utils/secure_storage.dart';
 
 class ApiClient {
+  ApiClient({SecureStorage secureStorage}) : _secureStorage = secureStorage ?? SecureStorage();
+
+  final SecureStorage _secureStorage;
+
   void throwException(int statusCode, String message) {
     if (statusCode == 400) {
       throw BadRequestException(message, statusCode);
@@ -27,11 +30,11 @@ class ApiClient {
   }
 
   Future<String> getServerUrl() async {
-    return 'http://' + await SecureStorage().readServerAddress();
+    return 'http://' + await _secureStorage.readServerAddress();
   }
 
   Future<String> getUsername() async {
-    return await SecureStorage().readUsername();
+    return await _secureStorage.readUsername();
   }
 
 }
