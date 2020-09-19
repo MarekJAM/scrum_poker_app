@@ -53,7 +53,8 @@ void main() {
         expect(isCreated, true);
       });
 
-      test('throws Exception when httpClient returns non-201 response', () async {
+      test('throws Exception when httpClient returns non-201 response',
+          () async {
         final mockedResponse = MockResponse();
 
         when(mockedResponse.statusCode).thenReturn(404);
@@ -66,6 +67,74 @@ void main() {
             ))).thenAnswer((_) => Future.value(mockedResponse));
 
         expect(() async => await roomsApiClient.createRoom("testname"),
+            throwsA(isException));
+      });
+    });
+
+    group('connect to room', () {
+      test('returns true if connected to room', () async {
+        final mockedResponse = MockResponse();
+
+        when(mockedResponse.statusCode).thenReturn(200);
+
+        when(httpClient.patch("http://127.0.0.1/rooms/connect",
+            headers: {"Content-Type": "application/json"},
+            body: OutgoingMessage.createConnectRoomJsonMsg(
+              "username",
+              "testname",
+            ))).thenAnswer((_) => Future.value(mockedResponse));
+
+        final isConnected = await roomsApiClient.connectToRoom("testname");
+        expect(isConnected, true);
+      });
+
+      test('throws Exception when httpClient returns non-200 response',
+          () async {
+        final mockedResponse = MockResponse();
+
+        when(mockedResponse.statusCode).thenReturn(404);
+
+        when(httpClient.patch("http://127.0.0.1/rooms/connect",
+            headers: {"Content-Type": "application/json"},
+            body: OutgoingMessage.createConnectRoomJsonMsg(
+              "username",
+              "testname",
+            ))).thenAnswer((_) => Future.value(mockedResponse));
+
+        expect(() async => await roomsApiClient.connectToRoom("testname"),
+            throwsA(isException));
+      });
+    });
+
+    group('disconnect from room', () {
+      test('returns true if disconnected from room', () async {
+        final mockedResponse = MockResponse();
+
+        when(mockedResponse.statusCode).thenReturn(200);
+
+        when(httpClient.patch("http://127.0.0.1/rooms/disconnect",
+            headers: {"Content-Type": "application/json"},
+            body: OutgoingMessage.createDisconnectFromRoomJsonMsg(
+              "username",
+            ))).thenAnswer((_) => Future.value(mockedResponse));
+
+        final isDisconnected = await roomsApiClient.disconnectFromRoom();
+        expect(isDisconnected, true);
+      });
+
+      test('throws Exception when httpClient returns non-200 response',
+          () async {
+        final mockedResponse = MockResponse();
+
+        when(mockedResponse.statusCode).thenReturn(407);
+
+        when(httpClient.patch("http://127.0.0.1/rooms/disconnect",
+            headers: {"Content-Type": "application/json"},
+            body: OutgoingMessage.createDisconnectFromRoomJsonMsg(
+              "username",
+            ))).thenAnswer((_) => Future.value(mockedResponse));
+
+        expect(() async => await roomsApiClient.disconnectFromRoom(),
             throwsA(isException));
       });
     });
