@@ -57,7 +57,6 @@ void main() {
         final mockedResponse = MockResponse();
 
         when(mockedResponse.statusCode).thenReturn(404);
-        when(mockedResponse.body).thenReturn("{}");
 
         when(httpClient.put("http://127.0.0.1/rooms/create",
             headers: {"Content-Type": "application/json"},

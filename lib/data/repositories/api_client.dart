@@ -26,6 +26,9 @@ class ApiClient {
   }
 
   String decodeErrorMessage(response) {
+    if (response.body == null) {
+      return null;
+    }
     return json.decode(response.body)['message'] ?? null;
   }
 
