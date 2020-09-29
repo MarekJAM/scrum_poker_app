@@ -24,6 +24,8 @@ void main() {
   final RoomsRepository roomsRepository = RoomsRepository(
       roomsApiClient: RoomsApiClient(httpClient: http.Client()));
 
+  final PlanningRoomRepository planningRoomRepository = PlanningRoomRepository();
+
   // ignore: close_sinks
   final webSocketBloc =
       WebSocketBloc(channel: channel, webSocketRepository: webSocketRepository);
@@ -33,7 +35,7 @@ void main() {
   // ignore: close_sinks
   final loginBloc = LoginBloc(webSocketBloc: webSocketBloc);
   // ignore: close_sinks
-  final planningRoomBloc = PlanningRoomBloc(webSocketBloc: webSocketBloc);
+  final planningRoomBloc = PlanningRoomBloc(webSocketBloc: webSocketBloc, planningRoomRepository: planningRoomRepository);
   // ignore: close_sinks
   final roomConnectionBloc =
       RoomConnectionBloc(roomsRepository: roomsRepository);

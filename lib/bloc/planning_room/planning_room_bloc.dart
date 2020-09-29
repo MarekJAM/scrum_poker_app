@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scrum_poker_app/data/repositories/repositories.dart';
 import '../../utils/stats.dart';
 import '../../data/models/models.dart';
 import '../../utils/secure_storage.dart';
@@ -11,10 +12,15 @@ import 'bloc.dart';
 class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
   final WebSocketBloc _webSocketBloc;
   StreamSubscription webSocketSubscription;
+  final PlanningRoomRepository _planningRoomRepository;
 
-  PlanningRoomBloc({@required WebSocketBloc webSocketBloc})
-      : assert(webSocketBloc != null),
+  PlanningRoomBloc({
+    @required WebSocketBloc webSocketBloc,
+    @required PlanningRoomRepository planningRoomRepository,
+  })  : assert(webSocketBloc != null),
+        assert(planningRoomRepository != null),
         _webSocketBloc = webSocketBloc,
+        _planningRoomRepository = planningRoomRepository,
         super(PlanningRoomInitial()) {
     webSocketSubscription = _webSocketBloc.listen((state) {
       if (state is WSMessageLoaded && state.message is RoomStatus) {
@@ -26,7 +32,7 @@ class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
   @override
   Stream<PlanningRoomState> mapEventToState(PlanningRoomEvent event) async* {
     if (event is PlanningRoomRoomStatusReceivedE) {
-      yield* _mapPlanningRoomRoomiesReceivedEToState(event);
+      yield* _mapPlanningRoomRoomStatusReceivedEToState(event);
     } else if (event is PlanningRoomSendEstimateRequestE) {
       yield* _mapPlanningRoomSendEstimateRequestEToState(event);
     } else if (event is PlanningRoomSendEstimateE) {
@@ -34,61 +40,14 @@ class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
     }
   }
 
-  Stream<PlanningRoomState> _mapPlanningRoomRoomiesReceivedEToState(
+  Stream<PlanningRoomState> _mapPlanningRoomRoomStatusReceivedEToState(
       event) async* {
     yield PlanningRoomRoomStatusLoading();
     try {
-      final myUsername = await SecureStorage().readUsername();
-      final amAdmin = event.roomStatus.admins.contains(myUsername);
-      bool alreadyEstimated;
-      alreadyEstimated = ((event.roomStatus.estimates.singleWhere(
-              (estimate) => estimate.name == myUsername,
-              orElse: () => null)) !=
-          null);
-
-      List<UserEstimationCard> userEstimationCardsUI = [];
-      List<int> estimates = [];
-
-      event.roomStatus.admins.forEach((admin) {
-        userEstimationCardsUI.add(
-            UserEstimationCard(username: admin, isAdmin: true, isInRoom: true));
-      });
-      event.roomStatus.estimators.forEach((estimator) {
-        userEstimationCardsUI.add(UserEstimationCard(
-            username: estimator, isAdmin: false, isInRoom: true));
-      });
-
-      //checks if all users who estimated are still in the room, and if not adds them at the end of the list
-      event.roomStatus.estimates.forEach((estimate) {
-        estimates.add(estimate.estimate);
-
-        var index = userEstimationCardsUI
-            .indexWhere((card) => card.username == estimate.name);
-        if (index >= 0) {
-          userEstimationCardsUI[index]
-            ..isInRoom = true
-            ..estimate = estimate.estimate;
-        } else {
-          userEstimationCardsUI.add(UserEstimationCard(
-            username: estimate.name,
-            estimate: estimate.estimate,
-          ));
-        }
-      });
-
-      final estimatedTaskInfo = estimates.isEmpty
-          ? EstimatedTaskInfo(taskId: event.roomStatus.taskId)
-          : EstimatedTaskInfo(
-              taskId: event.roomStatus.taskId,
-              average: Stats.average(estimates),
-              median: Stats.median(estimates),
-            );
-
+      final planningRoomStatusInfo = await _planningRoomRepository.processRoomStatusToUIModel(event.roomStatus);
+      
       yield PlanningRoomRoomStatusLoaded(
-        estimatedTaskInfo: estimatedTaskInfo,
-        amAdmin: amAdmin,
-        alreadyEstimated: alreadyEstimated,
-        userEstimationCards: userEstimationCardsUI,
+        planningRoomStatusInfo: planningRoomStatusInfo
       );
     } catch (e) {
       print(e);

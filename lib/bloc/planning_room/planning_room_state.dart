@@ -20,15 +20,12 @@ class PlanningRoomRoomStatusLoading extends PlanningRoomState {
 }
 
 class PlanningRoomRoomStatusLoaded extends PlanningRoomState {
-  final EstimatedTaskInfo estimatedTaskInfo;
-  final bool amAdmin;
-  final bool alreadyEstimated;
-  final List<UserEstimationCard> userEstimationCards;
+  final PlanningRoomStatusInfo planningRoomStatusInfo;
 
-  const PlanningRoomRoomStatusLoaded({@required this.estimatedTaskInfo, @required this.amAdmin, @required this.alreadyEstimated, @required this.userEstimationCards}) : assert(estimatedTaskInfo != null), assert(amAdmin != null), assert(alreadyEstimated != null);
+  const PlanningRoomRoomStatusLoaded({@required this.planningRoomStatusInfo}) : assert(planningRoomStatusInfo != null);
 
   @override
-  String toString() => 'PlanningRoomRoomStatusLoaded $estimatedTaskInfo';
+  String toString() => 'PlanningRoomRoomStatusLoaded $planningRoomStatusInfo';
 }
 
 class PlanningRoomError extends PlanningRoomState {

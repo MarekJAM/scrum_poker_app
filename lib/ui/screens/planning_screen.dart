@@ -154,10 +154,11 @@ class _PlanningScreenState extends State<PlanningScreen> {
         ),
         BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
           buildWhen: (_, state) {
-            return state is PlanningRoomRoomStatusLoaded ? true : false;
+            return state is PlanningRoomRoomStatusLoaded;
           },
           builder: (context, state) {
-            if (state is PlanningRoomRoomStatusLoaded && state.amAdmin) {
+            if (state is PlanningRoomRoomStatusLoaded &&
+                state.planningRoomStatusInfo.amAdmin) {
               return ListTile(
                 leading: Icon(
                   Icons.remove_circle,
@@ -188,10 +189,11 @@ class _PlanningScreenState extends State<PlanningScreen> {
   Widget _buildAdminAppBarAction(BuildContext context) {
     return BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
       buildWhen: (_, state) {
-        return state is PlanningRoomRoomStatusLoaded ? true : false;
+        return state is PlanningRoomRoomStatusLoaded;
       },
       builder: (context, state) {
-        if (state is PlanningRoomRoomStatusLoaded && state.amAdmin) {
+        if (state is PlanningRoomRoomStatusLoaded &&
+            state.planningRoomStatusInfo.amAdmin) {
           return FlatButton(
             child: Icon(
               CustomIcons.estimate_request,
@@ -212,7 +214,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
       width: double.infinity,
       child: BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
         buildWhen: (_, state) {
-          return state is PlanningRoomRoomStatusLoaded ? true : false;
+          return state is PlanningRoomRoomStatusLoaded;
         },
         builder: (_, state) {
           if (state is PlanningRoomRoomStatusLoaded) {
@@ -220,7 +222,8 @@ class _PlanningScreenState extends State<PlanningScreen> {
               alignment: WrapAlignment.start,
               direction: Axis.horizontal,
               children: [
-                for (var card in state.userEstimationCards)
+                for (var card
+                    in state.planningRoomStatusInfo.userEstimationCards)
                   Container(
                     width: deviceSize.width * 1 / 3,
                     child: Card(
@@ -258,8 +261,8 @@ class _PlanningScreenState extends State<PlanningScreen> {
     return BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
       builder: (_, state) {
         if (state is PlanningRoomRoomStatusLoaded &&
-            !state.alreadyEstimated &&
-            state.estimatedTaskInfo.taskId.isNotEmpty) {
+            !state.planningRoomStatusInfo.alreadyEstimated &&
+            state.planningRoomStatusInfo.estimatedTaskInfo.taskId.isNotEmpty) {
           return Positioned(
             bottom: 0,
             child: Container(
@@ -274,8 +277,10 @@ class _PlanningScreenState extends State<PlanningScreen> {
                 itemCount: estimates.length,
                 itemBuilder: (context, index) => GestureDetector(
                   onTap: () {
-                    _showEstimateConfirmationDialog(context,
-                        state.estimatedTaskInfo.taskId, estimates[index]);
+                    _showEstimateConfirmationDialog(
+                        context,
+                        state.planningRoomStatusInfo.estimatedTaskInfo.taskId,
+                        estimates[index]);
                   },
                   child: Card(
                     elevation: 5,
@@ -309,7 +314,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
         child: Center(
           child: BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
             buildWhen: (_, state) {
-              return state is PlanningRoomRoomStatusLoaded ? true : false;
+              return state is PlanningRoomRoomStatusLoaded;
             },
             builder: (_, state) {
               if (state is PlanningRoomRoomStatusLoaded) {
@@ -317,16 +322,18 @@ class _PlanningScreenState extends State<PlanningScreen> {
                   child: Column(
                     children: [
                       Text(
-                        state.estimatedTaskInfo.taskId.isNotEmpty
-                            ? '${state.estimatedTaskInfo.taskId}'
+                        state.planningRoomStatusInfo.estimatedTaskInfo.taskId
+                                .isNotEmpty
+                            ? '${state.planningRoomStatusInfo.estimatedTaskInfo.taskId}'
                             : "No estimation in progress.",
                         style: TextStyle(fontSize: 20),
                         textAlign: TextAlign.center,
                       ),
                       Padding(padding: EdgeInsets.only(top: 2)),
-                      state.estimatedTaskInfo.median != null
+                      state.planningRoomStatusInfo.estimatedTaskInfo.median !=
+                              null
                           ? Text(
-                              "Median: ${state.estimatedTaskInfo.median}, Average: ${state.estimatedTaskInfo.average}",
+                              "Median: ${state.planningRoomStatusInfo.estimatedTaskInfo.median}, Average: ${state.planningRoomStatusInfo.estimatedTaskInfo.average}",
                             )
                           : Container(),
                     ],
@@ -368,7 +375,8 @@ class _PlanningScreenState extends State<PlanningScreen> {
         return BlocListener<PlanningRoomBloc, PlanningRoomState>(
           listener: (context, state) {
             if (state is PlanningRoomRoomStatusLoaded &&
-                state.estimatedTaskInfo.taskId != estimatedTask) {
+                state.planningRoomStatusInfo.estimatedTaskInfo.taskId !=
+                    estimatedTask) {
               Navigator.of(context).pop();
             }
           },
