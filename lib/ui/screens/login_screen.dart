@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../utils/keys.dart';
 import '../../ui/widgets/common/common_widgets.dart';
 import '../../bloc/login/bloc.dart';
 
@@ -84,6 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     TextFormField(
+                                      key: Key(Keys.inputServerAddress),
                                       keyboardType: TextInputType.emailAddress,
                                       decoration: InputDecoration(
                                           labelText: 'Server address',
@@ -100,6 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       },
                                     ),
                                     TextFormField(
+                                      key: Key(Keys.inputUsername),
                                       decoration: InputDecoration(
                                         labelText: 'Username',
                                         prefixIcon: Icon(Icons.person),
@@ -123,6 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     state is LoginConnectingToServer
                                         ? CircularProgressIndicator()
                                         : RaisedButton(
+                                            key: Key(Keys.buttonConnect),
                                             child: Text(
                                               'Connect',
                                               style: TextStyle(

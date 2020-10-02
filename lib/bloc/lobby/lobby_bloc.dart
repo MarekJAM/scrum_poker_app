@@ -11,14 +11,12 @@ import 'bloc.dart';
 class LobbyBloc extends Bloc<LobbyEvent, LobbyState> {
   final WebSocketBloc _webSocketBloc;
   StreamSubscription webSocketSubscription;
-  final RoomsRepository _roomsRepository;
 
   LobbyBloc(
       {@required WebSocketBloc webSocketBloc,
       @required RoomsRepository roomsRepository})
       : assert(webSocketBloc != null),
         _webSocketBloc = webSocketBloc,
-        _roomsRepository = roomsRepository,
         super(LobbyInitial()) {
     webSocketSubscription = _webSocketBloc.listen((state) {
       if (state is WSMessageLoaded && state.message is LobbyStatus) {

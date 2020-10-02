@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../ui/screens/screens.dart';
 import '../../bloc/room_connection/bloc.dart';
 import '../../bloc/login/bloc.dart';
+import '../../utils/keys.dart';
 
 class AppDrawer extends StatelessWidget {
   final List<Widget> passedWidgets;
@@ -45,6 +47,7 @@ class AppDrawer extends StatelessWidget {
             ),
             Divider(),
             ListTile(
+              key: Key(Keys.buttonDisconnect),
               leading: Icon(Icons.exit_to_app),
               title: Text('Disconnect'),
               onTap: () {

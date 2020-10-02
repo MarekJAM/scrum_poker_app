@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scrum_poker_app/ui/screens/screens.dart';
+
+import '../../ui/screens/screens.dart';
 import '../../bloc/room_connection/bloc.dart';
+import '../../utils/keys.dart';
 
 class CreateRoomScreen extends StatelessWidget {
   static const routeName = '/createRoom';
@@ -29,6 +31,7 @@ class CreateRoomScreen extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child: TextFormField(
+                  key: Key(Keys.inputRoomname),
                   decoration: InputDecoration(labelText: "Room name"),
                   controller: _roomController,
                   validator: (value) {
@@ -68,6 +71,7 @@ class CreateRoomScreen extends StatelessWidget {
                                 child: CircularProgressIndicator(),
                               )
                             : RaisedButton(
+                                key: Key(Keys.buttonCreateRoom),
                                 child: Text(
                                   "Create",
                                   style: TextStyle(

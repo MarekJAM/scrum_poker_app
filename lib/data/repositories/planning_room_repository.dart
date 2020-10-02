@@ -4,8 +4,10 @@ import '../../ui/ui_models/ui_models.dart';
 import '../../data/models/models.dart';
 
 class PlanningRoomRepository {
+
   Future<PlanningRoomStatusInfo> processRoomStatusToUIModel(
       RoomStatus roomStatus) async {
+        
     final myUsername = await SecureStorage().readUsername();
     final amAdmin = roomStatus.admins.contains(myUsername);
     final alreadyEstimated = ((roomStatus.estimates.singleWhere(
@@ -50,7 +52,7 @@ class PlanningRoomRepository {
             average: Stats.average(estimates),
             median: Stats.median(estimates),
           );
-          
+
     return PlanningRoomStatusInfo(
       amAdmin: amAdmin,
       alreadyEstimated: alreadyEstimated,
@@ -58,4 +60,5 @@ class PlanningRoomRepository {
       userEstimationCards: userEstimationCardsUI,
     );
   }
+  
 }

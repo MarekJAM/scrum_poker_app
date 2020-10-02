@@ -12,6 +12,7 @@ import '../../bloc/lobby/bloc.dart';
 import '../../bloc/planning_room/bloc.dart';
 import '../../bloc/room_connection/bloc.dart';
 import 'lobby_screen.dart';
+import '../../utils/keys.dart';
 
 class PlanningScreen extends StatefulWidget {
   static const routeName = '/planning';
@@ -160,6 +161,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
             if (state is PlanningRoomRoomStatusLoaded &&
                 state.planningRoomStatusInfo.amAdmin) {
               return ListTile(
+                key: Key(Keys.buttonDestroyRoom),
                 leading: Icon(
                   Icons.remove_circle,
                   color: Colors.red,

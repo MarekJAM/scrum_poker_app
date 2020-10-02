@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../bloc/room_connection/bloc.dart';
+import '../../../utils/keys.dart';
 
 class ConfirmDestroyRoomDialog extends StatelessWidget {
   @override
@@ -32,6 +34,7 @@ class ConfirmDestroyRoomDialog extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   RaisedButton(
+                    key: Key(Keys.buttonDestroyRoomConfirm),
                     color: Theme.of(context).primaryColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),

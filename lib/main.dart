@@ -5,7 +5,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:http/http.dart' as http;
 
 import './bloc/room_connection/bloc.dart';
-import './bloc/planning_room/planning_room_bloc.dart';
+import './bloc/planning_room/bloc.dart';
 import './bloc/lobby/bloc.dart';
 import './bloc/websocket/bloc.dart';
 import './bloc/login/bloc.dart';

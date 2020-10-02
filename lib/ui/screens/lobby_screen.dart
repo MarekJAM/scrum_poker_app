@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../bloc/lobby/bloc.dart';
 import '../widgets/app_drawer.dart';
 import '../../bloc/room_connection/bloc.dart';
 import 'screens.dart';
 import '../../ui/widgets/common/widgets.dart';
+import '../../utils/keys.dart';
+
 
 class LobbyScreen extends StatelessWidget {
   static const routeName = '/rooms';
@@ -20,6 +23,7 @@ class LobbyScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        key: Key(Keys.titleLobby),
         title: Text('Lobby'),
       ),
       drawer: AppDrawer(),
@@ -105,6 +109,7 @@ class LobbyScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        key: Key(Keys.buttonNavigateToCreateRoomScreen),
         child: Text(
           '+',
           style: TextStyle(fontSize: 35),
