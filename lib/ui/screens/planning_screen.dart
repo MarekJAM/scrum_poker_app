@@ -197,6 +197,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
         if (state is PlanningRoomRoomStatusLoaded &&
             state.planningRoomStatusInfo.amAdmin) {
           return FlatButton(
+            key: Key(Keys.buttonRequestEstimateOpenDialog),
             child: Icon(
               CustomIcons.estimate_request,
               color: Theme.of(context).canvasColor,
@@ -336,6 +337,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
                               null
                           ? Text(
                               "Median: ${state.planningRoomStatusInfo.estimatedTaskInfo.median}, Average: ${state.planningRoomStatusInfo.estimatedTaskInfo.average}",
+                              key: Key(Keys.textMedianAndAverage),
                             )
                           : Container(),
                     ],

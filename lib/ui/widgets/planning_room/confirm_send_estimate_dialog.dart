@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../bloc/planning_room/bloc.dart';
+import '../../../utils/keys.dart';
 
 class ConfirmSendEstimateDialog extends StatelessWidget {
   const ConfirmSendEstimateDialog(this.estimatedTask, this.estimate);
@@ -51,6 +53,7 @@ class ConfirmSendEstimateDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 RaisedButton(
+                  key: Key(Keys.buttonSendEstimateConfirm),
                   color: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),

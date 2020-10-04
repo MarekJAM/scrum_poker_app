@@ -16,4 +16,11 @@ class Keys {
   // create room screen
   static const String inputRoomname = 'inputRoomname';
   static const String buttonCreateRoom = 'buttonCreateRoom';
+
+  // planning room screen
+  static const String buttonRequestEstimateOpenDialog = 'buttonRequestEstimateOpenDialog';
+  static const String inputEstimatedTask = 'inputEstimatedTask';
+  static const String buttonRequestEstimateConfirm = 'buttonRequestEstimateConfirm';
+  static const String buttonSendEstimateConfirm = 'buttonSendEstimateConfirm';
+  static const String textMedianAndAverage = 'textMedianAndAverage';
 }
