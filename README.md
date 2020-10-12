@@ -1,16 +1,7 @@
 # scrum_poker_app
 
-A new Flutter project.
+Mobile client for https://github.com/lawfx/ScrumPokerServer project.
 
-## Getting Started
+Connect to the server, create a room, wait for others to join and let the planning begin!
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+In the current version the creator of the room is it's only admin by default. The admin requests for estimates for given task, then all the users (including admin) can send thier estimates. Only admin can see estimates all the time, 'regular roomie' has to estimate first in order to see others estimates.
