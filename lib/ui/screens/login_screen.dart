@@ -27,176 +27,162 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
-        body: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color.fromRGBO(255, 127, 80, 1).withOpacity(0.4),
-                    Colors.blue,
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  stops: [0, 1],
-                ),
-              ),
-            ),
-            SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              child: Container(
-                height: deviceSize.height,
-                width: deviceSize.width,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Scrum Poker',
-                      style: TextStyle(
-                        color:
-                            Theme.of(context).accentTextTheme.headline2.color,
-                        fontSize: 35,
-                        fontFamily: 'Anton',
-                        fontWeight: FontWeight.normal,
-                      ),
+      body: SingleChildScrollView(
+        child: Container(
+          height: deviceSize.height,
+          width: deviceSize.width,
+          child: Stack(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Scrum Poker',
+                    style: TextStyle(
+                      color: Theme.of(context).accentTextTheme.headline2.color,
+                      fontSize: 35,
+                      fontFamily: 'Anton',
+                      fontWeight: FontWeight.normal,
                     ),
-                    Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Form(
-                          key: _formKey,
-                          child: BlocConsumer<LoginBloc, LoginState>(
-                            listener: (ctx, state) {
-                              if (state is LoginConnectionError) {
-                                CommonWidgets.displaySnackBar(
-                                  context: ctx,
-                                  message: state.message,
-                                  color: Theme.of(ctx).errorColor,
-                                );
-                              }
-                            },
-                            builder: (context, state) {
-                              if (state is LoginDisconnectedFromServer) {
-                                _userController.text = state.username;
-                                _serverController.text = state.serverAddress;
-                              }
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  TextFormField(
-                                    key: Key(Keys.inputServerAddress),
-                                    keyboardType: TextInputType.emailAddress,
-                                    decoration: InputDecoration(
-                                      labelText: 'Server address',
-                                      prefixIcon: Icon(Icons.dns),
-                                      
-                                    ),
-                                    readOnly: state is LoginConnectingToServer
-                                        ? true
-                                        : false,
-                                    controller: _serverController,
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return "Provide server address.";
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                  TextFormField(
-                                    key: Key(Keys.inputUsername),
-                                    decoration: InputDecoration(
-                                      labelText: 'Username',
-                                      prefixIcon: Icon(Icons.person),
-                                    ),
-                                    readOnly: state is LoginConnectingToServer
-                                        ? true
-                                        : false,
-                                    controller: _userController,
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return "Provide username.";
-                                      } else if (value.trim().length > 20) {
-                                        return "Name too long - max. 20 characters.";
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                  TextFormField(
-                                    decoration: InputDecoration(
-                                      labelText: 'Password',
-                                      prefixIcon: Icon(Icons.lock),
-                                    ),
-                                    obscureText: true,
-                                    controller: _passwordController,
-                                    readOnly: state is LoginConnectingToServer
-                                        ? true
-                                        : false,
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return "Provide password.";
-                                      } else if (value.trim().length > 20) {
-                                        return "Password too long - max. 20 characters.";
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  state is LoginConnectingToServer
-                                      ? CircularProgressIndicator()
-                                      : ConstrainedBox(
-                                          constraints: const BoxConstraints(
-                                            minWidth: double.infinity,
-                                          ),
-                                          child: RaisedButton(
-                                            key: Key(Keys.buttonConnect),
-                                            child: Text(
-                                              'Login',
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .canvasColor,
-                                              ),
-                                            ),
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            onPressed: () {
-                                              if (_formKey.currentState
-                                                  .validate()) {
-                                                _onFormSubmitted();
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                  Divider(),
-                                  ConstrainedBox(
-                                    constraints: const BoxConstraints(
-                                      minWidth: double.infinity,
-                                    ),
-                                    child: RaisedButton(
-                                      onPressed: () {},
-                                      child: Text('Signup'),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text('Login as guest'),
-                                  ),
-                                ],
+                  ),
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Form(
+                        key: _formKey,
+                        child: BlocConsumer<LoginBloc, LoginState>(
+                          listener: (ctx, state) {
+                            if (state is LoginConnectionError) {
+                              CommonWidgets.displaySnackBar(
+                                context: ctx,
+                                message: state.message,
+                                color: Theme.of(ctx).errorColor,
                               );
-                            },
-                          ),
+                            }
+                          },
+                          builder: (context, state) {
+                            if (state is LoginDisconnectedFromServer) {
+                              _userController.text = state.username;
+                              _serverController.text = state.serverAddress;
+                            }
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextFormField(
+                                  key: Key(Keys.inputServerAddress),
+                                  keyboardType: TextInputType.emailAddress,
+                                  decoration: InputDecoration(
+                                    labelText: 'Server address',
+                                    prefixIcon: Icon(
+                                      Icons.dns,
+                                    ),
+                                  ),
+                                  readOnly: state is LoginConnectingToServer
+                                      ? true
+                                      : false,
+                                  controller: _serverController,
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return "Provide server address.";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                TextFormField(
+                                  key: Key(Keys.inputUsername),
+                                  decoration: InputDecoration(
+                                    labelText: 'Username',
+                                    prefixIcon: Icon(Icons.person),
+                                  ),
+                                  readOnly: state is LoginConnectingToServer
+                                      ? true
+                                      : false,
+                                  controller: _userController,
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return "Provide username.";
+                                    } else if (value.trim().length > 20) {
+                                      return "Name too long - max. 20 characters.";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                TextFormField(
+                                  decoration: InputDecoration(
+                                    labelText: 'Password',
+                                    prefixIcon: Icon(Icons.lock),
+                                  ),
+                                  obscureText: true,
+                                  controller: _passwordController,
+                                  readOnly: state is LoginConnectingToServer
+                                      ? true
+                                      : false,
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return "Provide password.";
+                                    } else if (value.trim().length > 20) {
+                                      return "Password too long - max. 20 characters.";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                state is LoginConnectingToServer
+                                    ? CircularProgressIndicator()
+                                    : ConstrainedBox(
+                                        constraints: const BoxConstraints(
+                                          minWidth: double.infinity,
+                                        ),
+                                        child: RaisedButton(
+                                          key: Key(Keys.buttonConnect),
+                                          child: Text(
+                                            'Login',
+                                          ),
+                                          onPressed: () {
+                                            if (_formKey.currentState
+                                                .validate()) {
+                                              _onFormSubmitted();
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                Divider(),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text('Continue as guest'),
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       ),
                     ),
-                  ],
+                  ),
+                ],
+              ),
+              Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      minWidth: double.infinity,
+                    ),
+                    child: RaisedButton(
+                      onPressed: () {},
+                      child: Text('Create Account'),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        backgroundColor: Theme.of(context).primaryColor);
+      ),
+    );
   }
 
   void _onFormSubmitted() {

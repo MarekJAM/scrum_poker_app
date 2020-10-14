@@ -45,13 +45,11 @@ class RequestEstimateDialog extends StatelessWidget {
               ),
               RaisedButton(
                 key: Key(Keys.buttonRequestEstimateConfirm),
-                color: Theme.of(context).primaryColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
                   "Start estimation",
-                  style: TextStyle(color: Theme.of(context).canvasColor),
                 ),
                 onPressed: () {
                   if (_reqestEstimateKey.currentState.validate()) {

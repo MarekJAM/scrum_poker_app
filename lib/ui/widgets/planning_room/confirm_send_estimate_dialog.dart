@@ -27,7 +27,6 @@ class ConfirmSendEstimateDialog extends StatelessWidget {
                 text: TextSpan(
                   style: TextStyle(
                     fontSize: 14.0,
-                    color: Colors.black,
                   ),
                   children: [
                     TextSpan(text: 'Do you want to estimate task '),

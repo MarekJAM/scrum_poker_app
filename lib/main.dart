@@ -24,7 +24,8 @@ void main() {
   final RoomsRepository roomsRepository = RoomsRepository(
       roomsApiClient: RoomsApiClient(httpClient: http.Client()));
 
-  final PlanningRoomRepository planningRoomRepository = PlanningRoomRepository();
+  final PlanningRoomRepository planningRoomRepository =
+      PlanningRoomRepository();
 
   // ignore: close_sinks
   final webSocketBloc =
@@ -35,7 +36,9 @@ void main() {
   // ignore: close_sinks
   final loginBloc = LoginBloc(webSocketBloc: webSocketBloc);
   // ignore: close_sinks
-  final planningRoomBloc = PlanningRoomBloc(webSocketBloc: webSocketBloc, planningRoomRepository: planningRoomRepository);
+  final planningRoomBloc = PlanningRoomBloc(
+      webSocketBloc: webSocketBloc,
+      planningRoomRepository: planningRoomRepository);
   // ignore: close_sinks
   final roomConnectionBloc =
       RoomConnectionBloc(roomsRepository: roomsRepository);
@@ -122,6 +125,18 @@ class _AppViewState extends State<AppView> {
     final title = 'Scrum Poker';
     return MaterialApp(
         title: title,
+        theme: ThemeData(
+          // Define the default brightness and colors.
+          brightness: Brightness.dark,
+          primaryColor: Color(0xFF292B3D),
+          accentColor: Color(0xFFE07A5F),
+          buttonColor: Color(0xFFE07A5F),
+          scaffoldBackgroundColor: Color(0xFF3D405B),
+          textSelectionHandleColor: Color(0xFFE07A5F),
+          cardColor: Color(0xFFE07A5F),
+          dialogBackgroundColor: Color(0xFF3D405B)
+          // canvasColor: Colors.white,
+        ),
         navigatorKey: _navigatorKey,
         builder: (context, child) {
           return Scaffold(

@@ -35,13 +35,11 @@ class ConfirmDestroyRoomDialog extends StatelessWidget {
                 children: [
                   RaisedButton(
                     key: Key(Keys.buttonDestroyRoomConfirm),
-                    color: Theme.of(context).primaryColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
                       "Yes",
-                      style: TextStyle(color: Theme.of(context).canvasColor),
                     ),
                     onPressed: () {
                       BlocProvider.of<RoomConnectionBloc>(context).add(
@@ -52,7 +50,6 @@ class ConfirmDestroyRoomDialog extends StatelessWidget {
                   Builder(
                     builder: (context) {
                       return RaisedButton(
-                        color: Theme.of(context).buttonColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),

@@ -200,7 +200,6 @@ class _PlanningScreenState extends State<PlanningScreen> {
             key: Key(Keys.buttonRequestEstimateOpenDialog),
             child: Icon(
               CustomIcons.estimate_request,
-              color: Theme.of(context).canvasColor,
             ),
             onPressed: () {
               _showRequestEstimateDialog(context);
@@ -230,7 +229,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
                   Container(
                     width: deviceSize.width * 1 / 3,
                     child: Card(
-                      color: card.isInRoom ? null : Colors.grey[200],
+                      color: card.isInRoom ? Colors.grey[200] : Colors.grey[400],
                       shape: card.isAdmin
                           ? RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5),
@@ -241,9 +240,12 @@ class _PlanningScreenState extends State<PlanningScreen> {
                           card.username,
                           maxLines: 1,
                           overflow: TextOverflow.clip,
+                          style: TextStyle(color: Colors.black),
                         ),
                         trailing: Text(
-                            card.estimate == null ? '' : '${card.estimate}'),
+                          card.estimate == null ? '' : '${card.estimate}',
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                     ),
                   ),

@@ -16,7 +16,7 @@ class CreateRoomScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: FlatButton(
-          child: Icon(Icons.arrow_back, color: Theme.of(context).canvasColor),
+          child: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.of(context).pushReplacementNamed(LobbyScreen.routeName);
           },
@@ -74,9 +74,7 @@ class CreateRoomScreen extends StatelessWidget {
                                 key: Key(Keys.buttonCreateRoom),
                                 child: Text(
                                   "Create",
-                                  style: TextStyle(
-                                    color: Theme.of(context).canvasColor,
-                                  ),
+                             
                                 ),
                                 color: Theme.of(context).primaryColor,
                                 shape: RoundedRectangleBorder(
