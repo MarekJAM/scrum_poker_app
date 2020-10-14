@@ -13,6 +13,7 @@ import '../../bloc/planning_room/bloc.dart';
 import '../../bloc/room_connection/bloc.dart';
 import 'lobby_screen.dart';
 import '../../utils/keys.dart';
+import '../../utils/custom_colors.dart';
 
 class PlanningScreen extends StatefulWidget {
   static const routeName = '/planning';
@@ -164,7 +165,7 @@ class _PlanningScreenState extends State<PlanningScreen> {
                 key: Key(Keys.buttonDestroyRoom),
                 leading: Icon(
                   Icons.remove_circle,
-                  color: Colors.red,
+                  color: Theme.of(context).errorColor,
                 ),
                 title: Text('Destroy room'),
                 onTap: () {
@@ -229,22 +230,22 @@ class _PlanningScreenState extends State<PlanningScreen> {
                   Container(
                     width: deviceSize.width * 1 / 3,
                     child: Card(
-                      color: card.isInRoom ? Colors.grey[200] : Colors.grey[400],
+                      color: card.isInRoom ? CustomColors.buttonLightGrey : CustomColors.buttonGrey,
                       shape: card.isAdmin
                           ? RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5),
-                              side: BorderSide(color: Colors.yellow, width: 2))
+                              side: BorderSide(color: Theme.of(context).accentColor, width: 3))
                           : null,
                       child: ListTile(
                         title: Text(
                           card.username,
                           maxLines: 1,
                           overflow: TextOverflow.clip,
-                          style: TextStyle(color: Colors.black),
+                          style: TextStyle(color: CustomColors.textDark),
                         ),
                         trailing: Text(
                           card.estimate == null ? '' : '${card.estimate}',
-                          style: TextStyle(color: Colors.black),
+                          style: TextStyle(color: CustomColors.textDark),
                         ),
                       ),
                     ),

@@ -126,7 +126,6 @@ class _AppViewState extends State<AppView> {
     return MaterialApp(
         title: title,
         theme: ThemeData(
-          // Define the default brightness and colors.
           brightness: Brightness.dark,
           primaryColor: Color(0xFF292B3D),
           accentColor: Color(0xFFE07A5F),
@@ -134,8 +133,7 @@ class _AppViewState extends State<AppView> {
           scaffoldBackgroundColor: Color(0xFF3D405B),
           textSelectionHandleColor: Color(0xFFE07A5F),
           cardColor: Color(0xFFE07A5F),
-          dialogBackgroundColor: Color(0xFF3D405B)
-          // canvasColor: Colors.white,
+          dialogBackgroundColor: Color(0xFF3D405B),
         ),
         navigatorKey: _navigatorKey,
         builder: (context, child) {

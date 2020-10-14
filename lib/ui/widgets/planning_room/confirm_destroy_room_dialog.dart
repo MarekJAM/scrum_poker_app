@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/room_connection/bloc.dart';
 import '../../../utils/keys.dart';
+import '../../../utils/custom_colors.dart';
 
 class ConfirmDestroyRoomDialog extends StatelessWidget {
   @override
@@ -50,10 +51,16 @@ class ConfirmDestroyRoomDialog extends StatelessWidget {
                   Builder(
                     builder: (context) {
                       return RaisedButton(
+                        color: CustomColors.buttonGrey,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Text("No"),
+                        child: Text(
+                          "No",
+                          style: TextStyle(
+                            color: CustomColors.textDark,
+                          ),
+                        ),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },

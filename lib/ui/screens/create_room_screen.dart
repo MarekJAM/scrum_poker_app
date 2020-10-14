@@ -63,7 +63,8 @@ class CreateRoomScreen extends StatelessWidget {
                             child: Text(
                               state.message,
                               style: TextStyle(
-                                  color: Theme.of(context).errorColor),
+                                color: Theme.of(context).errorColor,
+                              ),
                             ),
                           ),
                         state is RoomConnectionConnecting
@@ -74,9 +75,8 @@ class CreateRoomScreen extends StatelessWidget {
                                 key: Key(Keys.buttonCreateRoom),
                                 child: Text(
                                   "Create",
-                             
                                 ),
-                                color: Theme.of(context).primaryColor,
+                                color: Theme.of(context).accentColor,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),

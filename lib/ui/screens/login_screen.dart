@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../utils/keys.dart';
 import '../../ui/widgets/common/common_widgets.dart';
 import '../../bloc/login/bloc.dart';
+import '../../utils/custom_colors.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -172,8 +173,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       minWidth: double.infinity,
                     ),
                     child: RaisedButton(
+                      color: CustomColors.buttonGrey,
                       onPressed: () {},
-                      child: Text('Create Account'),
+                      child: Text(
+                        'Create Account',
+                        style: TextStyle(color: CustomColors.textDark),
+                      ),
                     ),
                   ),
                 ),

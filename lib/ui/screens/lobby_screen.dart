@@ -110,9 +110,11 @@ class LobbyScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         key: Key(Keys.buttonNavigateToCreateRoomScreen),
+        backgroundColor: Colors.grey[200],
+        elevation: 15,
         child: Text(
           '+',
-          style: TextStyle(fontSize: 35),
+          style: TextStyle(fontSize: 35, color: Theme.of(context).accentColor),
         ),
         onPressed: () {
           Navigator.of(context)

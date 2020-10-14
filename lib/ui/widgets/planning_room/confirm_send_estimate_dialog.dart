@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/planning_room/bloc.dart';
 import '../../../utils/keys.dart';
+import '../../../utils/custom_colors.dart';
 
 class ConfirmSendEstimateDialog extends StatelessWidget {
   const ConfirmSendEstimateDialog(this.estimatedTask, this.estimate);
@@ -53,13 +54,11 @@ class ConfirmSendEstimateDialog extends StatelessWidget {
               children: [
                 RaisedButton(
                   key: Key(Keys.buttonSendEstimateConfirm),
-                  color: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
                     "Yes",
-                    style: TextStyle(color: Theme.of(context).canvasColor),
                   ),
                   onPressed: () {
                     BlocProvider.of<PlanningRoomBloc>(context).add(
@@ -71,11 +70,16 @@ class ConfirmSendEstimateDialog extends StatelessWidget {
                   },
                 ),
                 RaisedButton(
-                  color: Theme.of(context).buttonColor,
+                  color: CustomColors.buttonGrey,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Text("No"),
+                  child: Text(
+                    "No",
+                    style: TextStyle(
+                      color: CustomColors.textDark,
+                    ),
+                  ),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
