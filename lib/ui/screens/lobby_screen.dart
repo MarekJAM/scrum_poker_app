@@ -17,8 +17,6 @@ class LobbyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
-
     List<String> rooms = [];
 
     return Scaffold(
