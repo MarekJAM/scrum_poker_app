@@ -117,8 +117,8 @@ class _LoginScreenState extends State<LoginScreen>
                                 ),
                                 AnimatedSize(
                                   vsync: this,
-                                  duration: Duration(milliseconds: 350),
-                                  curve: Curves.fastOutSlowIn,
+                                  duration: Duration(milliseconds: 450),
+                                  curve: Curves.easeInOutBack,
                                   child: Container(
                                     child: _loginMode == LoginMode.AsGuest
                                         ? null
@@ -209,7 +209,8 @@ class _LoginScreenState extends State<LoginScreen>
                         style: TextStyle(color: CustomColors.textDark),
                       ),
                       onPressed: () {
-                        Navigator.of(context).pushNamed(RegisterScreen.routeName);
+                        Navigator.of(context)
+                            .pushNamed(RegisterScreen.routeName);
                       },
                     ),
                   ),
