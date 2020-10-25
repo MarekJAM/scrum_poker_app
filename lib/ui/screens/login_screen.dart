@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scrum_poker_app/ui/screens/register_screen.dart';
 
 import '../../utils/keys.dart';
 import '../../ui/widgets/common/common_widgets.dart';
 import '../../bloc/login/bloc.dart';
 import '../../utils/custom_colors.dart';
+
+enum LoginMode { Regular, AsGuest }
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -16,13 +19,16 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen>
+    with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _serverController = TextEditingController(
     text: "192.168.0.14:8080",
   );
   TextEditingController _userController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
+  LoginMode _loginMode = LoginMode.Regular;
 
   @override
   Widget build(BuildContext context) {
@@ -109,24 +115,34 @@ class _LoginScreenState extends State<LoginScreen> {
                                     return null;
                                   },
                                 ),
-                                TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Password',
-                                    prefixIcon: Icon(Icons.lock),
+                                AnimatedSize(
+                                  vsync: this,
+                                  duration: Duration(milliseconds: 350),
+                                  curve: Curves.fastOutSlowIn,
+                                  child: Container(
+                                    child: _loginMode == LoginMode.AsGuest
+                                        ? null
+                                        : TextFormField(
+                                            decoration: InputDecoration(
+                                              labelText: 'Password',
+                                              prefixIcon: Icon(Icons.lock),
+                                            ),
+                                            obscureText: true,
+                                            controller: _passwordController,
+                                            readOnly:
+                                                state is LoginConnectingToServer
+                                                    ? true
+                                                    : false,
+                                            validator: (value) {
+                                              // if (value.isEmpty) {
+                                              //   return "Provide password.";
+                                              // } else if (value.trim().length > 20) {
+                                              //   return "Password too long - max. 20 characters.";
+                                              // }
+                                              return null;
+                                            },
+                                          ),
                                   ),
-                                  obscureText: true,
-                                  controller: _passwordController,
-                                  readOnly: state is LoginConnectingToServer
-                                      ? true
-                                      : false,
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return "Provide password.";
-                                    } else if (value.trim().length > 20) {
-                                      return "Password too long - max. 20 characters.";
-                                    }
-                                    return null;
-                                  },
                                 ),
                                 SizedBox(
                                   height: 20,
@@ -140,7 +156,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                         child: RaisedButton(
                                           key: Key(Keys.buttonConnect),
                                           child: Text(
-                                            'Login',
+                                            _loginMode == LoginMode.Regular
+                                                ? 'Login'
+                                                : 'Login as Guest',
                                           ),
                                           onPressed: () {
                                             if (_formKey.currentState
@@ -151,9 +169,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                       ),
                                 Divider(),
-                                Padding(
+                                FlatButton(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Text('Continue as guest'),
+                                  child: Text(_loginMode == LoginMode.Regular
+                                      ? 'Continue as Guest'
+                                      : 'Go Back'),
+                                  onPressed: () {
+                                    setState(
+                                      () {
+                                        _loginMode =
+                                            _loginMode == LoginMode.AsGuest
+                                                ? LoginMode.Regular
+                                                : LoginMode.AsGuest;
+                                      },
+                                    );
+                                  },
                                 ),
                               ],
                             );
@@ -174,11 +204,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: RaisedButton(
                       color: CustomColors.buttonGrey,
-                      onPressed: () {},
                       child: Text(
                         'Create Account',
                         style: TextStyle(color: CustomColors.textDark),
                       ),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(RegisterScreen.routeName);
+                      },
                     ),
                   ),
                 ),

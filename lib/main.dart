@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:scrum_poker_app/ui/screens/register_screen.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:http/http.dart' as http;
 
@@ -165,6 +166,7 @@ class _AppViewState extends State<AppView> {
         },
         routes: {
           LoginScreen.routeName: (ctx) => LoginScreen(),
+          RegisterScreen.routeName: (ctx) => RegisterScreen(),
           LobbyScreen.routeName: (ctx) => LobbyScreen(),
           PlanningScreen.routeName: (ctx) => PlanningScreen(),
           CreateRoomScreen.routeName: (ctx) => CreateRoomScreen(),
