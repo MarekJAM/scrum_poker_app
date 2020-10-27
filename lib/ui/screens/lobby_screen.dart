@@ -8,7 +8,6 @@ import 'screens.dart';
 import '../../ui/widgets/common/widgets.dart';
 import '../../utils/keys.dart';
 
-
 class LobbyScreen extends StatelessWidget {
   static const routeName = '/rooms';
   static Route route() {
@@ -39,9 +38,11 @@ class LobbyScreen extends StatelessWidget {
                       color: Theme.of(context).errorColor,
                     );
                   } else if (state is RoomConnectionConnectedToRoom) {
-                    Navigator.of(context).pushReplacementNamed(
-                        PlanningScreen.routeName,
-                        arguments: state.roomName);
+                    Navigator.of(context).pushNamedAndRemoveUntil<void>(
+                      PlanningScreen.routeName,
+                      (route) => false,
+                      arguments: state.roomName,
+                    );
                   }
                 },
                 child: BlocBuilder<LobbyBloc, LobbyState>(
@@ -115,8 +116,7 @@ class LobbyScreen extends StatelessWidget {
           style: TextStyle(fontSize: 35, color: Theme.of(context).accentColor),
         ),
         onPressed: () {
-          Navigator.of(context)
-              .pushReplacementNamed(CreateRoomScreen.routeName);
+          Navigator.of(context).pushNamed(CreateRoomScreen.routeName);
         },
       ),
     );

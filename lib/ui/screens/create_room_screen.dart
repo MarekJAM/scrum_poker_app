@@ -16,11 +16,10 @@ class CreateRoomScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: FlatButton(
-          child: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pushReplacementNamed(LobbyScreen.routeName);
-          },
-        ),
+            child: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
       ),
       body: Container(
         child: Form(
@@ -46,15 +45,7 @@ class CreateRoomScreen extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: BlocConsumer<RoomConnectionBloc, RoomConnectionState>(
-                  listener: (_, state) {
-                    if (state is RoomConnectionConnectedToRoom) {
-                      Navigator.of(context).pushReplacementNamed(
-                        PlanningScreen.routeName,
-                        arguments: _roomController.text.trim(),
-                      );
-                    }
-                  },
+                child: BlocBuilder<RoomConnectionBloc, RoomConnectionState>(
                   builder: (_, state) {
                     return Column(
                       children: [
