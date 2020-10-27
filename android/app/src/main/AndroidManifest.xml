@@ -7,7 +7,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="scrum_poker_app"
+        android:label="Skram"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scrum_poker_app/ui/screens/register_screen.dart';
 
 import '../../utils/keys.dart';
@@ -30,6 +31,8 @@ class _LoginScreenState extends State<LoginScreen>
 
   LoginMode _loginMode = LoginMode.Regular;
 
+  final String assetLogo = 'assets/skram_logo_osvg.svg';
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -44,15 +47,7 @@ class _LoginScreenState extends State<LoginScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    'Scrum Poker',
-                    style: TextStyle(
-                      color: Theme.of(context).accentTextTheme.headline2.color,
-                      fontSize: 35,
-                      fontFamily: 'Anton',
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
+                  SvgPicture.asset(assetLogo, semanticsLabel: 'Logo', width: deviceSize.width * 0.6, ),
                   Center(
                     child: Padding(
                       padding: EdgeInsets.all(16),
