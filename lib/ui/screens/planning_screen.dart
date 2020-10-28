@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:wakelock/wakelock.dart';
@@ -14,6 +15,7 @@ import '../../bloc/room_connection/bloc.dart';
 import 'lobby_screen.dart';
 import '../../utils/keys.dart';
 import '../../utils/custom_colors.dart';
+import '../../utils/notifier.dart';
 
 class PlanningScreen extends StatefulWidget {
   static const routeName = '/planning';
@@ -23,6 +25,7 @@ class PlanningScreen extends StatefulWidget {
 }
 
 class _PlanningScreenState extends State<PlanningScreen> {
+  String taskId;
   final estimates = [
     1,
     2,
@@ -230,11 +233,17 @@ class _PlanningScreenState extends State<PlanningScreen> {
                   Container(
                     width: deviceSize.width * 1 / 3,
                     child: Card(
-                      color: card.isInRoom ? CustomColors.buttonLightGrey : CustomColors.buttonGrey,
+                      color: card.isInRoom
+                          ? CustomColors.buttonLightGrey
+                          : CustomColors.buttonGrey,
                       shape: card.isAdmin
                           ? RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5),
-                              side: BorderSide(color: Theme.of(context).accentColor, width: 3))
+                              side: BorderSide(
+                                color: Theme.of(context).accentColor,
+                                width: 3,
+                              ),
+                            )
                           : null,
                       child: ListTile(
                         title: Text(
@@ -324,12 +333,20 @@ class _PlanningScreenState extends State<PlanningScreen> {
             },
             builder: (_, state) {
               if (state is PlanningRoomRoomStatusLoaded) {
+                if (state.planningRoomStatusInfo.estimatedTaskInfo.taskId !=
+                        taskId &&
+                    state.planningRoomStatusInfo.estimatedTaskInfo.taskId
+                        .isNotEmpty &&
+                    !state.planningRoomStatusInfo.amAdmin &&
+                    taskId != null) {
+                  Notifier.notify();
+                }
+                taskId = state.planningRoomStatusInfo.estimatedTaskInfo.taskId;
                 return SingleChildScrollView(
                   child: Column(
                     children: [
                       Text(
-                        state.planningRoomStatusInfo.estimatedTaskInfo.taskId
-                                .isNotEmpty
+                        taskId.isNotEmpty
                             ? '${state.planningRoomStatusInfo.estimatedTaskInfo.taskId}'
                             : "No estimation in progress.",
                         style: TextStyle(fontSize: 20),
