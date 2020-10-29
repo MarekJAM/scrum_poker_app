@@ -327,11 +327,8 @@ class _PlanningScreenState extends State<PlanningScreen> {
       padding: const EdgeInsets.only(top: 8.0),
       child: Container(
         child: Center(
-          child: BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
-            buildWhen: (_, state) {
-              return state is PlanningRoomRoomStatusLoaded;
-            },
-            builder: (_, state) {
+          child: BlocConsumer<PlanningRoomBloc, PlanningRoomState>(
+            listener: (_, state) {
               if (state is PlanningRoomRoomStatusLoaded) {
                 if (state.planningRoomStatusInfo.estimatedTaskInfo.taskId !=
                         taskId &&
@@ -341,6 +338,13 @@ class _PlanningScreenState extends State<PlanningScreen> {
                     taskId != null) {
                   Notifier.notify();
                 }
+              }
+            },
+            buildWhen: (_, state) {
+              return state is PlanningRoomRoomStatusLoaded;
+            },
+            builder: (_, state) {
+              if (state is PlanningRoomRoomStatusLoaded) {
                 taskId = state.planningRoomStatusInfo.estimatedTaskInfo.taskId;
                 return SingleChildScrollView(
                   child: Column(

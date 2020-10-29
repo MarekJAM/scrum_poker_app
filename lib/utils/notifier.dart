@@ -8,6 +8,8 @@ class Notifier {
       if (await Vibration.hasVibrator()) {
         Vibration.vibrate();
       }
+    } else {
+      print("Notify method not implemented for this platform.");
     }
   }
   
