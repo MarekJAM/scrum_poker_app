@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:wakelock/wakelock.dart';
@@ -24,7 +23,8 @@ class PlanningScreen extends StatefulWidget {
   _PlanningScreenState createState() => _PlanningScreenState();
 }
 
-class _PlanningScreenState extends State<PlanningScreen> {
+class _PlanningScreenState extends State<PlanningScreen>
+    with TickerProviderStateMixin {
   String taskId;
   final estimates = [
     1,
@@ -273,52 +273,64 @@ class _PlanningScreenState extends State<PlanningScreen> {
     Size deviceSize,
     List<int> estimates,
   ) {
-    return BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
-      builder: (_, state) {
-        if (state is PlanningRoomRoomStatusLoaded &&
-            !state.planningRoomStatusInfo.alreadyEstimated &&
-            state.planningRoomStatusInfo.estimatedTaskInfo.taskId.isNotEmpty) {
-          return Positioned(
-            bottom: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-              ),
-              padding: EdgeInsets.all(3),
-              height: deviceSize.height * 0.12,
-              width: deviceSize.width,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: estimates.length,
-                itemBuilder: (context, index) => GestureDetector(
-                  onTap: () {
-                    _showEstimateConfirmationDialog(
-                        context,
-                        state.planningRoomStatusInfo.estimatedTaskInfo.taskId,
-                        estimates[index]);
-                  },
-                  child: Card(
-                    elevation: 5,
-                    child: Container(
-                      child: Center(
-                        child: AutoSizeText(
-                          '${estimates[index]}',
-                          minFontSize: 24,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
+    return Positioned(
+      bottom: 0,
+      child: AnimatedSize(
+        vsync: this,
+        duration: Duration(milliseconds: 450),
+        curve: Curves.linear,
+        child: BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
+          builder: (_, state) {
+            return AnimatedSwitcher(
+              duration: Duration(milliseconds: 250),
+              child: (state is PlanningRoomRoomStatusLoaded &&
+                      !state.planningRoomStatusInfo.alreadyEstimated &&
+                      state.planningRoomStatusInfo.estimatedTaskInfo.taskId
+                          .isNotEmpty)
+                  ? Container(
+                      key: ValueKey(1),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      padding: EdgeInsets.all(3),
+                      height: deviceSize.height * 0.12,
+                      width: deviceSize.width,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: estimates.length,
+                        itemBuilder: (context, index) => GestureDetector(
+                          onTap: () {
+                            _showEstimateConfirmationDialog(
+                                context,
+                                state.planningRoomStatusInfo.estimatedTaskInfo
+                                    .taskId,
+                                estimates[index]);
+                          },
+                          child: Card(
+                            elevation: 5,
+                            child: Container(
+                              child: Center(
+                                child: AutoSizeText(
+                                  '${estimates[index]}',
+                                  minFontSize: 24,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              width: deviceSize.width * 0.12,
+                            ),
                           ),
                         ),
                       ),
-                      width: deviceSize.width * 0.12,
+                    )
+                  : Container(
+                      key: ValueKey(2),
                     ),
-                  ),
-                ),
-              ),
-            ),
-          );
-        }
-        return Container();
-      },
+            );
+          },
+        ),
+      ),
     );
   }
 
