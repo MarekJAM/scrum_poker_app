@@ -231,32 +231,47 @@ class _PlanningScreenState extends State<PlanningScreen>
                 for (var card
                     in state.planningRoomStatusInfo.userEstimationCards)
                   Container(
-                    width: deviceSize.width * 1 / 3,
-                    child: Card(
-                      color: card.isInRoom
-                          ? CustomColors.buttonLightGrey
-                          : CustomColors.buttonGrey,
-                      shape: card.isAdmin
-                          ? RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              side: BorderSide(
-                                color: Theme.of(context).accentColor,
-                                width: 3,
-                              ),
-                            )
-                          : null,
-                      child: ListTile(
-                        title: Text(
+                    width: deviceSize.width * 1 / 5,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Card(
+                            margin: EdgeInsets.zero,
+                            elevation: 8.0,
+                            shape: CircleBorder(
+                              side: card.isAdmin
+                                  ? BorderSide(
+                                      width: 2,
+                                      color: Theme.of(context).accentColor,
+                                    )
+                                  : BorderSide.none,
+                            ),
+                            clipBehavior: Clip.antiAlias,
+                            child: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: card.isInRoom
+                                  ? CustomColors.buttonLightGrey
+                                  : CustomColors.buttonGrey,
+                              child: card.estimate == null
+                                  ? Icon(Icons.timelapse)
+                                  : Text(
+                                      card.estimate == null
+                                          ? ''
+                                          : '${card.estimate}',
+                                      style: TextStyle(
+                                        fontSize: 19,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                            ),
+                          ),
+                        ),
+                        Text(
                           card.username,
-                          maxLines: 1,
-                          overflow: TextOverflow.clip,
-                          style: TextStyle(color: CustomColors.textDark),
-                        ),
-                        trailing: Text(
-                          card.estimate == null ? '' : '${card.estimate}',
-                          style: TextStyle(color: CustomColors.textDark),
-                        ),
-                      ),
+                          textAlign: TextAlign.center,
+                        )
+                      ],
                     ),
                   ),
               ],
