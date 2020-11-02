@@ -254,7 +254,7 @@ class _PlanningScreenState extends State<PlanningScreen>
                                   ? CustomColors.buttonLightGrey
                                   : CustomColors.buttonGrey,
                               child: card.estimate == null
-                                  ? Icon(Icons.timelapse)
+                                  ? Icon(Icons.help_outline)
                                   : Text(
                                       card.estimate == null
                                           ? ''
