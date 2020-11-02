@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:scrum_poker_app/ui/screens/register_screen.dart';
 
 import '../../utils/keys.dart';
 import '../../ui/widgets/common/common_widgets.dart';
@@ -47,7 +46,11 @@ class _LoginScreenState extends State<LoginScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(assetLogo, semanticsLabel: 'Logo', width: deviceSize.width * 0.6, ),
+                  SvgPicture.asset(
+                    assetLogo,
+                    semanticsLabel: 'Logo',
+                    width: deviceSize.width * 0.6,
+                  ),
                   Center(
                     child: Padding(
                       padding: EdgeInsets.all(16),
@@ -110,35 +113,6 @@ class _LoginScreenState extends State<LoginScreen>
                                     return null;
                                   },
                                 ),
-                                AnimatedSize(
-                                  vsync: this,
-                                  duration: Duration(milliseconds: 450),
-                                  curve: Curves.easeInOutBack,
-                                  child: Container(
-                                    child: _loginMode == LoginMode.AsGuest
-                                        ? null
-                                        : TextFormField(
-                                            decoration: InputDecoration(
-                                              labelText: 'Password',
-                                              prefixIcon: Icon(Icons.lock),
-                                            ),
-                                            obscureText: true,
-                                            controller: _passwordController,
-                                            readOnly:
-                                                state is LoginConnectingToServer
-                                                    ? true
-                                                    : false,
-                                            validator: (value) {
-                                              // if (value.isEmpty) {
-                                              //   return "Provide password.";
-                                              // } else if (value.trim().length > 20) {
-                                              //   return "Password too long - max. 20 characters.";
-                                              // }
-                                              return null;
-                                            },
-                                          ),
-                                  ),
-                                ),
                                 SizedBox(
                                   height: 20,
                                 ),
@@ -163,23 +137,6 @@ class _LoginScreenState extends State<LoginScreen>
                                           },
                                         ),
                                       ),
-                                Divider(),
-                                FlatButton(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(_loginMode == LoginMode.Regular
-                                      ? 'Continue as Guest'
-                                      : 'Go Back'),
-                                  onPressed: () {
-                                    setState(
-                                      () {
-                                        _loginMode =
-                                            _loginMode == LoginMode.AsGuest
-                                                ? LoginMode.Regular
-                                                : LoginMode.AsGuest;
-                                      },
-                                    );
-                                  },
-                                ),
                               ],
                             );
                           },
@@ -188,28 +145,6 @@ class _LoginScreenState extends State<LoginScreen>
                     ),
                   ),
                 ],
-              ),
-              Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      minWidth: double.infinity,
-                    ),
-                    child: RaisedButton(
-                      color: CustomColors.buttonGrey,
-                      child: Text(
-                        'Create Account',
-                        style: TextStyle(color: CustomColors.textDark),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(RegisterScreen.routeName);
-                      },
-                    ),
-                  ),
-                ),
               ),
             ],
           ),
