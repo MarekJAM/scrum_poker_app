@@ -40,12 +40,16 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
         add(WSConnectionErrorReceivedE("Could not establish connection."));
       }, onDone: () {
         var message = "";
+        print(channel.closeCode);
         switch (channel.closeCode) {
           case 1002:
             message = "Disconnected: no internet connection.";
             break;
           case 1001:
             message = "Disconnected: connection with server broken.";
+            break;
+          case 4003:
+            message = "Not authenticated.";
             break;
         }
 

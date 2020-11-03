@@ -129,11 +129,11 @@ class _LoginScreenState extends State<LoginScreen>
                                                     ? true
                                                     : false,
                                             validator: (value) {
-                                              // if (value.isEmpty) {
-                                              //   return "Provide password.";
-                                              // } else if (value.trim().length > 20) {
-                                              //   return "Password too long - max. 20 characters.";
-                                              // }
+                                              if (value.isEmpty) {
+                                                return "Provide password.";
+                                              } else if (value.trim().length > 20) {
+                                                return "Password too long - max. 20 characters.";
+                                              }
                                               return null;
                                             },
                                           ),
@@ -220,7 +220,7 @@ class _LoginScreenState extends State<LoginScreen>
 
   void _onFormSubmitted() {
     BlocProvider.of<LoginBloc>(context).add(
-      LoginConnectToServerE(_serverController.text, _userController.text),
+      LoginConnectToServerE(_serverController.text, _userController.text, _passwordController.text),
     );
   }
 }

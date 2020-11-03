@@ -1,6 +1,10 @@
 import 'dart:convert';
 
 class OutgoingMessage {
+  static String createLoginMessage(String username, String password) {
+    return json.encode({"username": username, "password": password});
+  }
+
   static String createCreateRoomJsonMsg(String username, String roomName) {
     return json.encode({"username": username, "roomname": roomName});
   }

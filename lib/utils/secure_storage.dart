@@ -11,6 +11,7 @@ class SecureStorage {
 
   final String _usernameKey = 'username';
   final String _serverAddressKey = 'serverAdress';
+  final String _token = 'token';
 
   Future<String> readUsername() async => await storage.read(key: _usernameKey);
 
@@ -23,4 +24,10 @@ class SecureStorage {
   Future writeServerAddress(value) async => await storage.write(key: _serverAddressKey, value: value);
   
   Future deleteServerAddress() async => await storage.delete(key: _serverAddressKey);
+
+  Future<String> readToken() async => await storage.read(key: _token);
+
+  Future writeToken(value) async => await storage.write(key: _token, value: value);
+  
+  Future deleteToken() async => await storage.delete(key: _token);
 }

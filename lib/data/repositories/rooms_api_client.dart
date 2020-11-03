@@ -15,9 +15,9 @@ class RoomsApiClient extends ApiClient {
 
   Future<bool> createRoom(String roomName) async {    
     http.Response response = await httpClient.put(
-      await getServerUrl() + '$_createRoomEndpoint',
+      getServerUrl() + '$_createRoomEndpoint',
       headers: {"Content-Type": "application/json"},
-      body: OutgoingMessage.createCreateRoomJsonMsg(await getUsername(), roomName)
+      body: OutgoingMessage.createCreateRoomJsonMsg(getUsername(), roomName)
     );
 
     if (response.statusCode != 201) {
@@ -29,9 +29,9 @@ class RoomsApiClient extends ApiClient {
 
   Future<bool> connectToRoom(String roomName) async {
     http.Response response = await httpClient.patch(
-      await getServerUrl() + '$_connectToRoomEndpoint',
+      getServerUrl() + '$_connectToRoomEndpoint',
       headers: {"Content-Type": "application/json"},
-      body: OutgoingMessage.createConnectRoomJsonMsg(await getUsername(), roomName)
+      body: OutgoingMessage.createConnectRoomJsonMsg(getUsername(), roomName)
     );
 
     if (response.statusCode != 200) {
@@ -43,9 +43,9 @@ class RoomsApiClient extends ApiClient {
 
   Future<bool> disconnectFromRoom() async {
     http.Response response = await httpClient.patch(
-      await getServerUrl() + '$_disconnectFromRoomEndpoint',
+      getServerUrl() + '$_disconnectFromRoomEndpoint',
       headers: {"Content-Type": "application/json"},
-      body: OutgoingMessage.createDisconnectFromRoomJsonMsg(await getUsername())
+      body: OutgoingMessage.createDisconnectFromRoomJsonMsg(getUsername())
     );
 
     if (response.statusCode != 200) {
@@ -58,9 +58,9 @@ class RoomsApiClient extends ApiClient {
   Future<bool> destroyRoom() async {
     final response = await httpClient.send(
       http.Request(
-          "DELETE", Uri.parse(await getServerUrl() + '$_destroyRoomEndpoint'))
+          "DELETE", Uri.parse(getServerUrl() + '$_destroyRoomEndpoint'))
         ..headers["Content-Type"] = "application/json"
-        ..body = OutgoingMessage.createDisconnectFromRoomJsonMsg(await getUsername()),
+        ..body = OutgoingMessage.createDisconnectFromRoomJsonMsg(getUsername()),
     );
 
     if (response.statusCode != 200) {

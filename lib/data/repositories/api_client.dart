@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'exceptions.dart';
+
 import '../../utils/secure_storage.dart';
+import '../../utils/globals.dart' as globals;
 
 class ApiClient {
   ApiClient({SecureStorage secureStorage}) : _secureStorage = secureStorage ?? SecureStorage();
@@ -32,12 +34,21 @@ class ApiClient {
     return json.decode(response.body)['message'] ?? null;
   }
 
-  Future<String> getServerUrl() async {
-    return 'http://' + await _secureStorage.readServerAddress();
+  dynamic jsonParse(response){
+    return jsonDecode(utf8.decode(response.bodyBytes));
   }
 
-  Future<String> getUsername() async {
-    return await _secureStorage.readUsername();
+  String getServerUrl() {
+    return 'http://' + globals.serverURL;
+  }
+
+  String getUsername() {
+    return globals.username;
+  }
+
+  Future<void> saveToken(String token) async {
+    globals.token = token;
+    await SecureStorage().writeToken(token);
   }
 
 }

@@ -29,6 +29,9 @@ void main() {
   final PlanningRoomRepository planningRoomRepository =
       PlanningRoomRepository();
 
+  final AuthRepository authRepository =
+      AuthRepository(authApiClient: AuthApiClient(httpClient: http.Client()));
+
   // ignore: close_sinks
   final webSocketBloc =
       WebSocketBloc(channel: channel, webSocketRepository: webSocketRepository);
@@ -36,7 +39,7 @@ void main() {
   final roomsBloc =
       LobbyBloc(webSocketBloc: webSocketBloc, roomsRepository: roomsRepository);
   // ignore: close_sinks
-  final loginBloc = LoginBloc(webSocketBloc: webSocketBloc);
+  final loginBloc = LoginBloc(webSocketBloc: webSocketBloc, authRepository: authRepository);
   // ignore: close_sinks
   final planningRoomBloc = PlanningRoomBloc(
       webSocketBloc: webSocketBloc,
@@ -53,6 +56,7 @@ void main() {
       roomsRepository: roomsRepository,
       planningRoomBloc: planningRoomBloc,
       roomConnectionBloc: roomConnectionBloc,
+      authRepository: authRepository,
     ),
   );
 }
@@ -66,6 +70,7 @@ class App extends StatelessWidget {
     @required this.roomsRepository,
     @required this.planningRoomBloc,
     @required this.roomConnectionBloc,
+    @required this.authRepository,
   }) : super(key: key);
 
   final WebSocketBloc webSocketBloc;
@@ -74,6 +79,7 @@ class App extends StatelessWidget {
   final RoomsRepository roomsRepository;
   final PlanningRoomBloc planningRoomBloc;
   final RoomConnectionBloc roomConnectionBloc;
+  final AuthRepository authRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +95,7 @@ class App extends StatelessWidget {
               create: (context) => webSocketBloc,
             ),
             BlocProvider<LoginBloc>(
-              create: (context) => LoginBloc(webSocketBloc: webSocketBloc),
+              create: (context) => LoginBloc(webSocketBloc: webSocketBloc, authRepository: authRepository),
             ),
             BlocProvider<LobbyBloc>(
               create: (context) => roomsBloc,

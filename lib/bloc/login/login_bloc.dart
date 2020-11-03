@@ -1,17 +1,22 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scrum_poker_app/utils/secure_storage.dart';
-import '../websocket/bloc.dart';
+
 import 'bloc.dart';
+import '../websocket/bloc.dart';
+import '../../utils/secure_storage.dart';
+import '../../data/repositories/repositories.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final WebSocketBloc _webSocketBloc;
+  final AuthRepository _authRepository;
   StreamSubscription webSocketSubscription;
 
-  LoginBloc({@required WebSocketBloc webSocketBloc})
+  LoginBloc({@required WebSocketBloc webSocketBloc, @required authRepository})
       : assert(webSocketBloc != null),
+        assert(authRepository != null),
         _webSocketBloc = webSocketBloc,
+        _authRepository = authRepository,
         super(LoginInitial()) {
     webSocketSubscription = _webSocketBloc.listen((state) {
       if (state is WSConnectedToServer) {
@@ -46,7 +51,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       var username = await SecureStorage().readUsername();
       var serverAddress = await SecureStorage().readServerAddress();
-      yield LoginDisconnectedFromServer(username: username, serverAddress: serverAddress);
+      yield LoginDisconnectedFromServer(
+          username: username, serverAddress: serverAddress);
     } catch (e) {
       print(e);
       yield LoginConnectionError(message: "Connection error occured.");
@@ -57,10 +63,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     yield LoginConnectingToServer();
     try {
       //this is temporary solution only
-      SecureStorage().writeServerAddress(event.link);
-      SecureStorage().writeUsername(event.username);
+      await SecureStorage().writeServerAddress(event.serverUrl);
+      await SecureStorage().writeUsername(event.username);
+
+      await _authRepository.login(event.username, event.password);
+
       _webSocketBloc.add(
-          WSConnectToServerE("ws://" + event.link + "?name=" + event.username));
+          WSConnectToServerE("ws://" + event.serverUrl));
     } catch (e) {
       print(e);
       yield LoginConnectionError(message: "Connection error occured.");
@@ -95,7 +104,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       var username = await SecureStorage().readUsername();
       var serverAddress = await SecureStorage().readServerAddress();
-      yield LoginDisconnectedFromServer(message: event.message, username: username, serverAddress: serverAddress);
+      yield LoginDisconnectedFromServer(
+          message: event.message,
+          username: username,
+          serverAddress: serverAddress);
     } catch (e) {
       print(e);
     }
