@@ -6,6 +6,7 @@ import 'bloc.dart';
 import '../websocket/bloc.dart';
 import '../../utils/secure_storage.dart';
 import '../../data/repositories/repositories.dart';
+import '../../utils/globals.dart' as globals;
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final WebSocketBloc _webSocketBloc;
@@ -59,10 +60,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  Stream<LoginState> _mapLoginConnectToServerToState(event) async* {
+  Stream<LoginState> _mapLoginConnectToServerToState(LoginConnectToServerE event) async* {
     yield LoginConnectingToServer();
     try {
       //this is temporary solution only
+      globals.serverURL = event.serverUrl;
+
       await SecureStorage().writeServerAddress(event.serverUrl);
       await SecureStorage().writeUsername(event.username);
 
@@ -72,7 +75,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           WSConnectToServerE("ws://" + event.serverUrl));
     } catch (e) {
       print(e);
-      yield LoginConnectionError(message: "Connection error occured.");
+      yield LoginConnectionError(message: e.message);
     }
   }
 

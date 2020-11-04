@@ -15,12 +15,12 @@ class AuthApiClient extends ApiClient {
         super(secureStorage: secureStorage);
 
   Future<bool> login(String username, String password) async {
-    http.Response response = await httpClient.put(
+    http.Response response = await httpClient.post(
         getServerUrl() + '$_loginEndpoint',
         headers: {"Content-Type": "application/json"},
         body: OutgoingMessage.createLoginMessage(username, password));
-
-    if (response.statusCode != 201) {
+    
+    if (response.statusCode != 200) {
       throwException(
           response.statusCode, decodeErrorMessage(response) ?? "Login failed");
     }

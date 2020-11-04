@@ -5,7 +5,8 @@ import '../../utils/secure_storage.dart';
 import '../../utils/globals.dart' as globals;
 
 class ApiClient {
-  ApiClient({SecureStorage secureStorage}) : _secureStorage = secureStorage ?? SecureStorage();
+  ApiClient({SecureStorage secureStorage})
+      : _secureStorage = secureStorage ?? SecureStorage();
 
   final SecureStorage _secureStorage;
 
@@ -27,6 +28,13 @@ class ApiClient {
     }
   }
 
+  Map<String, String> getRequestHeaders() {
+    return {
+      "Content-Type": "application/json",
+      "Authorization": 'Bearer ' + globals.token
+    };
+  }
+
   String decodeErrorMessage(response) {
     if (response.body == null) {
       return null;
@@ -34,7 +42,7 @@ class ApiClient {
     return json.decode(response.body)['message'] ?? null;
   }
 
-  dynamic jsonParse(response){
+  dynamic jsonParse(response) {
     return jsonDecode(utf8.decode(response.bodyBytes));
   }
 
@@ -50,5 +58,4 @@ class ApiClient {
     globals.token = token;
     await SecureStorage().writeToken(token);
   }
-
 }

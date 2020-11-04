@@ -1,7 +1,8 @@
-import '../../utils/secure_storage.dart';
-import '../../data/models/models.dart';
 import 'repositories.dart';
 import 'package:http/http.dart' as http;
+
+import '../../utils/secure_storage.dart';
+import '../../data/models/models.dart';
 
 class RoomsApiClient extends ApiClient {
   final _createRoomEndpoint = '/rooms/create';
@@ -16,9 +17,11 @@ class RoomsApiClient extends ApiClient {
   Future<bool> createRoom(String roomName) async {    
     http.Response response = await httpClient.put(
       getServerUrl() + '$_createRoomEndpoint',
-      headers: {"Content-Type": "application/json"},
+      headers: getRequestHeaders(),
       body: OutgoingMessage.createCreateRoomJsonMsg(getUsername(), roomName)
     );
+
+    print(response.statusCode);
 
     if (response.statusCode != 201) {
       throwException(response.statusCode, decodeErrorMessage(response) ?? "Error while creating room");
@@ -30,7 +33,7 @@ class RoomsApiClient extends ApiClient {
   Future<bool> connectToRoom(String roomName) async {
     http.Response response = await httpClient.patch(
       getServerUrl() + '$_connectToRoomEndpoint',
-      headers: {"Content-Type": "application/json"},
+      headers: getRequestHeaders(),
       body: OutgoingMessage.createConnectRoomJsonMsg(getUsername(), roomName)
     );
 
@@ -44,7 +47,7 @@ class RoomsApiClient extends ApiClient {
   Future<bool> disconnectFromRoom() async {
     http.Response response = await httpClient.patch(
       getServerUrl() + '$_disconnectFromRoomEndpoint',
-      headers: {"Content-Type": "application/json"},
+      headers: getRequestHeaders(),
       body: OutgoingMessage.createDisconnectFromRoomJsonMsg(getUsername())
     );
 
@@ -56,11 +59,9 @@ class RoomsApiClient extends ApiClient {
   }
 
   Future<bool> destroyRoom() async {
-    final response = await httpClient.send(
-      http.Request(
-          "DELETE", Uri.parse(getServerUrl() + '$_destroyRoomEndpoint'))
-        ..headers["Content-Type"] = "application/json"
-        ..body = OutgoingMessage.createDisconnectFromRoomJsonMsg(getUsername()),
+    http.Response response = await httpClient.delete(
+      getServerUrl() + '$_destroyRoomEndpoint',
+      headers: getRequestHeaders(),
     );
 
     if (response.statusCode != 200) {
