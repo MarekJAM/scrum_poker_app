@@ -6,7 +6,7 @@ import 'bloc.dart';
 import '../websocket/bloc.dart';
 import '../../utils/secure_storage.dart';
 import '../../data/repositories/repositories.dart';
-import '../../utils/globals.dart' as globals;
+import '../../utils/session_data_singleton.dart' as globals;
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final WebSocketBloc _webSocketBloc;

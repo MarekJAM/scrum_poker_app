@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'exceptions.dart';
 
 import '../../utils/secure_storage.dart';
-import '../../utils/globals.dart' as globals;
+import '../../utils/session_data_singleton.dart';
 
 class ApiClient {
   ApiClient({SecureStorage secureStorage})
@@ -31,7 +31,7 @@ class ApiClient {
   Map<String, String> getRequestHeaders() {
     return {
       "Content-Type": "application/json",
-      "Authorization": 'Bearer ' + globals.token
+      "Authorization": 'Bearer ' + SesionDataSingleton().getToken()
     };
   }
 
@@ -44,18 +44,5 @@ class ApiClient {
 
   dynamic jsonParse(response) {
     return jsonDecode(utf8.decode(response.bodyBytes));
-  }
-
-  String getServerUrl() {
-    return 'http://' + globals.serverURL;
-  }
-
-  String getUsername() {
-    return globals.username;
-  }
-
-  Future<void> saveToken(String token) async {
-    globals.token = token;
-    await SecureStorage().writeToken(token);
   }
 }
