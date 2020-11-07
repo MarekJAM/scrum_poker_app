@@ -4,9 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc.dart';
 import '../websocket/bloc.dart';
-import '../../utils/secure_storage.dart';
 import '../../data/repositories/repositories.dart';
-import '../../utils/session_data_singleton.dart' as globals;
+import '../../utils/session_data_singleton.dart' ;
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final WebSocketBloc _webSocketBloc;
@@ -49,11 +48,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   // temporary solution, normally some kind of autologin attempt should be here
   Stream<LoginState> _mapAppStartedToState() async* {
+    await SessionDataSingleton().init();
     try {
-      var username = await SecureStorage().readUsername();
-      var serverAddress = await SecureStorage().readServerAddress();
       yield LoginDisconnectedFromServer(
-          username: username, serverAddress: serverAddress);
+          username: SessionDataSingleton().getUsername(), serverAddress: SessionDataSingleton().getServerAddress());
     } catch (e) {
       print(e);
       yield LoginConnectionError(message: "Connection error occured.");
@@ -64,15 +62,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     yield LoginConnectingToServer();
     try {
       //this is temporary solution only
-      globals.serverURL = event.serverUrl;
-
-      await SecureStorage().writeServerAddress(event.serverUrl);
-      await SecureStorage().writeUsername(event.username);
+      await SessionDataSingleton().setServerAddress(event.serverAddress);
+      await SessionDataSingleton().setUsername(event.username);
 
       await _authRepository.login(event.username, event.password);
 
       _webSocketBloc.add(
-          WSConnectToServerE("ws://" + event.serverUrl));
+          WSConnectToServerE("ws://" + event.serverAddress));
     } catch (e) {
       print(e);
       yield LoginConnectionError(message: e.message);
@@ -105,8 +101,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   Stream<LoginState> _mapLoginDisconnectedFromServerToState(event) async* {
     try {
-      var username = await SecureStorage().readUsername();
-      var serverAddress = await SecureStorage().readServerAddress();
+      var username = SessionDataSingleton().getUsername();
+      var serverAddress = SessionDataSingleton().getServerAddress();
       yield LoginDisconnectedFromServer(
           message: event.message,
           username: username,

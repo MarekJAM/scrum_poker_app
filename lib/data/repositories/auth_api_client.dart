@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 
 import '../../utils/secure_storage.dart';
 import '../../data/models/models.dart';
+import '../../utils/session_data_singleton.dart';
 
 class AuthApiClient extends ApiClient {
   final _loginEndpoint = '/auth/login';
@@ -16,7 +17,7 @@ class AuthApiClient extends ApiClient {
 
   Future<bool> login(String username, String password) async {
     http.Response response = await httpClient.post(
-        getServerUrl() + '$_loginEndpoint',
+        getBaseURL() + '$_loginEndpoint',
         headers: {"Content-Type": "application/json"},
         body: OutgoingMessage.createLoginMessage(username, password));
     
@@ -27,7 +28,7 @@ class AuthApiClient extends ApiClient {
 
     var token = jsonParse(response)['token'];
 
-    await saveToken(token);
+    await SessionDataSingleton().setToken(token);
 
     return true;
   }

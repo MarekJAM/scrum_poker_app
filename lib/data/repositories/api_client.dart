@@ -31,8 +31,12 @@ class ApiClient {
   Map<String, String> getRequestHeaders() {
     return {
       "Content-Type": "application/json",
-      "Authorization": 'Bearer ' + SesionDataSingleton().getToken()
+      "Authorization": 'Bearer ' + SessionDataSingleton().getToken()
     };
+  }
+
+  String getBaseURL() {
+    return 'http://' + SessionDataSingleton().getServerAddress();
   }
 
   String decodeErrorMessage(response) {

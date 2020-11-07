@@ -9,7 +9,7 @@ import '../../utils/session_data_singleton.dart';
 class WebSocketRepository {
 
   Future<IOWebSocketChannel> establishConnection(String url) async {
-    return IOWebSocketChannel(await WebSocket.connect(url.toString(), headers: <String, String>{"token": SesionDataSingleton().getToken()}).timeout(Duration(seconds: 5))..pingInterval = Duration(seconds: 10));
+    return IOWebSocketChannel(await WebSocket.connect(url.toString(), headers: <String, String>{"token": SessionDataSingleton().getToken()}).timeout(Duration(seconds: 5))..pingInterval = Duration(seconds: 10));
   }
 
   dynamic parseMessage(dynamic message) {

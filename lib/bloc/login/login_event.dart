@@ -13,11 +13,11 @@ class AppStarted extends LoginEvent {
 }
 
 class LoginConnectToServerE extends LoginEvent {
-  final String serverUrl;
+  final String serverAddress;
   final String username;
   final String password;
 
-  LoginConnectToServerE(this.serverUrl, this.username, this.password);
+  LoginConnectToServerE(this.serverAddress, this.username, this.password);
 
   @override
   String toString() => 'LoginConnectToServerE';

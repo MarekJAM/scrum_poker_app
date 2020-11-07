@@ -1,29 +1,29 @@
 import 'secure_storage.dart';
 
-class SesionDataSingleton {
-  static final SesionDataSingleton _singleton = SesionDataSingleton._internal();
+class SessionDataSingleton {
+  static final SessionDataSingleton _singleton = SessionDataSingleton._internal();
 
-  factory SesionDataSingleton() {
+  factory SessionDataSingleton() {
     return _singleton;
   }
 
-  SesionDataSingleton._internal();
+  SessionDataSingleton._internal();
 
   String _token;
   String _username;
-  String _serverURL;
+  String _serverAddress;
 
-  init() async {
+  Future<void> init() async {
     _token = await SecureStorage().readToken();
     _username = await SecureStorage().readUsername();
-    _serverURL = await SecureStorage().readServerAddress();
+    _serverAddress = await SecureStorage().readServerAddress();
   }
 
   String getToken() {
     return _token;
   }
 
-  void setToken(String token) async {
+  Future<void> setToken(String token) async {
     _token = token;
     await SecureStorage().writeToken(token);
   }
@@ -32,17 +32,17 @@ class SesionDataSingleton {
     return _username;
   }
 
-  void setUsername(String username) async {
+  Future<void> setUsername(String username) async {
     _username = username;
     await SecureStorage().writeUsername(username);
   } 
 
-  String getServerURL() {
-    return _serverURL;
+  String getServerAddress() {
+    return _serverAddress;
   }
 
-  void setServerURL(String url) async {
-    _serverURL = url;
+  Future<void> setServerAddress(String url) async {
+    _serverAddress = url;
     await SecureStorage().writeServerAddress(url);
   }
 }
