@@ -5,16 +5,12 @@ class OutgoingMessage {
     return json.encode({"username": username, "password": password});
   }
 
-  static String createCreateRoomJsonMsg(String username, String roomName) {
-    return json.encode({"username": username, "roomname": roomName});
+  static String createCreateRoomJsonMsg(String roomName) {
+    return json.encode({"roomname": roomName});
   }
 
-  static String createConnectRoomJsonMsg(String username, String roomName) {
-    return json.encode({"username": username, "roomname": roomName});
-  }
-
-  static String createDisconnectFromRoomJsonMsg(String username) {
-    return json.encode({"username": username});
+  static String createConnectRoomJsonMsg(String roomName) {
+    return json.encode({"roomname": roomName});
   }
 
   static String createRequestEstimateJsonMsg(String taskNumber) {

@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 
 import '../../utils/secure_storage.dart';
 import '../../data/models/models.dart';
-import '../../utils/session_data_singleton.dart';
 
 class RoomsApiClient extends ApiClient {
   final _createRoomEndpoint = '/rooms/create';
@@ -21,8 +20,7 @@ class RoomsApiClient extends ApiClient {
     http.Response response = await httpClient.put(
         getBaseURL() + '$_createRoomEndpoint',
         headers: getRequestHeaders(),
-        body: OutgoingMessage.createCreateRoomJsonMsg(
-            SessionDataSingleton().getUsername(), roomName));
+        body: OutgoingMessage.createCreateRoomJsonMsg(roomName));
 
     print(response.statusCode);
 
@@ -38,8 +36,7 @@ class RoomsApiClient extends ApiClient {
     http.Response response = await httpClient.patch(
         getBaseURL() + '$_connectToRoomEndpoint',
         headers: getRequestHeaders(),
-        body: OutgoingMessage.createConnectRoomJsonMsg(
-            SessionDataSingleton().getUsername(), roomName));
+        body: OutgoingMessage.createConnectRoomJsonMsg(roomName));
 
     if (response.statusCode != 200) {
       throwException(response.statusCode,
@@ -51,10 +48,9 @@ class RoomsApiClient extends ApiClient {
 
   Future<bool> disconnectFromRoom() async {
     http.Response response = await httpClient.patch(
-        getBaseURL() + '$_disconnectFromRoomEndpoint',
-        headers: getRequestHeaders(),
-        body: OutgoingMessage.createDisconnectFromRoomJsonMsg(
-            SessionDataSingleton().getUsername()));
+      getBaseURL() + '$_disconnectFromRoomEndpoint',
+      headers: getRequestHeaders(),
+    );
 
     if (response.statusCode != 200) {
       throwException(
