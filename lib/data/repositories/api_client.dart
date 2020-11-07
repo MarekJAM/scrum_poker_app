@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'exceptions.dart';
 
-import '../../utils/secure_storage.dart';
 import '../../utils/session_data_singleton.dart';
 
 class ApiClient {
-  ApiClient({SecureStorage secureStorage})
-      : _secureStorage = secureStorage ?? SecureStorage();
+  ApiClient({SessionDataSingleton sessionDataSingleton})
+      : _sessionDataSingleton = sessionDataSingleton ?? SessionDataSingleton();
 
-  final SecureStorage _secureStorage;
+  final SessionDataSingleton _sessionDataSingleton;
 
   void throwException(int statusCode, String message) {
     if (statusCode == 400) {
@@ -31,12 +30,12 @@ class ApiClient {
   Map<String, String> getRequestHeaders() {
     return {
       "Content-Type": "application/json",
-      "Authorization": 'Bearer ' + SessionDataSingleton().getToken()
+      "Authorization": 'Bearer ' + _sessionDataSingleton.getToken()
     };
   }
 
   String getBaseURL() {
-    return 'http://' + SessionDataSingleton().getServerAddress();
+    return 'http://' + _sessionDataSingleton.getServerAddress();
   }
 
   String decodeErrorMessage(response) {

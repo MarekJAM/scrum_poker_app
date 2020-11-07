@@ -1,23 +1,29 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
+
 import '../lib/data/models/outgoing_message.dart';
-import '../lib/utils/secure_storage.dart';
 import '../lib/data/repositories/repositories.dart';
+import '../lib/utils/session_data_singleton.dart';
 
 class MockHttpClient extends Mock implements http.Client {}
 
 class MockResponse extends Mock implements http.Response {}
 
-class FakeSecureStorage extends Fake implements SecureStorage {
+class FakeSessionDataSingleton extends Fake implements SessionDataSingleton {
   @override
-  Future<String> readServerAddress() {
-    return Future.value("127.0.0.1");
+  String getServerAddress() {
+    return "127.0.0.1";
   }
 
   @override
-  Future<String> readUsername() {
-    return Future.value("username");
+  String getUsername() {
+    return "username";
+  }
+
+  @override
+  String getToken() {
+    return "token";
   }
 }
 
@@ -25,11 +31,17 @@ void main() {
   group('RoomsApiClient', () {
     http.Client httpClient;
     RoomsApiClient roomsApiClient;
+    Map<String, String> requestHeaders = {
+      "Content-Type": "application/json",
+      "Authorization": 'Bearer token'
+    };
 
     setUp(() async {
       httpClient = MockHttpClient();
       roomsApiClient = RoomsApiClient(
-          httpClient: httpClient, secureStorage: FakeSecureStorage());
+        httpClient: httpClient,
+        sessionDataSingleton: FakeSessionDataSingleton(),
+      );
     });
 
     test('throws AssertionError when httpClient is null', () {
@@ -43,13 +55,13 @@ void main() {
         when(mockedResponse.statusCode).thenReturn(201);
 
         when(httpClient.put("http://127.0.0.1/rooms/create",
-            headers: {"Content-Type": "application/json"},
+            headers: requestHeaders,
             body: OutgoingMessage.createCreateRoomJsonMsg(
-              "username",
               "testname",
             ))).thenAnswer((_) => Future.value(mockedResponse));
 
         final isCreated = await roomsApiClient.createRoom("testname");
+
         expect(isCreated, true);
       });
 
@@ -60,9 +72,8 @@ void main() {
         when(mockedResponse.statusCode).thenReturn(404);
 
         when(httpClient.put("http://127.0.0.1/rooms/create",
-            headers: {"Content-Type": "application/json"},
+            headers: requestHeaders,
             body: OutgoingMessage.createCreateRoomJsonMsg(
-              "username",
               "testname",
             ))).thenAnswer((_) => Future.value(mockedResponse));
 
@@ -78,9 +89,8 @@ void main() {
         when(mockedResponse.statusCode).thenReturn(200);
 
         when(httpClient.patch("http://127.0.0.1/rooms/connect",
-            headers: {"Content-Type": "application/json"},
+            headers: requestHeaders,
             body: OutgoingMessage.createConnectRoomJsonMsg(
-              "username",
               "testname",
             ))).thenAnswer((_) => Future.value(mockedResponse));
 
@@ -95,9 +105,8 @@ void main() {
         when(mockedResponse.statusCode).thenReturn(404);
 
         when(httpClient.patch("http://127.0.0.1/rooms/connect",
-            headers: {"Content-Type": "application/json"},
+            headers: requestHeaders,
             body: OutgoingMessage.createConnectRoomJsonMsg(
-              "username",
               "testname",
             ))).thenAnswer((_) => Future.value(mockedResponse));
 
@@ -112,11 +121,10 @@ void main() {
 
         when(mockedResponse.statusCode).thenReturn(200);
 
-        when(httpClient.patch("http://127.0.0.1/rooms/disconnect",
-            headers: {"Content-Type": "application/json"},
-            body: OutgoingMessage.createDisconnectFromRoomJsonMsg(
-              "username",
-            ))).thenAnswer((_) => Future.value(mockedResponse));
+        when(httpClient.patch(
+          "http://127.0.0.1/rooms/disconnect",
+          headers: requestHeaders,
+        )).thenAnswer((_) => Future.value(mockedResponse));
 
         final isDisconnected = await roomsApiClient.disconnectFromRoom();
         expect(isDisconnected, true);
@@ -128,13 +136,43 @@ void main() {
 
         when(mockedResponse.statusCode).thenReturn(407);
 
-        when(httpClient.patch("http://127.0.0.1/rooms/disconnect",
-            headers: {"Content-Type": "application/json"},
-            body: OutgoingMessage.createDisconnectFromRoomJsonMsg(
-              "username",
-            ))).thenAnswer((_) => Future.value(mockedResponse));
+        when(httpClient.patch(
+          "http://127.0.0.1/rooms/disconnect",
+          headers: requestHeaders,
+        )).thenAnswer((_) => Future.value(mockedResponse));
 
         expect(() async => await roomsApiClient.disconnectFromRoom(),
+            throwsA(isException));
+      });
+    });
+
+    group('destroy the room', () {
+      test('returns true if room destroyed', () async {
+        final mockedResponse = MockResponse();
+
+        when(mockedResponse.statusCode).thenReturn(200);
+
+        when(httpClient.delete(
+          "http://127.0.0.1/rooms/destroy",
+          headers: requestHeaders,
+        )).thenAnswer((_) => Future.value(mockedResponse));
+
+        final isDisconnected = await roomsApiClient.destroyRoom();
+        expect(isDisconnected, true);
+      });
+
+      test('throws Exception when httpClient returns non-200 response',
+          () async {
+        final mockedResponse = MockResponse();
+
+        when(mockedResponse.statusCode).thenReturn(407);
+
+        when(httpClient.delete(
+          "http://127.0.0.1/rooms/destroy",
+          headers: requestHeaders,
+        )).thenAnswer((_) => Future.value(mockedResponse));
+
+        expect(() async => await roomsApiClient.destroyRoom(),
             throwsA(isException));
       });
     });

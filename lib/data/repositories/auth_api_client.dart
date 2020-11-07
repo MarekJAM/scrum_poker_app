@@ -1,7 +1,6 @@
 import 'repositories.dart';
 import 'package:http/http.dart' as http;
 
-import '../../utils/secure_storage.dart';
 import '../../data/models/models.dart';
 import '../../utils/session_data_singleton.dart';
 
@@ -11,9 +10,9 @@ class AuthApiClient extends ApiClient {
 
   final http.Client httpClient;
 
-  AuthApiClient({this.httpClient, SecureStorage secureStorage})
+  AuthApiClient({this.httpClient, SessionDataSingleton sessionDataSingleton})
       : assert(httpClient != null),
-        super(secureStorage: secureStorage);
+        super(sessionDataSingleton: sessionDataSingleton);
 
   Future<bool> login(String username, String password) async {
     http.Response response = await httpClient.post(

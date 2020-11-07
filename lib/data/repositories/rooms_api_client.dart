@@ -1,8 +1,8 @@
 import 'repositories.dart';
 import 'package:http/http.dart' as http;
 
-import '../../utils/secure_storage.dart';
 import '../../data/models/models.dart';
+import '../../utils/session_data_singleton.dart';
 
 class RoomsApiClient extends ApiClient {
   final _createRoomEndpoint = '/rooms/create';
@@ -12,17 +12,15 @@ class RoomsApiClient extends ApiClient {
 
   final http.Client httpClient;
 
-  RoomsApiClient({this.httpClient, SecureStorage secureStorage})
+  RoomsApiClient({this.httpClient, SessionDataSingleton sessionDataSingleton})
       : assert(httpClient != null),
-        super(secureStorage: secureStorage);
+        super(sessionDataSingleton: sessionDataSingleton);
 
   Future<bool> createRoom(String roomName) async {
     http.Response response = await httpClient.put(
         getBaseURL() + '$_createRoomEndpoint',
         headers: getRequestHeaders(),
         body: OutgoingMessage.createCreateRoomJsonMsg(roomName));
-
-    print(response.statusCode);
 
     if (response.statusCode != 201) {
       throwException(response.statusCode,
