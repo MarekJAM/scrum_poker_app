@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc.dart';
 import '../websocket/bloc.dart';
 import '../../data/repositories/repositories.dart';
-import '../../utils/session_data_singleton.dart' ;
+import '../../utils/session_data_singleton.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final WebSocketBloc _webSocketBloc;
@@ -51,14 +52,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     await SessionDataSingleton().init();
     try {
       yield LoginDisconnectedFromServer(
-          username: SessionDataSingleton().getUsername(), serverAddress: SessionDataSingleton().getServerAddress());
+          username: SessionDataSingleton().getUsername(),
+          serverAddress: SessionDataSingleton().getServerAddress());
     } catch (e) {
       print(e);
       yield LoginConnectionError(message: "Connection error occured.");
     }
   }
 
-  Stream<LoginState> _mapLoginConnectToServerToState(LoginConnectToServerE event) async* {
+  Stream<LoginState> _mapLoginConnectToServerToState(
+      LoginConnectToServerE event) async* {
     yield LoginConnectingToServer();
     try {
       //this is temporary solution only
@@ -67,8 +70,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       await _authRepository.login(event.username, event.password);
 
-      _webSocketBloc.add(
-          WSConnectToServerE("ws://" + event.serverAddress));
+      _webSocketBloc.add(WSConnectToServerE("ws://" + event.serverAddress));
+    } on SocketException catch (e) {
+      print(e);
+      yield LoginConnectionError(message: "Could not establish connection with server.");
     } catch (e) {
       print(e);
       yield LoginConnectionError(message: e.message);
