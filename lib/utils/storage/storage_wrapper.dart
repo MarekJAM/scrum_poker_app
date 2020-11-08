@@ -19,7 +19,7 @@ abstract class StorageWrapper {
 
   Future<String> readToken();
 
-  Future writeToken(String value);
+  Future<void> writeToken(String value);
 
-  Future deleteToken();
+  Future<void> deleteToken();
 }

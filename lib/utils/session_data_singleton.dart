@@ -7,16 +7,19 @@ class SessionDataSingleton {
     return _singleton;
   }
 
-  SessionDataSingleton._internal();
+  SessionDataSingleton._internal() {
+    _storageWrapper = StorageWrapper();
+  }
 
   String _token;
   String _username;
   String _serverAddress;
+  StorageWrapper _storageWrapper;
 
   Future<void> init() async {
-    _token = await StorageWrapper().readToken();
-    _username = await StorageWrapper().readUsername();
-    _serverAddress = await StorageWrapper().readServerAddress();
+    _token = await _storageWrapper.readToken();
+    _username = await _storageWrapper.readUsername();
+    _serverAddress = await _storageWrapper.readServerAddress();
   }
 
   String getToken() {
@@ -25,7 +28,7 @@ class SessionDataSingleton {
 
   Future<void> setToken(String token) async {
     _token = token;
-    await StorageWrapper().writeToken(token);
+    await _storageWrapper.writeToken(token);
   }
 
   String getUsername() {
@@ -34,7 +37,7 @@ class SessionDataSingleton {
 
   Future<void> setUsername(String username) async {
     _username = username;
-    await StorageWrapper().writeUsername(username);
+    await _storageWrapper.writeUsername(username);
   } 
 
   String getServerAddress() {
@@ -43,6 +46,6 @@ class SessionDataSingleton {
 
   Future<void> setServerAddress(String url) async {
     _serverAddress = url;
-    await StorageWrapper().writeServerAddress(url);
+    await _storageWrapper.writeServerAddress(url);
   }
 }
