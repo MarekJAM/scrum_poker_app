@@ -1,4 +1,4 @@
-import 'storage_wrapper.dart';
+import 'storage/storage_wrapper.dart';
 
 class SessionDataSingleton {
   static final SessionDataSingleton _singleton = SessionDataSingleton._internal();
