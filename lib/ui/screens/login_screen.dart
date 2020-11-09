@@ -6,6 +6,7 @@ import '../../utils/keys.dart';
 import '../../ui/widgets/common/common_widgets.dart';
 import '../../bloc/login/bloc.dart';
 import '../../utils/custom_colors.dart';
+import '../../utils/asset_paths.dart';
 
 enum LoginMode { Regular, AsGuest }
 
@@ -30,8 +31,6 @@ class _LoginScreenState extends State<LoginScreen>
 
   LoginMode _loginMode = LoginMode.Regular;
 
-  final String assetLogo = 'assets/skram_logo_osvg.svg';
-
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -46,11 +45,7 @@ class _LoginScreenState extends State<LoginScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(
-                    assetLogo,
-                    semanticsLabel: 'Logo',
-                    width: deviceSize.width * 0.6,
-                  ),
+                  SvgPicture.asset(AssetPaths.logo, semanticsLabel: 'Logo', width: deviceSize.width * 0.6, ),
                   Center(
                     child: Padding(
                       padding: EdgeInsets.all(16),

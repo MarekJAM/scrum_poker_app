@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../ui/screens/screens.dart';
 import '../../bloc/room_connection/bloc.dart';
 import '../../bloc/login/bloc.dart';
 import '../../utils/keys.dart';
+import '../../utils/asset_paths.dart';
 
 class AppDrawer extends StatelessWidget {
   final List<Widget> passedWidgets;
@@ -19,23 +21,26 @@ class AppDrawer extends StatelessWidget {
       },
       listener: (_, state) {
         if (state is RoomConnectionDestroyingRoomError) {
-          Navigator.of(context).popUntil(ModalRoute.withName(PlanningScreen.routeName));
-        } 
+          Navigator.of(context).popUntil(
+            ModalRoute.withName(PlanningScreen.routeName),
+          );
+        }
       },
       child: Drawer(
         child: DecoratedBox(
-          decoration: (BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor)),
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+          ),
           child: Column(
             children: <Widget>[
               UserAccountsDrawerHeader(
-                accountName: Text(
-                  'Scrum Poker',
-                  style: TextStyle(
-                    fontSize: 30,
-                  ),
+                accountName: SvgPicture.asset(
+                  AssetPaths.logo,
+                  semanticsLabel: 'Logo',
+                  width: 150,
                 ),
                 accountEmail: Text(
-                  'v. 1.0.0',
+                  'v1.0.0',
                   style: TextStyle(fontSize: 12),
                 ),
               ),
