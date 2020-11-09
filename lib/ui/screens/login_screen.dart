@@ -46,7 +46,11 @@ class _LoginScreenState extends State<LoginScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(AssetPaths.logo, semanticsLabel: 'Logo', width: deviceSize.width * 0.6, ),
+                  SvgPicture.asset(
+                    AssetPaths.logo,
+                    semanticsLabel: 'Logo',
+                    width: deviceSize.width * 0.6,
+                  ),
                   Center(
                     child: Padding(
                       padding: EdgeInsets.all(16),
@@ -130,7 +134,8 @@ class _LoginScreenState extends State<LoginScreen>
                                             validator: (value) {
                                               if (value.isEmpty) {
                                                 return "Provide password.";
-                                              } else if (value.trim().length > 20) {
+                                              } else if (value.trim().length >
+                                                  20) {
                                                 return "Password too long - max. 20 characters.";
                                               }
                                               return null;
@@ -219,7 +224,8 @@ class _LoginScreenState extends State<LoginScreen>
 
   void _onFormSubmitted() {
     BlocProvider.of<LoginBloc>(context).add(
-      LoginConnectToServerE(_serverController.text, _userController.text, _passwordController.text),
+      LoginConnectToServerE(_serverController.text, _userController.text,
+          _passwordController.text),
     );
   }
 }
