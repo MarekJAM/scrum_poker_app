@@ -1,3 +1,5 @@
+import 'package:package_info/package_info.dart';
+
 import 'storage/storage_wrapper.dart';
 
 class SessionDataSingleton {
@@ -15,11 +17,14 @@ class SessionDataSingleton {
   String _username;
   String _serverAddress;
   StorageWrapper _storageWrapper;
+  PackageInfo _packageInfo;
+
 
   Future<void> init() async {
     _token = await _storageWrapper.readToken();
     _username = await _storageWrapper.readUsername();
     _serverAddress = await _storageWrapper.readServerAddress();
+    _packageInfo = await PackageInfo.fromPlatform();
   }
 
   String getToken() {
@@ -47,5 +52,9 @@ class SessionDataSingleton {
   Future<void> setServerAddress(String url) async {
     _serverAddress = url;
     await _storageWrapper.writeServerAddress(url);
+  }
+
+  String getAppVersion() {
+    return _packageInfo.version;
   }
 }

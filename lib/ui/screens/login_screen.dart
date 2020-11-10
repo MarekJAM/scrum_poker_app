@@ -100,9 +100,7 @@ class _LoginScreenState extends State<LoginScreen>
                                     labelText: 'Username',
                                     prefixIcon: Icon(Icons.person),
                                   ),
-                                  readOnly: state is LoginConnectingToServer
-                                      ? true
-                                      : false,
+                                  readOnly: state is LoginConnectingToServer,
                                   controller: _userController,
                                   validator: (value) {
                                     if (value.isEmpty) {
