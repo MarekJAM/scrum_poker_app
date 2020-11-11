@@ -1,6 +1,8 @@
-import 'repositories.dart';
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
 
+import 'repositories.dart';
 import '../../data/models/models.dart';
 import '../../utils/session_data_singleton.dart';
 
@@ -18,7 +20,7 @@ class AuthApiClient extends ApiClient {
     http.Response response = await httpClient.post(
         getBaseURL() + '$_loginEndpoint',
         headers: {"Content-Type": "application/json"},
-        body: OutgoingMessage.createLoginMessage(username, password));
+        body: OutgoingMessage.createLoginMessage(username, password)).timeout(const Duration(seconds: 5), onTimeout: () => throw SocketException("Login timeout."));
     
     if (response.statusCode != 200) {
       throwException(
