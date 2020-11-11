@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scrum_poker_app/ui/screens/register_screen.dart';
+import 'package:scrum_poker_app/ui/widgets/common/loading_layer.dart';
 
 import '../../utils/keys.dart';
 import '../../ui/widgets/common/common_widgets.dart';
@@ -144,27 +145,24 @@ class _LoginScreenState extends State<LoginScreen>
                                 SizedBox(
                                   height: 20,
                                 ),
-                                state is LoginConnectingToServer
-                                    ? CircularProgressIndicator()
-                                    : ConstrainedBox(
-                                        constraints: const BoxConstraints(
-                                          minWidth: double.infinity,
-                                        ),
-                                        child: RaisedButton(
-                                          key: Key(Keys.buttonConnect),
-                                          child: Text(
-                                            _loginMode == LoginMode.Regular
-                                                ? 'Login'
-                                                : 'Login as Guest',
-                                          ),
-                                          onPressed: () {
-                                            if (_formKey.currentState
-                                                .validate()) {
-                                              _onFormSubmitted();
-                                            }
-                                          },
-                                        ),
-                                      ),
+                                ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    minWidth: double.infinity,
+                                  ),
+                                  child: RaisedButton(
+                                    key: Key(Keys.buttonConnect),
+                                    child: Text(
+                                      _loginMode == LoginMode.Regular
+                                          ? 'Login'
+                                          : 'Login as Guest',
+                                    ),
+                                    onPressed: () {
+                                      if (_formKey.currentState.validate()) {
+                                        _onFormSubmitted();
+                                      }
+                                    },
+                                  ),
+                                ),
                                 Divider(),
                                 FlatButton(
                                   padding: const EdgeInsets.all(8.0),
@@ -213,6 +211,15 @@ class _LoginScreenState extends State<LoginScreen>
                   ),
                 ),
               ),
+              BlocBuilder<LoginBloc, LoginState>(
+                builder: (context, state) {
+                  if (state is LoginConnectingToServer) {
+                    return LoadingLayer();
+                  } else {
+                    return Container();
+                  }
+                },
+              )
             ],
           ),
         ),

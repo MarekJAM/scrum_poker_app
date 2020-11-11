@@ -49,8 +49,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   // temporary solution, normally some kind of autologin attempt should be here
   Stream<LoginState> _mapAppStartedToState() async* {
-    await SessionDataSingleton().init();
     try {
+      await SessionDataSingleton().init();
       yield LoginDisconnectedFromServer(
           username: SessionDataSingleton().getUsername(),
           serverAddress: SessionDataSingleton().getServerAddress());
