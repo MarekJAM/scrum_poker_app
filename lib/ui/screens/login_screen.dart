@@ -10,6 +10,7 @@ import '../../bloc/auth/login/bloc.dart';
 import '../../utils/custom_colors.dart';
 import '../../utils/asset_paths.dart';
 import '../../bloc/auth/register/register_bloc.dart';
+import '../../utils/session_data_singleton.dart';
 
 enum LoginMode { Regular, AsGuest }
 
@@ -35,6 +36,13 @@ class _LoginScreenState extends State<LoginScreen>
   LoginMode _loginMode = LoginMode.Regular;
 
   @override
+  void initState() {
+    super.initState();
+    _userController.text = SessionDataSingleton().getUsername();
+    _serverController.text = SessionDataSingleton().getServerAddress();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
@@ -58,142 +66,133 @@ class _LoginScreenState extends State<LoginScreen>
                       padding: EdgeInsets.all(16),
                       child: Form(
                         key: _formKey,
-                        child: BlocListener<RegisterBloc, RegisterState>(
-                          listener: (context, state) {
-                            if (state is RegisterSignedUp) {
-                              CommonWidgets.displaySnackBar(
-                                context: context,
-                                message: "Signed up successfully",
-                                color: Colors.green,
-                              );
-                            }
-                          },
-                          child: BlocConsumer<LoginBloc, LoginState>(
-                            listener: (ctx, state) {
-                              if (state is LoginConnectionError) {
-                                CommonWidgets.displaySnackBar(
-                                  context: ctx,
-                                  message: state.message,
-                                  color: Theme.of(ctx).errorColor,
-                                );
-                              }
-                            },
-                            builder: (context, state) {
-                              if (state is LoginDisconnectedFromServer) {
-                                _userController.text = state.username;
-                                _serverController.text = state.serverAddress;
-                              }
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  TextFormField(
-                                    key: Key(Keys.inputServerAddress),
-                                    keyboardType: TextInputType.emailAddress,
-                                    decoration: InputDecoration(
-                                      labelText: 'Server address',
-                                      prefixIcon: Icon(
-                                        Icons.dns,
-                                      ),
-                                    ),
-                                    readOnly: state is LoginConnectingToServer
-                                        ? true
-                                        : false,
-                                    controller: _serverController,
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return "Provide server address.";
-                                      }
-                                      return null;
+                        child: MultiBlocListener(
+                          listeners: [
+                            BlocListener<RegisterBloc, RegisterState>(
+                              listener: (context, state) {
+                                if (state is RegisterSignedUp) {
+                                  CommonWidgets.displaySnackBar(
+                                    context: context,
+                                    message: "Signed up successfully",
+                                    color: Colors.green,
+                                  );
+                                }
+                              },
+                            ),
+                            BlocListener<LoginBloc, LoginState>(
+                              listener: (ctx, state) {
+                                if (state is LoginConnectionError) {
+                                  CommonWidgets.displaySnackBar(
+                                    context: ctx,
+                                    message: state.message,
+                                    color: Theme.of(ctx).errorColor,
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextFormField(
+                                key: Key(Keys.inputServerAddress),
+                                keyboardType: TextInputType.emailAddress,
+                                decoration: InputDecoration(
+                                  labelText: 'Server address',
+                                  prefixIcon: Icon(
+                                    Icons.dns,
+                                  ),
+                                ),
+                                controller: _serverController,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return "Provide server address.";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              TextFormField(
+                                key: Key(Keys.inputUsername),
+                                decoration: InputDecoration(
+                                  labelText: 'Username',
+                                  prefixIcon: Icon(Icons.person),
+                                ),
+                                controller: _userController,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return "Provide username.";
+                                  } else if (value.trim().length > 20) {
+                                    return "Name too long - max. 20 characters.";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              AnimatedSize(
+                                vsync: this,
+                                duration: Duration(milliseconds: 450),
+                                curve: Curves.easeInOutBack,
+                                child: Container(
+                                  child: _loginMode == LoginMode.AsGuest
+                                      ? null
+                                      : TextFormField(
+                                          decoration: InputDecoration(
+                                            labelText: 'Password',
+                                            prefixIcon: Icon(Icons.lock),
+                                          ),
+                                          obscureText: true,
+                                          controller: _passwordController,
+                                          validator: (value) {
+                                            if (value.isEmpty) {
+                                              return "Provide password.";
+                                            } else if (value.trim().length >
+                                                20) {
+                                              return "Password too long - max. 20 characters.";
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  minWidth: double.infinity,
+                                ),
+                                child: RaisedButton(
+                                  key: Key(Keys.buttonConnect),
+                                  child: Text(
+                                    _loginMode == LoginMode.Regular
+                                        ? 'Login'
+                                        : 'Login as Guest',
+                                  ),
+                                  onPressed: () {
+                                    if (_formKey.currentState.validate()) {
+                                      FocusScope.of(context).unfocus();
+                                      _onFormSubmitted();
+                                    }
+                                  },
+                                ),
+                              ),
+                              Divider(),
+                              FlatButton(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(_loginMode == LoginMode.Regular
+                                    ? 'Continue as Guest'
+                                    : 'Go Back'),
+                                onPressed: () {
+                                  setState(
+                                    () {
+                                      _loginMode =
+                                          _loginMode == LoginMode.AsGuest
+                                              ? LoginMode.Regular
+                                              : LoginMode.AsGuest;
                                     },
-                                  ),
-                                  TextFormField(
-                                    key: Key(Keys.inputUsername),
-                                    decoration: InputDecoration(
-                                      labelText: 'Username',
-                                      prefixIcon: Icon(Icons.person),
-                                    ),
-                                    readOnly: state is LoginConnectingToServer,
-                                    controller: _userController,
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return "Provide username.";
-                                      } else if (value.trim().length > 20) {
-                                        return "Name too long - max. 20 characters.";
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                  AnimatedSize(
-                                    vsync: this,
-                                    duration: Duration(milliseconds: 450),
-                                    curve: Curves.easeInOutBack,
-                                    child: Container(
-                                      child: _loginMode == LoginMode.AsGuest
-                                          ? null
-                                          : TextFormField(
-                                              decoration: InputDecoration(
-                                                labelText: 'Password',
-                                                prefixIcon: Icon(Icons.lock),
-                                              ),
-                                              obscureText: true,
-                                              controller: _passwordController,
-                                              readOnly: state
-                                                      is LoginConnectingToServer
-                                                  ? true
-                                                  : false,
-                                              validator: (value) {
-                                                if (value.isEmpty) {
-                                                  return "Provide password.";
-                                                } else if (value.trim().length >
-                                                    20) {
-                                                  return "Password too long - max. 20 characters.";
-                                                }
-                                                return null;
-                                              },
-                                            ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  ConstrainedBox(
-                                    constraints: const BoxConstraints(
-                                      minWidth: double.infinity,
-                                    ),
-                                    child: RaisedButton(
-                                      key: Key(Keys.buttonConnect),
-                                      child: Text(
-                                        _loginMode == LoginMode.Regular
-                                            ? 'Login'
-                                            : 'Login as Guest',
-                                      ),
-                                      onPressed: () {
-                                        if (_formKey.currentState.validate()) {
-                                          _onFormSubmitted();
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                  Divider(),
-                                  FlatButton(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(_loginMode == LoginMode.Regular
-                                        ? 'Continue as Guest'
-                                        : 'Go Back'),
-                                    onPressed: () {
-                                      setState(
-                                        () {
-                                          _loginMode =
-                                              _loginMode == LoginMode.AsGuest
-                                                  ? LoginMode.Regular
-                                                  : LoginMode.AsGuest;
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ),
                       ),
