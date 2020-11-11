@@ -17,11 +17,13 @@ class AuthApiClient extends ApiClient {
         super(sessionDataSingleton: sessionDataSingleton);
 
   Future<bool> login(String username, String password) async {
-    http.Response response = await httpClient.post(
-        getBaseURL() + '$_loginEndpoint',
-        headers: {"Content-Type": "application/json"},
-        body: OutgoingMessage.createLoginMessage(username, password)).timeout(const Duration(seconds: 5), onTimeout: () => throw SocketException("Login timeout."));
-    
+    http.Response response = await httpClient
+        .post(getBaseURL() + '$_loginEndpoint',
+            headers: {"Content-Type": "application/json"},
+            body: OutgoingMessage.createLoginMessage(username, password))
+        .timeout(const Duration(seconds: 5),
+            onTimeout: () => throw SocketException("Login timeout."));
+
     if (response.statusCode != 200) {
       throwException(
           response.statusCode, decodeErrorMessage(response) ?? "Login failed");
@@ -30,6 +32,22 @@ class AuthApiClient extends ApiClient {
     var token = jsonParse(response)['token'];
 
     await SessionDataSingleton().setToken(token);
+
+    return true;
+  }
+
+  Future<bool> register(String username, String password) async {
+    http.Response response = await httpClient
+        .post(getBaseURL() + '$_registerEndpoint',
+            headers: {"Content-Type": "application/json"},
+            body: OutgoingMessage.createLoginMessage(username, password))
+        .timeout(const Duration(seconds: 5),
+            onTimeout: () => throw SocketException("Register timeout."));
+
+    if (response.statusCode != 201) {
+      throwException(response.statusCode,
+          decodeErrorMessage(response) ?? "Register failed");
+    }
 
     return true;
   }

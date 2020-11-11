@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc.dart';
-import '../websocket/bloc.dart';
-import '../../data/repositories/repositories.dart';
-import '../../utils/session_data_singleton.dart';
+import '../../websocket/bloc.dart';
+import '../../../data/repositories/repositories.dart';
+import '../../../utils/session_data_singleton.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final WebSocketBloc _webSocketBloc;

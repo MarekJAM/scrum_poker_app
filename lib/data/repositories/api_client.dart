@@ -20,7 +20,7 @@ class ApiClient {
       throw ResourceExistsException(message, statusCode);
     } else if (statusCode > 400 && statusCode < 500) {
       throw ClientException(message, statusCode);
-    } else if (statusCode > 500) {
+    } else if (statusCode >= 500) {
       throw ServerException(message, statusCode);
     } else {
       throw Exception('$message, status code: $statusCode');

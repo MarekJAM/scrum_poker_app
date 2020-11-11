@@ -10,4 +10,8 @@ class AuthRepository {
   Future<bool> login(String username, String password) async {
     return await authApiClient.login(username, password);
   }
+
+  Future<bool> register(String username, String password) async {
+    return await authApiClient.register(username, password);
+  }
 }
