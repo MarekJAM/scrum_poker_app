@@ -17,6 +17,7 @@ import './bloc/simple_bloc_observer.dart';
 import './data/repositories/repositories.dart';
 import './ui/widgets/common/common_widgets.dart';
 import './bloc/auth/register/register_bloc.dart';
+import './utils/custom_colors.dart';
 
 void main() {
   Bloc.observer = SimpleBlocObserver();
@@ -180,7 +181,8 @@ class _AppViewState extends State<AppView> {
                     CommonWidgets.displaySnackBar(
                       context: context,
                       message: state.message,
-                      color: Theme.of(context).errorColor,
+                      color: CustomColors.snackBarError,
+                      lightText: true
                     );
                   }
                 }

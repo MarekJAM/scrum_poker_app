@@ -74,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen>
                                   CommonWidgets.displaySnackBar(
                                     context: context,
                                     message: "Signed up successfully",
-                                    color: Colors.green,
+                                    color: CustomColors.snackBarSuccess,
                                   );
                                 }
                               },
@@ -85,7 +85,8 @@ class _LoginScreenState extends State<LoginScreen>
                                   CommonWidgets.displaySnackBar(
                                     context: ctx,
                                     message: state.message,
-                                    color: Theme.of(ctx).errorColor,
+                                    color: CustomColors.snackBarError,
+                                    lightText: true
                                   );
                                 }
                               },

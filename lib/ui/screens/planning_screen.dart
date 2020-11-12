@@ -86,13 +86,15 @@ class _PlanningScreenState extends State<PlanningScreen>
                 CommonWidgets.displaySnackBar(
                   context: context,
                   message: "Failed to disconnect from room.",
-                  color: Theme.of(context).errorColor,
+                  color: CustomColors.snackBarError,
+                  lightText: true
                 );
               } else if (state is RoomConnectionDestroyingRoomError) {
                 CommonWidgets.displaySnackBar(
                   context: context,
                   message: "Failed to destroy room.",
-                  color: Theme.of(context).errorColor,
+                  color: CustomColors.snackBarError,
+                  lightText: true
                 );
               }
             },
@@ -115,7 +117,8 @@ class _PlanningScreenState extends State<PlanningScreen>
               CommonWidgets.displaySnackBar(
                 context: context,
                 message: state.message,
-                color: Theme.of(context).errorColor,
+                color: CustomColors.snackBarError,
+                lightText: true
               );
             }
           },
