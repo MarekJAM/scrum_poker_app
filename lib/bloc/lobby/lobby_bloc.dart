@@ -1,12 +1,17 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
+
 import '../../data/models/models.dart';
 import '../../data/repositories/repositories.dart';
 import '../../data/repositories/rooms_repository.dart';
 import '../../data/models/lobby_status.dart';
-import '../websocket/bloc.dart';
-import 'bloc.dart';
+import '../websocket/websocket_bloc.dart';
+
+part 'lobby_event.dart';
+part 'lobby_state.dart';
 
 class LobbyBloc extends Bloc<LobbyEvent, LobbyState> {
   final WebSocketBloc _webSocketBloc;
@@ -29,7 +34,7 @@ class LobbyBloc extends Bloc<LobbyEvent, LobbyState> {
   Stream<LobbyState> mapEventToState(LobbyEvent event) async* {
     if (event is LobbyStatusLoadedE) {
       yield* _mapLobbyLoadedEToState(event);
-    } 
+    }
   }
 
   Stream<LobbyState> _mapLobbyLoadedEToState(event) async* {

@@ -1,5 +1,4 @@
-import 'package:equatable/equatable.dart';
-import '../../data/models/lobby_status.dart';
+part of 'lobby_bloc.dart';
 
 abstract class LobbyEvent extends Equatable {
   const LobbyEvent();

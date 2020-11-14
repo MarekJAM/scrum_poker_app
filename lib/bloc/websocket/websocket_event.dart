@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+part of 'websocket_bloc.dart';
 
 abstract class WebSocketEvent extends Equatable {
   const WebSocketEvent();

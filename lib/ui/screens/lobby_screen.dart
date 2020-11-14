@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/lobby/bloc.dart';
+import '../../bloc/lobby/lobby_bloc.dart';
 import '../widgets/app_drawer.dart';
-import '../../bloc/room_connection/bloc.dart';
+import '../../bloc/room_connection/room_connection_bloc.dart';
 import 'screens.dart';
 import '../../ui/widgets/common/widgets.dart';
 import '../../utils/keys.dart';

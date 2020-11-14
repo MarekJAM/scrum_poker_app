@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:web_socket_channel/io.dart';
-import 'bloc.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../data/repositories/websocket_repository.dart';
+
+part 'websocket_event.dart';
+part 'websocket_state.dart';
 
 class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
   final WebSocketRepository webSocketRepository;

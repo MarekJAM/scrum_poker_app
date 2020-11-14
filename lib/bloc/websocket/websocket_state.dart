@@ -1,5 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+part of 'websocket_bloc.dart';
 
 abstract class WebSocketState extends Equatable {
   const WebSocketState();

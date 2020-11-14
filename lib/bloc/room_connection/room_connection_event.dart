@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+part of 'room_connection_bloc.dart';
 
 abstract class RoomConnectionEvent extends Equatable {
   const RoomConnectionEvent();

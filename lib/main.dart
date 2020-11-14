@@ -6,12 +6,11 @@ import 'package:scrum_poker_app/utils/custom_page_transition_builder.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:http/http.dart' as http;
 
-import './bloc/room_connection/bloc.dart';
-import './bloc/planning_room/bloc.dart';
-import './bloc/lobby/bloc.dart';
-import './bloc/websocket/bloc.dart';
-import './bloc/auth/login/bloc.dart';
+import './bloc/room_connection/room_connection_bloc.dart';
+import './bloc/planning_room/planning_room_bloc.dart';
+import './bloc/lobby/lobby_bloc.dart';
 import './bloc/websocket/websocket_bloc.dart';
+import './bloc/auth/login/login_bloc.dart';
 import './ui/screens/screens.dart';
 import './bloc/simple_bloc_observer.dart';
 import './data/repositories/repositories.dart';

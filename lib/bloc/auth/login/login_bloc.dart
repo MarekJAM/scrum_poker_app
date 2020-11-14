@@ -1,12 +1,17 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:bloc/bloc.dart';
 
-import 'bloc.dart';
-import '../../websocket/bloc.dart';
+import '../../websocket/websocket_bloc.dart';
 import '../../../data/repositories/repositories.dart';
 import '../../../utils/session_data_singleton.dart';
+
+part 'login_event.dart';
+part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final WebSocketBloc _webSocketBloc;

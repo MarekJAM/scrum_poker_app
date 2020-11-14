@@ -6,7 +6,7 @@ import 'screens.dart';
 import '../../ui/widgets/common/widgets.dart';
 import '../../utils/keys.dart';
 import '../../ui/widgets/common/common_widgets.dart';
-import '../../bloc/auth/login/bloc.dart';
+import '../../bloc/auth/login/login_bloc.dart';
 import '../../utils/custom_colors.dart';
 import '../../utils/asset_paths.dart';
 import '../../bloc/auth/register/register_bloc.dart';
