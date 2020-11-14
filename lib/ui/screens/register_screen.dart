@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../utils/custom_colors.dart';
 import '../../bloc/auth/register/register_bloc.dart';
 import '../../ui/widgets/common/widgets.dart';
-import '../../utils/custom_colors.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const routeName = '/register';
