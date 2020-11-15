@@ -16,8 +16,9 @@ class LoginConnectToServerE extends LoginEvent {
   final String serverAddress;
   final String username;
   final String password;
+  final bool isLoggingAsGuest;
 
-  LoginConnectToServerE(this.serverAddress, this.username, this.password);
+  LoginConnectToServerE({@required this.serverAddress, @required this.username, this.password, this.isLoggingAsGuest = false});
 
   @override
   String toString() => 'LoginConnectToServerE';

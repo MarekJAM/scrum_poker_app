@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen>
                                     context: ctx,
                                     message: state.message,
                                     color: CustomColors.snackBarError,
-                                    lightText: true
+                                    lightText: true,
                                   );
                                 }
                               },
@@ -245,9 +245,20 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   void _onFormSubmitted() {
-    BlocProvider.of<LoginBloc>(context).add(
-      LoginConnectToServerE(_serverController.text, _userController.text,
-          _passwordController.text),
-    );
+    _loginMode == LoginMode.Regular
+        ? BlocProvider.of<LoginBloc>(context).add(
+            LoginConnectToServerE(
+              serverAddress: _serverController.text,
+              username: _userController.text,
+              password: _passwordController.text,
+            ),
+          )
+        : BlocProvider.of<LoginBloc>(context).add(
+            LoginConnectToServerE(
+              serverAddress: _serverController.text,
+              username: _userController.text,
+              isLoggingAsGuest: true,
+            ),
+          );
   }
 }

@@ -73,12 +73,18 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       await SessionDataSingleton().setServerAddress(event.serverAddress);
       await SessionDataSingleton().setUsername(event.username);
 
-      await _authRepository.login(event.username, event.password);
+      event.isLoggingAsGuest
+          ? await _authRepository.loginAsGuest(event.username)
+          : await _authRepository.loginWithCredentials(
+              event.username,
+              event.password,
+            );
 
       _webSocketBloc.add(WSConnectToServerE("ws://" + event.serverAddress));
     } on SocketException catch (e) {
       print(e);
-      yield LoginConnectionError(message: "Could not establish connection with server.");
+      yield LoginConnectionError(
+          message: "Could not establish connection with server.");
     } catch (e) {
       print(e);
       yield LoginConnectionError(message: e.message);
