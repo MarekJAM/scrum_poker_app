@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:web_socket_channel/io.dart';
 import 'package:equatable/equatable.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
-import '../../data/repositories/websocket_repository.dart';
+import '../../data/repositories/websocket_repository/websocket_repository.dart';
 
 part 'websocket_event.dart';
 part 'websocket_state.dart';
 
 class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
   final WebSocketRepository webSocketRepository;
-  IOWebSocketChannel channel;
+  WebSocketChannel channel;
+
+  final intentionalCloseCode = 4999;
 
   WebSocketBloc({@required this.channel, @required this.webSocketRepository})
       : super(WebSocketInitial());
@@ -42,19 +44,9 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
         print(e);
         add(WSConnectionErrorReceivedE("Could not establish connection."));
       }, onDone: () {
-        var message = "";
-        print(channel.closeCode);
-        switch (channel.closeCode) {
-          case 1002:
-            message = "Disconnected: no internet connection.";
-            break;
-          case 1001:
-            message = "Disconnected: connection with server broken.";
-            break;
-          case 4003:
-            message = "Not authenticated.";
-            break;
-        }
+        print("Websocket connection close code: ${channel.closeCode}");
+        
+        var message = channel.closeCode == intentionalCloseCode ? "" : "Disconnected. Check your internet connection";
 
         add(WSDisconnectedFromServerE(message: message));
       });
@@ -76,7 +68,7 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
   Stream<WebSocketState> _mapDisconnectFromServerToState(event) async* {
     try {
       //sending closeCode to distinguish whether user disconnected intentionally or not
-      channel.sink.close(4999);
+      channel.sink.close(intentionalCloseCode);
     } catch (e) {
       print(e);
     }

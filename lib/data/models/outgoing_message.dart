@@ -1,6 +1,10 @@
 import 'dart:convert';
 
 class OutgoingMessage {
+  static String createWebSocketTokenMessage(String token) {
+    return json.encode({"token": token});
+  }
+
   static String createLoginMessage(String username, String password) {
     return json.encode({"username": username, "password": password});
   }
