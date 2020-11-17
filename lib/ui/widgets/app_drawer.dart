@@ -35,9 +35,8 @@ class AppDrawer extends StatelessWidget {
           child: Column(
             children: <Widget>[
               UserAccountsDrawerHeader(
-                accountName: SvgPicture.asset(
-                  AssetPaths.logo,
-                  semanticsLabel: 'Logo',
+                accountName: Image.asset(
+                  AssetPaths.logoPNG,
                   width: 150,
                 ),
                 accountEmail: Text(

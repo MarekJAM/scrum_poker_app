@@ -56,9 +56,8 @@ class _LoginScreenState extends State<LoginScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(
-                    AssetPaths.logo,
-                    semanticsLabel: 'Logo',
+                  Image.asset(
+                    AssetPaths.logoPNG,
                     width: deviceSize.width * 0.6,
                   ),
                   Center(
