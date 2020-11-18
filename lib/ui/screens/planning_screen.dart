@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:wakelock/wakelock.dart';
 import 'dart:math' as math;
 
 import '../../ui/widgets/app_drawer.dart';
@@ -15,6 +14,7 @@ import 'lobby_screen.dart';
 import '../../utils/keys.dart';
 import '../../utils/custom_colors.dart';
 import '../../utils/notifier.dart';
+import '../../utils/wakelock_wrapper.dart';
 
 class PlanningScreen extends StatefulWidget {
   static const routeName = '/planning';
@@ -52,13 +52,13 @@ class _PlanningScreenState extends State<PlanningScreen>
   @override
   void initState() {
     super.initState();
-    Wakelock.enable();
+    WakelockWrapper.enable();
   }
 
   @override
   void dispose() {
     super.dispose();
-    Wakelock.disable();
+    WakelockWrapper.disable();
   }
 
   @override
