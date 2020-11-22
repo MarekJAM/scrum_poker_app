@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart' hide Fake;
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,18 +12,32 @@ class MockResponse extends Mock implements http.Response {}
 
 class FakeSessionDataSingleton extends Fake implements SessionDataSingleton {
   @override
+  Future<void> init() async {}
+
+  @override
   String getServerAddress() {
     return "127.0.0.1";
   }
+
+  Future<void> setServerAddress(String url) async {}
 
   @override
   String getUsername() {
     return "username";
   }
 
+  Future<void> setUsername(String username) async {}
+
   @override
   String getToken() {
     return "token";
+  }
+
+  Future<void> setToken(String token) async {}
+
+  @override
+  String getAppVersion() {
+    return "1.0";
   }
 }
 
