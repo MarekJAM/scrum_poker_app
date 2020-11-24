@@ -1,10 +1,12 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:scrum_poker_app/ui/screens/register_screen.dart';
 import 'package:scrum_poker_app/utils/custom_page_transition_builder.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_translate/flutter_translate.dart';
 
 import './bloc/room_connection/room_connection_bloc.dart';
 import './bloc/planning_room/planning_room_bloc.dart';
@@ -18,7 +20,12 @@ import './ui/widgets/common/common_widgets.dart';
 import './bloc/auth/register/register_bloc.dart';
 import './utils/custom_colors.dart';
 
-void main() {
+void main() async {
+  var delegate = await LocalizationDelegate.create(
+    fallbackLocale: 'en_US',
+    supportedLocales: ['en_US'],
+  );
+
   Bloc.observer = SimpleBlocObserver();
 
   WebSocketChannel channel;
@@ -53,15 +60,18 @@ void main() {
   final registerBloc = RegisterBloc(authRepository: authRepository);
 
   runApp(
-    App(
-      webSocketBloc: webSocketBloc,
-      roomsBloc: roomsBloc,
-      loginBloc: loginBloc,
-      roomsRepository: roomsRepository,
-      planningRoomBloc: planningRoomBloc,
-      roomConnectionBloc: roomConnectionBloc,
-      authRepository: authRepository,
-      registerBloc: registerBloc,
+    LocalizedApp(
+      delegate,
+      App(
+        webSocketBloc: webSocketBloc,
+        roomsBloc: roomsBloc,
+        loginBloc: loginBloc,
+        roomsRepository: roomsRepository,
+        planningRoomBloc: planningRoomBloc,
+        roomConnectionBloc: roomConnectionBloc,
+        authRepository: authRepository,
+        registerBloc: registerBloc,
+      ),
     ),
   );
 }
@@ -106,8 +116,7 @@ class App extends StatelessWidget {
                   webSocketBloc: webSocketBloc, authRepository: authRepository),
             ),
             BlocProvider<RegisterBloc>(
-              create: (context) => RegisterBloc(
-                 authRepository: authRepository),
+              create: (context) => RegisterBloc(authRepository: authRepository),
             ),
             BlocProvider<LobbyBloc>(
               create: (context) => roomsBloc,
@@ -143,6 +152,7 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     final title = 'Scrum Poker';
+    var localizationDelegate = LocalizedApp.of(context).delegate;
     return MaterialApp(
         title: title,
         theme: ThemeData(
@@ -161,6 +171,12 @@ class _AppViewState extends State<AppView> {
             },
           ),
         ),
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: localizationDelegate.supportedLocales,
         navigatorKey: _navigatorKey,
         builder: (context, child) {
           return Scaffold(
@@ -178,11 +194,10 @@ class _AppViewState extends State<AppView> {
                   );
                   if (state.message.isNotEmpty) {
                     CommonWidgets.displaySnackBar(
-                      context: context,
-                      message: state.message,
-                      color: CustomColors.snackBarError,
-                      lightText: true
-                    );
+                        context: context,
+                        message: state.message,
+                        color: CustomColors.snackBarError,
+                        lightText: true);
                   }
                 }
               },

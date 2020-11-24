@@ -1,6 +1,8 @@
 import 'dart:convert';
-import 'exceptions.dart';
 
+import 'package:flutter_translate/flutter_translate.dart';
+
+import 'exceptions.dart';
 import '../../utils/session_data_singleton.dart';
 
 class ApiClient {
@@ -41,8 +43,11 @@ class ApiClient {
   String decodeErrorMessage(response) {
     if (response.body == null) {
       return null;
+    } else if (json.decode(response.body)['message'] == null) {
+      return null;
     }
-    return json.decode(response.body)['message'] ?? null;
+    
+    return translate(json.decode(response.body)['message']);
   }
 
   dynamic jsonParse(response) {

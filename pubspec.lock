@@ -160,6 +160,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.0"
+  flutter_device_locale:
+    dependency: transitive
+    description:
+      name: flutter_device_locale
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0"
   flutter_driver:
     dependency: "direct dev"
     description: flutter
@@ -172,6 +179,11 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.8.1"
+  flutter_localizations:
+    dependency: "direct main"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_secure_storage:
     dependency: "direct main"
     description:
@@ -191,6 +203,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_translate:
+    dependency: "direct main"
+    description:
+      name: flutter_translate
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.6.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -229,6 +248,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.4"
+  i18n_extension:
+    dependency: "direct main"
+    description:
+      name: i18n_extension
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.4.5"
   image:
     dependency: transitive
     description:
@@ -236,6 +262,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.18"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.17.0-nullsafety.2"
   io:
     dependency: transitive
     description:
@@ -556,6 +589,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0-nullsafety.4"
+  sprintf:
+    dependency: transitive
+    description:
+      name: sprintf
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.1.0"
   stack_trace:
     dependency: transitive
     description:

@@ -1,0 +1,19 @@
+{
+	"Error": {
+        "MalformedRequest": "Something went wrong, contact the admin.",
+        "Unknown": "Unknown error, contact the admin.",
+
+        "RoomnameMoreThan20Chars": "Room name too long (max 20 characters).",
+        "RoomnameEmpty": "Room name can't be empty.",
+        "UserNotConnected": "Connection error occured.",
+        "RoomAlreadyExists": "Room with this name already exists.",
+        "UserAlreadyInARoom": "Leave room before joining another.",
+        "RoomNotExists": "Room does not exist.",
+        "UserNotInARoom": "You've already left the room.",
+        "UserNotAdmin": "Only admin can destroy the room.",
+
+        "WrongCredentials": "Login failed - wrong username or password.",
+        "TokenCreation": "Login failed - internal server error.",
+        "UserAlreadyExists": "This username is already taken."
+	}
+}
