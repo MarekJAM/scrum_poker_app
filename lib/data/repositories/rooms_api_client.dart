@@ -19,10 +19,8 @@ class RoomsApiClient extends ApiClient {
   Future<bool> createRoom(String roomName) async {
     http.Response response = await httpClient.put(
         getBaseURL() + '$_createRoomEndpoint',
-        headers: {"Content-Type": "application/json"},
+        headers: getRequestHeaders(),
         body: OutgoingMessage.createCreateRoomJsonMsg(roomName));
-
-    print(response.statusCode);
 
     if (response.statusCode != 201) {
       throwException(response.statusCode,

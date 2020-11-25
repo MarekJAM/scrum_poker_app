@@ -41,13 +41,13 @@ class ApiClient {
   }
 
   String decodeErrorMessage(response) {
-    if (response.body == null) {
-      return null;
-    } else if (json.decode(response.body)['message'] == null) {
+    try {
+      var message = translate(json.decode(response.body)['message']);
+      return message;
+    } catch (e) {
+      print(e);
       return null;
     }
-    
-    return translate(json.decode(response.body)['message']);
   }
 
   dynamic jsonParse(response) {
