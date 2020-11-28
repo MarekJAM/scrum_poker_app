@@ -1,10 +1,10 @@
+import 'package:universal_platform/universal_platform.dart';
 import 'package:vibration/vibration.dart';
-import 'dart:io' show Platform;
 
 class Notifier {
   
   static void notify() async {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (UniversalPlatform.isAndroid || UniversalPlatform.isIOS) {
       if (await Vibration.hasVibrator()) {
         Vibration.vibrate();
       }

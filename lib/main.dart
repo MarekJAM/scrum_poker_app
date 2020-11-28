@@ -1,22 +1,31 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:scrum_poker_app/ui/screens/register_screen.dart';
 import 'package:scrum_poker_app/utils/custom_page_transition_builder.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_translate/flutter_translate.dart';
 
-import './bloc/room_connection/bloc.dart';
-import './bloc/planning_room/bloc.dart';
-import './bloc/lobby/bloc.dart';
-import './bloc/websocket/bloc.dart';
-import './bloc/login/bloc.dart';
+import './bloc/room_connection/room_connection_bloc.dart';
+import './bloc/planning_room/planning_room_bloc.dart';
+import './bloc/lobby/lobby_bloc.dart';
 import './bloc/websocket/websocket_bloc.dart';
+import './bloc/auth/login/login_bloc.dart';
 import './ui/screens/screens.dart';
 import './bloc/simple_bloc_observer.dart';
 import './data/repositories/repositories.dart';
 import './ui/widgets/common/common_widgets.dart';
+import './bloc/auth/register/register_bloc.dart';
+import './utils/custom_colors.dart';
 
-void main() {
+void main() async {
+  var delegate = await LocalizationDelegate.create(
+    fallbackLocale: 'en_US',
+    supportedLocales: ['en_US'],
+  );
+
   Bloc.observer = SimpleBlocObserver();
 
   WebSocketChannel channel;
@@ -28,6 +37,9 @@ void main() {
   final PlanningRoomRepository planningRoomRepository =
       PlanningRoomRepository();
 
+  final AuthRepository authRepository =
+      AuthRepository(authApiClient: AuthApiClient(httpClient: http.Client()));
+
   // ignore: close_sinks
   final webSocketBloc =
       WebSocketBloc(channel: channel, webSocketRepository: webSocketRepository);
@@ -35,7 +47,8 @@ void main() {
   final roomsBloc =
       LobbyBloc(webSocketBloc: webSocketBloc, roomsRepository: roomsRepository);
   // ignore: close_sinks
-  final loginBloc = LoginBloc(webSocketBloc: webSocketBloc);
+  final loginBloc =
+      LoginBloc(webSocketBloc: webSocketBloc, authRepository: authRepository);
   // ignore: close_sinks
   final planningRoomBloc = PlanningRoomBloc(
       webSocketBloc: webSocketBloc,
@@ -43,15 +56,22 @@ void main() {
   // ignore: close_sinks
   final roomConnectionBloc =
       RoomConnectionBloc(roomsRepository: roomsRepository);
+  // ignore: close_sinks
+  final registerBloc = RegisterBloc(authRepository: authRepository);
 
   runApp(
-    App(
-      webSocketBloc: webSocketBloc,
-      roomsBloc: roomsBloc,
-      loginBloc: loginBloc,
-      roomsRepository: roomsRepository,
-      planningRoomBloc: planningRoomBloc,
-      roomConnectionBloc: roomConnectionBloc,
+    LocalizedApp(
+      delegate,
+      App(
+        webSocketBloc: webSocketBloc,
+        roomsBloc: roomsBloc,
+        loginBloc: loginBloc,
+        roomsRepository: roomsRepository,
+        planningRoomBloc: planningRoomBloc,
+        roomConnectionBloc: roomConnectionBloc,
+        authRepository: authRepository,
+        registerBloc: registerBloc,
+      ),
     ),
   );
 }
@@ -65,6 +85,8 @@ class App extends StatelessWidget {
     @required this.roomsRepository,
     @required this.planningRoomBloc,
     @required this.roomConnectionBloc,
+    @required this.authRepository,
+    @required this.registerBloc,
   }) : super(key: key);
 
   final WebSocketBloc webSocketBloc;
@@ -73,6 +95,8 @@ class App extends StatelessWidget {
   final RoomsRepository roomsRepository;
   final PlanningRoomBloc planningRoomBloc;
   final RoomConnectionBloc roomConnectionBloc;
+  final AuthRepository authRepository;
+  final RegisterBloc registerBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +112,11 @@ class App extends StatelessWidget {
               create: (context) => webSocketBloc,
             ),
             BlocProvider<LoginBloc>(
-              create: (context) => LoginBloc(webSocketBloc: webSocketBloc),
+              create: (context) => LoginBloc(
+                  webSocketBloc: webSocketBloc, authRepository: authRepository),
+            ),
+            BlocProvider<RegisterBloc>(
+              create: (context) => RegisterBloc(authRepository: authRepository),
             ),
             BlocProvider<LobbyBloc>(
               create: (context) => roomsBloc,
@@ -124,6 +152,7 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     final title = 'Scrum Poker';
+    var localizationDelegate = LocalizedApp.of(context).delegate;
     return MaterialApp(
         title: title,
         theme: ThemeData(
@@ -142,6 +171,12 @@ class _AppViewState extends State<AppView> {
             },
           ),
         ),
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: localizationDelegate.supportedLocales,
         navigatorKey: _navigatorKey,
         builder: (context, child) {
           return Scaffold(
@@ -159,10 +194,10 @@ class _AppViewState extends State<AppView> {
                   );
                   if (state.message.isNotEmpty) {
                     CommonWidgets.displaySnackBar(
-                      context: context,
-                      message: state.message,
-                      color: Theme.of(context).errorColor,
-                    );
+                        context: context,
+                        message: state.message,
+                        color: CustomColors.snackBarError,
+                        lightText: true);
                   }
                 }
               },

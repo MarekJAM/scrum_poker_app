@@ -1,5 +1,4 @@
-import 'package:equatable/equatable.dart';
-import '../../data/models/models.dart';
+part of 'planning_room_bloc.dart';
 
 abstract class PlanningRoomEvent extends Equatable {
   const PlanningRoomEvent();

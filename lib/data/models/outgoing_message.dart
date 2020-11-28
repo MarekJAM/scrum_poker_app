@@ -1,16 +1,24 @@
 import 'dart:convert';
 
 class OutgoingMessage {
-  static String createCreateRoomJsonMsg(String username, String roomName) {
-    return json.encode({"username": username, "roomname": roomName});
+  static String createWebSocketTokenMessage(String token) {
+    return json.encode({"token": token});
   }
 
-  static String createConnectRoomJsonMsg(String username, String roomName) {
-    return json.encode({"username": username, "roomname": roomName});
+  static String createLoginMessage(String username, String password) {
+    return json.encode({"username": username, "password": password});
   }
 
-  static String createDisconnectFromRoomJsonMsg(String username) {
+  static String createLoginAsGuestMessage(String username) {
     return json.encode({"username": username});
+  }
+
+  static String createCreateRoomJsonMsg(String roomName) {
+    return json.encode({"roomname": roomName});
+  }
+
+  static String createConnectRoomJsonMsg(String roomName) {
+    return json.encode({"roomname": roomName});
   }
 
   static String createRequestEstimateJsonMsg(String taskNumber) {

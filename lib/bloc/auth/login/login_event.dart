@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+part of 'login_bloc.dart';
 
 abstract class LoginEvent extends Equatable {
   const LoginEvent();
@@ -13,10 +13,12 @@ class AppStarted extends LoginEvent {
 }
 
 class LoginConnectToServerE extends LoginEvent {
-  final String link;
+  final String serverAddress;
   final String username;
+  final String password;
+  final bool isLoggingAsGuest;
 
-  LoginConnectToServerE(this.link, this.username);
+  LoginConnectToServerE({@required this.serverAddress, @required this.username, this.password, this.isLoggingAsGuest = false});
 
   @override
   String toString() => 'LoginConnectToServerE';

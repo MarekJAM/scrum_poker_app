@@ -1,5 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+part of 'room_connection_bloc.dart';
 
 abstract class RoomConnectionState extends Equatable {
   const RoomConnectionState();

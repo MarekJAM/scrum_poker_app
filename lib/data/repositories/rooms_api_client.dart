@@ -1,7 +1,8 @@
-import '../../utils/secure_storage.dart';
-import '../../data/models/models.dart';
 import 'repositories.dart';
 import 'package:http/http.dart' as http;
+
+import '../../data/models/models.dart';
+import '../../utils/session_data_singleton.dart';
 
 class RoomsApiClient extends ApiClient {
   final _createRoomEndpoint = '/rooms/create';
@@ -11,62 +12,65 @@ class RoomsApiClient extends ApiClient {
 
   final http.Client httpClient;
 
-  RoomsApiClient({this.httpClient, SecureStorage secureStorage}) : assert(httpClient != null), super(secureStorage: secureStorage);
+  RoomsApiClient({this.httpClient, SessionDataSingleton sessionDataSingleton})
+      : assert(httpClient != null),
+        super(sessionDataSingleton: sessionDataSingleton);
 
-  Future<bool> createRoom(String roomName) async {    
+  Future<bool> createRoom(String roomName) async {
     http.Response response = await httpClient.put(
-      await getServerUrl() + '$_createRoomEndpoint',
-      headers: {"Content-Type": "application/json"},
-      body: OutgoingMessage.createCreateRoomJsonMsg(await getUsername(), roomName)
-    );
+        getBaseURL() + '$_createRoomEndpoint',
+        headers: getRequestHeaders(),
+        body: OutgoingMessage.createCreateRoomJsonMsg(roomName));
 
     if (response.statusCode != 201) {
-      throwException(response.statusCode, decodeErrorMessage(response) ?? "Error while creating room");
+      throwException(response.statusCode,
+          decodeErrorMessage(response) ?? "Error while creating room");
     }
-  
+
     return true;
   }
 
   Future<bool> connectToRoom(String roomName) async {
     http.Response response = await httpClient.patch(
-      await getServerUrl() + '$_connectToRoomEndpoint',
-      headers: {"Content-Type": "application/json"},
-      body: OutgoingMessage.createConnectRoomJsonMsg(await getUsername(), roomName)
-    );
+        getBaseURL() + '$_connectToRoomEndpoint',
+        headers: getRequestHeaders(),
+        body: OutgoingMessage.createConnectRoomJsonMsg(roomName));
 
     if (response.statusCode != 200) {
-      throwException(response.statusCode, decodeErrorMessage(response) ?? 'Error while connecting to room');
+      throwException(response.statusCode,
+          decodeErrorMessage(response) ?? 'Error while connecting to room');
     }
-  
+
     return true;
   }
 
   Future<bool> disconnectFromRoom() async {
     http.Response response = await httpClient.patch(
-      await getServerUrl() + '$_disconnectFromRoomEndpoint',
-      headers: {"Content-Type": "application/json"},
-      body: OutgoingMessage.createDisconnectFromRoomJsonMsg(await getUsername())
+      getBaseURL() + '$_disconnectFromRoomEndpoint',
+      headers: getRequestHeaders(),
     );
 
     if (response.statusCode != 200) {
-      throwException(response.statusCode, decodeErrorMessage(response) ?? 'Error while disconnecting from room');
+      throwException(
+          response.statusCode,
+          decodeErrorMessage(response) ??
+              'Error while disconnecting from room');
     }
-  
+
     return true;
   }
 
   Future<bool> destroyRoom() async {
-    final response = await httpClient.send(
-      http.Request(
-          "DELETE", Uri.parse(await getServerUrl() + '$_destroyRoomEndpoint'))
-        ..headers["Content-Type"] = "application/json"
-        ..body = OutgoingMessage.createDisconnectFromRoomJsonMsg(await getUsername()),
+    http.Response response = await httpClient.delete(
+      getBaseURL() + '$_destroyRoomEndpoint',
+      headers: getRequestHeaders(),
     );
 
     if (response.statusCode != 200) {
-      throwException(response.statusCode, decodeErrorMessage(response) ?? 'Error while destroying room');
+      throwException(response.statusCode,
+          decodeErrorMessage(response) ?? 'Error while destroying room');
     }
-  
+
     return true;
   }
 }

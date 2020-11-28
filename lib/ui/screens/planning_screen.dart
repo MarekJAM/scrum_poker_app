@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:wakelock/wakelock.dart';
 import 'dart:math' as math;
 
 import '../../ui/widgets/app_drawer.dart';
 import '../../ui/icons/custom_icons.dart';
 import '../../ui/widgets/common/common_widgets.dart';
 import '../widgets/planning_room/widgets.dart';
-import '../../bloc/lobby/bloc.dart';
-import '../../bloc/planning_room/bloc.dart';
-import '../../bloc/room_connection/bloc.dart';
+import '../../bloc/lobby/lobby_bloc.dart';
+import '../../bloc/planning_room/planning_room_bloc.dart';
+import '../../bloc/room_connection/room_connection_bloc.dart';
 import 'lobby_screen.dart';
 import '../../utils/keys.dart';
 import '../../utils/custom_colors.dart';
 import '../../utils/notifier.dart';
+import '../../utils/wakelock_wrapper.dart';
 
 class PlanningScreen extends StatefulWidget {
   static const routeName = '/planning';
@@ -52,13 +52,13 @@ class _PlanningScreenState extends State<PlanningScreen>
   @override
   void initState() {
     super.initState();
-    Wakelock.enable();
+    WakelockWrapper.enable();
   }
 
   @override
   void dispose() {
     super.dispose();
-    Wakelock.disable();
+    WakelockWrapper.disable();
   }
 
   @override
@@ -86,13 +86,15 @@ class _PlanningScreenState extends State<PlanningScreen>
                 CommonWidgets.displaySnackBar(
                   context: context,
                   message: "Failed to disconnect from room.",
-                  color: Theme.of(context).errorColor,
+                  color: CustomColors.snackBarError,
+                  lightText: true
                 );
               } else if (state is RoomConnectionDestroyingRoomError) {
                 CommonWidgets.displaySnackBar(
                   context: context,
                   message: "Failed to destroy room.",
-                  color: Theme.of(context).errorColor,
+                  color: CustomColors.snackBarError,
+                  lightText: true
                 );
               }
             },
@@ -115,7 +117,8 @@ class _PlanningScreenState extends State<PlanningScreen>
               CommonWidgets.displaySnackBar(
                 context: context,
                 message: state.message,
-                color: Theme.of(context).errorColor,
+                color: CustomColors.snackBarError,
+                lightText: true
               );
             }
           },

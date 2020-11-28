@@ -1,9 +1,14 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
+
 import '../../data/repositories/repositories.dart';
 import '../../data/repositories/rooms_repository.dart';
-import 'bloc.dart';
+
+part 'room_connection_event.dart';
+part 'room_connection_state.dart';
 
 class RoomConnectionBloc
     extends Bloc<RoomConnectionEvent, RoomConnectionState> {

@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-import '../../ui/ui_models/ui_models.dart';
+part of 'planning_room_bloc.dart';
 
 abstract class PlanningRoomState extends Equatable {
   const PlanningRoomState();

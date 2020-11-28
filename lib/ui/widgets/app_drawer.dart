@@ -3,10 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../ui/screens/screens.dart';
-import '../../bloc/room_connection/bloc.dart';
-import '../../bloc/login/bloc.dart';
+import '../../bloc/room_connection/room_connection_bloc.dart';
+import '../../bloc/auth/login/login_bloc.dart';
 import '../../utils/keys.dart';
 import '../../utils/asset_paths.dart';
+import '../../utils/session_data_singleton.dart';
 
 class AppDrawer extends StatelessWidget {
   final List<Widget> passedWidgets;
@@ -34,13 +35,12 @@ class AppDrawer extends StatelessWidget {
           child: Column(
             children: <Widget>[
               UserAccountsDrawerHeader(
-                accountName: SvgPicture.asset(
-                  AssetPaths.logo,
-                  semanticsLabel: 'Logo',
+                accountName: Image.asset(
+                  AssetPaths.logoPNG,
                   width: 150,
                 ),
                 accountEmail: Text(
-                  'v1.0.0',
+                  'v' + SessionDataSingleton().getAppVersion(),
                   style: TextStyle(fontSize: 12),
                 ),
               ),

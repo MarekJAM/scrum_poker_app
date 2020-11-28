@@ -1,11 +1,16 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../data/repositories/repositories.dart';
+import '../../ui/ui_models/ui_models.dart';
 import '../../data/models/models.dart';
-import '../websocket/bloc.dart';
-import 'bloc.dart';
+import '../websocket/websocket_bloc.dart';
+
+part 'planning_room_event.dart';
+part 'planning_room_state.dart';
 
 class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
   final WebSocketBloc _webSocketBloc;

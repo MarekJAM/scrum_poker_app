@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../bloc/planning_room/bloc.dart';
+import '../../../bloc/planning_room/planning_room_bloc.dart';
 import '../../../utils/keys.dart';
 
 class RequestEstimateDialog extends StatelessWidget {

@@ -1,11 +1,15 @@
 import 'dart:convert';
+
+import 'package:flutter_translate/flutter_translate.dart';
+
 import 'exceptions.dart';
-import '../../utils/secure_storage.dart';
+import '../../utils/session_data_singleton.dart';
 
 class ApiClient {
-  ApiClient({SecureStorage secureStorage}) : _secureStorage = secureStorage ?? SecureStorage();
+  ApiClient({SessionDataSingleton sessionDataSingleton})
+      : _sessionDataSingleton = sessionDataSingleton ?? SessionDataSingleton();
 
-  final SecureStorage _secureStorage;
+  final SessionDataSingleton _sessionDataSingleton;
 
   void throwException(int statusCode, String message) {
     if (statusCode == 400) {
@@ -18,26 +22,35 @@ class ApiClient {
       throw ResourceExistsException(message, statusCode);
     } else if (statusCode > 400 && statusCode < 500) {
       throw ClientException(message, statusCode);
-    } else if (statusCode > 500) {
+    } else if (statusCode >= 500) {
       throw ServerException(message, statusCode);
     } else {
       throw Exception('$message, status code: $statusCode');
     }
   }
 
+  Map<String, String> getRequestHeaders() {
+    return {
+      "Content-Type": "application/json",
+      "Authorization": 'Bearer ' + _sessionDataSingleton.getToken()
+    };
+  }
+
+  String getBaseURL() {
+    return 'http://' + _sessionDataSingleton.getServerAddress();
+  }
+
   String decodeErrorMessage(response) {
-    if (response.body == null) {
+    try {
+      var message = translate(json.decode(response.body)['message']);
+      return message;
+    } catch (e) {
+      print(e);
       return null;
     }
-    return json.decode(response.body)['message'] ?? null;
   }
 
-  Future<String> getServerUrl() async {
-    return 'http://' + await _secureStorage.readServerAddress();
+  dynamic jsonParse(response) {
+    return jsonDecode(utf8.decode(response.bodyBytes));
   }
-
-  Future<String> getUsername() async {
-    return await _secureStorage.readUsername();
-  }
-
 }

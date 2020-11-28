@@ -1,5 +1,5 @@
 import '../../utils/stats.dart';
-import '../../utils/secure_storage.dart';
+import '../../utils/session_data_singleton.dart';
 import '../../ui/ui_models/ui_models.dart';
 import '../../data/models/models.dart';
 
@@ -8,7 +8,7 @@ class PlanningRoomRepository {
   Future<PlanningRoomStatusInfo> processRoomStatusToUIModel(
       RoomStatus roomStatus) async {
         
-    final myUsername = await SecureStorage().readUsername();
+    final myUsername = SessionDataSingleton().getUsername();
     final amAdmin = roomStatus.admins.contains(myUsername);
     final alreadyEstimated = ((roomStatus.estimates.singleWhere(
             (estimate) => estimate.name == myUsername,

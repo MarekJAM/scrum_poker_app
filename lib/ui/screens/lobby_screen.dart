@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/lobby/bloc.dart';
+import '../../bloc/lobby/lobby_bloc.dart';
 import '../widgets/app_drawer.dart';
-import '../../bloc/room_connection/bloc.dart';
+import '../../bloc/room_connection/room_connection_bloc.dart';
 import 'screens.dart';
 import '../../ui/widgets/common/widgets.dart';
 import '../../utils/keys.dart';
+import '../../utils/custom_colors.dart';
 
 class LobbyScreen extends StatelessWidget {
   static const routeName = '/rooms';
@@ -35,7 +36,8 @@ class LobbyScreen extends StatelessWidget {
                     CommonWidgets.displaySnackBar(
                       context: context,
                       message: state.message,
-                      color: Theme.of(context).errorColor,
+                      color: CustomColors.snackBarError,
+                      lightText: true
                     );
                   } else if (state is RoomConnectionConnectedToRoom) {
                     Navigator.of(context).pushNamedAndRemoveUntil<void>(
@@ -59,11 +61,11 @@ class LobbyScreen extends StatelessWidget {
                     if (state is LobbyStatusLoaded) {
                       if (state.lobbyStatus.leftRoomReason.isNotEmpty) {
                         CommonWidgets.displaySnackBar(
-                            context: context,
-                            message:
-                                "Disconnected from room.\n Reason: ${state.lobbyStatus.leftRoomReason}",
-                            color: Colors.orange[400],
-                            textColor: Colors.black);
+                          context: context,
+                          message:
+                              "Disconnected from room.\n Reason: ${state.lobbyStatus.leftRoomReason}",
+                          color: CustomColors.snackBarInfo,
+                        );
                       }
                       rooms = state.lobbyStatus.rooms;
                       return rooms.length > 0
