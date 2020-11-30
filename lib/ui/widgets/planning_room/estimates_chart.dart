@@ -1,102 +1,221 @@
-import 'dart:math';
-import 'dart:ui' show lerpDouble;
-
-import 'package:flutter/animation.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:math' as math;
 
-class ChartPage extends StatefulWidget {
-  @override
-  ChartPageState createState() => ChartPageState();
+import '../../../bloc/planning_room/planning_room_bloc.dart';
+
+class ExampleModel {
+  int value;
+  double frequency;
+  Color color;
+
+  ExampleModel(this.value, this.frequency, this.color);
 }
 
-class ChartPageState extends State<ChartPage> with TickerProviderStateMixin {
-  final random = Random();
-  AnimationController animation;
-  BarTween tween;
+class EstimatesChart extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => EstimatesChartState();
+}
+
+class EstimatesChartState extends State {
+  List<ExampleModel> list = [
+    // ExampleModel(1, 0, Colors.orange),
+    // ExampleModel(1, 1, Colors.black),
+    ExampleModel(2, 1, Colors.teal),
+    ExampleModel(3, 3, Colors.purple),
+    ExampleModel(4, 2, Colors.yellow),
+    ExampleModel(5, 1, Colors.pink),
+    ExampleModel(6, 2, Colors.orange),
+    ExampleModel(7, 1, Colors.green[200]),
+    ExampleModel(9, 1, Colors.red),
+    // ExampleModel(2, 1, Colors.blue),
+    // ExampleModel(2, 2, Colors.brown),
+    // ExampleModel(3, 1, Colors.green)
+  ];
 
   @override
-  void initState() {
-    super.initState();
-    animation = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    tween = BarTween(Bar(0.0), Bar(50.0));
-    animation.forward();
-  }
-
-  @override
-  void dispose() {
-    animation.dispose();
-    super.dispose();
-  }
-
-  void changeData() {
-    setState(() {
-      tween = BarTween(
-        tween.evaluate(animation),
-        Bar(random.nextDouble() * 100.0),
+  Widget build(BuildContext context) {
+    return BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
+        builder: (context, state) {
+      return Stack(
+        alignment: Alignment.center,
+        children: [
+          SizedBox(
+            height: 160,
+            width: 160,
+            child: PieChart(
+              PieChartData(
+                borderData: FlBorderData(
+                  show: false,
+                ),
+                sectionsSpace: 2,
+                centerSpaceRadius: 20,
+                sections: showingSections(),
+              ),
+            ),
+          ),
+          Center(
+            child: CircleChart(
+              progressNumber: 4,
+              maxNumber: 10,
+              showRate: false,
+              width: 150,
+              height: 150,
+              progressColor: Theme.of(context).accentColor,
+              // rateTextStyle: TextStyle(),
+            ),
+          )
+        ],
       );
-      animation.forward(from: 0.0);
     });
+  }
+
+  List<PieChartSectionData> showingSections() {
+    return list
+        .map((e) => PieChartSectionData(
+              color: e.color,
+              value: e.frequency,
+              title: '${e.value}',
+              radius: 40,
+              titleStyle: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ))
+        .toList();
+  }
+}
+
+class CircleChart extends StatefulWidget {
+  final double progressNumber;
+  final int maxNumber;
+  final bool showRate;
+  final double width;
+  final double height;
+  final TextStyle rateTextStyle;
+  final Duration animationDuration;
+  final Color progressColor;
+  final Color backgroundColor;
+  final List<Widget> children;
+
+  CircleChart(
+      {@required this.progressNumber,
+      @required this.maxNumber,
+      this.children,
+      this.showRate = true,
+      this.rateTextStyle,
+      this.animationDuration = const Duration(seconds: 1),
+      this.backgroundColor,
+      this.progressColor,
+      this.width = 128,
+      this.height = 128}) {
+    assert(progressNumber > 0 && maxNumber > 0 && progressNumber < maxNumber);
+  }
+
+  @override
+  State<StatefulWidget> createState() => CircleChartState();
+}
+
+class CircleChartState extends State<CircleChart> with SingleTickerProviderStateMixin {
+  CirclePainter _painter;
+  Animation<double> _animation;
+  AnimationController _controller;
+  double _fraction = 0.0;
+
+  initState() {
+    super.initState();
+    _controller = AnimationController(duration: widget.animationDuration, vsync: this);
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_controller)
+      ..addListener(() {
+        setState(() {
+          _fraction = _animation.value;
+        });
+      });
+    _controller.forward();
+  }
+
+  @override
+  dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return 
-      Center(
-        child: CustomPaint(
-          size: Size(50.0, 200.0),
-          painter: BarChartPainter(tween.animate(animation)),
+    _painter = CirclePainter(
+        animation: _controller,
+        fraction: _fraction,
+        progressNumber: widget.progressNumber,
+        maxNumber: widget.maxNumber,
+        backgroundColor: widget.backgroundColor,
+        progressColor: widget.progressColor);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          width: widget.width,
+          height: widget.height,
+          child: Stack(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.center,
+                child: AspectRatio(
+                  aspectRatio: 1.0,
+                  child: AnimatedBuilder(
+                    animation: _controller,
+                    builder: (BuildContext context, Widget child) {
+                      return CustomPaint(painter: _painter);
+                    },
+                  ),
+                ),
+              ),
+              
+            ],
+          ),
         ),
-      );
-    
-  }
-}
-
-class Bar {
-  Bar(this.width);
-
-  final double width;
-
-  static Bar lerp(Bar begin, Bar end, double t) {
-    return Bar(lerpDouble(begin.width, end.width, t));
-  }
-}
-
-class BarTween extends Tween<Bar> {
-  BarTween(Bar begin, Bar end) : super(begin: begin, end: end);
-
-  @override
-  Bar lerp(double t) => Bar.lerp(begin, end, t);
-}
-
-class BarChartPainter extends CustomPainter {
-  static const barHeight = 10.0;
-
-  BarChartPainter(Animation<Bar> animation)
-      : animation = animation,
-        super(repaint: animation);
-
-  final Animation<Bar> animation;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final bar = animation.value;
-    final paint = Paint()
-      ..color = Colors.blue[400]
-      ..style = PaintingStyle.fill;
-    canvas.drawRect(
-      Rect.fromLTWH(
-        size.width - bar.width,
-        size.height - barHeight,
-        bar.width,
-        barHeight,
-      ),
-      paint,
+      ],
     );
   }
+}
+
+class CirclePainter extends CustomPainter {
+  final Color progressColor;
+  final Color backgroundColor;
+  final double progressNumber;
+  final int maxNumber;
+  final double fraction;
+  final Animation<double> animation;
+  Paint _paint;
+
+  CirclePainter(
+      {@required this.progressNumber,
+      @required this.maxNumber,
+      @required this.fraction,
+      @required this.animation,
+      this.backgroundColor,
+      this.progressColor}) {
+    _paint = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 10.0
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+  }
+
+  void paint(Canvas canvas, Size size) {
+    _paint.color = backgroundColor ?? Colors.black12;
+    canvas.drawArc(Offset.zero & size, -math.pi * 1.5 + math.pi / 4, (3 * math.pi) / 2, false, _paint);
+
+    _paint.color = progressColor ?? Colors.blue;
+
+    double progressRadians = ((progressNumber / maxNumber) * (3 * math.pi / 2) * (-animation.value));
+    double startAngle = (-math.pi * 1.5 + math.pi / 4);
+
+    canvas.drawArc(Offset.zero & size, startAngle, -progressRadians, false, _paint);
+  }
 
   @override
-  bool shouldRepaint(BarChartPainter old) => false;
+  bool shouldRepaint(CirclePainter oldDelegate) {
+    return oldDelegate.fraction != fraction;
+  }
 }

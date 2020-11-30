@@ -84,18 +84,16 @@ class _PlanningScreenState extends State<PlanningScreen>
                     .pushReplacementNamed(LobbyScreen.routeName);
               } else if (state is RoomConnectionDisconnectingFromRoomError) {
                 CommonWidgets.displaySnackBar(
-                  context: context,
-                  message: "Failed to disconnect from room.",
-                  color: CustomColors.snackBarError,
-                  lightText: true
-                );
+                    context: context,
+                    message: "Failed to disconnect from room.",
+                    color: CustomColors.snackBarError,
+                    lightText: true);
               } else if (state is RoomConnectionDestroyingRoomError) {
                 CommonWidgets.displaySnackBar(
-                  context: context,
-                  message: "Failed to destroy room.",
-                  color: CustomColors.snackBarError,
-                  lightText: true
-                );
+                    context: context,
+                    message: "Failed to destroy room.",
+                    color: CustomColors.snackBarError,
+                    lightText: true);
               }
             },
           ),
@@ -115,11 +113,10 @@ class _PlanningScreenState extends State<PlanningScreen>
           listener: (context, state) {
             if (state is PlanningRoomError) {
               CommonWidgets.displaySnackBar(
-                context: context,
-                message: state.message,
-                color: CustomColors.snackBarError,
-                lightText: true
-              );
+                  context: context,
+                  message: state.message,
+                  color: CustomColors.snackBarError,
+                  lightText: true);
             }
           },
           child: Stack(
@@ -379,21 +376,40 @@ class _PlanningScreenState extends State<PlanningScreen>
                 return SingleChildScrollView(
                   child: Column(
                     children: [
-                      Text(
-                        taskId.isNotEmpty
-                            ? '${state.planningRoomStatusInfo.estimatedTaskInfo.taskId}'
-                            : "No estimation in progress.",
-                        style: TextStyle(fontSize: 20),
-                        textAlign: TextAlign.center,
-                      ),
-                      Padding(padding: EdgeInsets.only(top: 2)),
-                      state.planningRoomStatusInfo.estimatedTaskInfo.median !=
-                              null
-                          ? Text(
-                              "Median: ${state.planningRoomStatusInfo.estimatedTaskInfo.median}, Average: ${state.planningRoomStatusInfo.estimatedTaskInfo.average}",
-                              key: Key(Keys.textMedianAndAverage),
-                            )
-                          : Container(),
+                      if (taskId.isEmpty)
+                        Text(
+                          "No estimation in progress.",
+                          style: TextStyle(fontSize: 20),
+                          textAlign: TextAlign.center,
+                        ),
+                      if (taskId.isNotEmpty)
+                        Container(
+                          width: deviceSize.width,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                EstimatesChart(),
+                                Column(
+                                  children: [
+                                    Text(
+                                      "${state.planningRoomStatusInfo.estimatedTaskInfo.taskId}",
+                                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Padding(padding: EdgeInsets.only(top: 5),),
+                                    Text(
+                                      "Median: ${state.planningRoomStatusInfo.estimatedTaskInfo.median}\nAverage: ${state.planningRoomStatusInfo.estimatedTaskInfo.average}",
+                                      key: Key(Keys.textMedianAndAverage),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 );
@@ -402,7 +418,7 @@ class _PlanningScreenState extends State<PlanningScreen>
             },
           ),
         ),
-        height: deviceSize.height * 0.1,
+        height: deviceSize.height * 0.20,
       ),
     );
   }
