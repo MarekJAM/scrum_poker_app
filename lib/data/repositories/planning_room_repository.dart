@@ -4,16 +4,20 @@ import '../../ui/ui_models/ui_models.dart';
 import '../../data/models/models.dart';
 
 class PlanningRoomRepository {
-
   Future<PlanningRoomStatusInfo> processRoomStatusToUIModel(
       RoomStatus roomStatus) async {
-        
     final myUsername = SessionDataSingleton().getUsername();
     final amAdmin = roomStatus.admins.contains(myUsername);
     final alreadyEstimated = ((roomStatus.estimates.singleWhere(
             (estimate) => estimate.name == myUsername,
             orElse: () => null)) !=
         null);
+    final estimatesReceived = roomStatus.estimates.length;
+    final estimatesExpected =
+        roomStatus.admins.length + roomStatus.estimators.length;
+    
+    print(estimatesReceived);
+    print(estimatesExpected);
 
     List<UserEstimationCard> userEstimationCardsUI = [];
     List<int> estimates = [];
@@ -46,19 +50,23 @@ class PlanningRoomRepository {
     });
 
     final estimatedTaskInfo = estimates.isEmpty
-        ? EstimatedTaskInfo(taskId: roomStatus.taskId)
+        ? EstimatedTaskInfo(
+            taskId: roomStatus.taskId,
+            estimatesReceived: estimatesReceived,
+            estimatesExpected: estimatesExpected,
+          )
         : EstimatedTaskInfo(
             taskId: roomStatus.taskId,
             average: Stats.average(estimates),
             median: Stats.median(estimates),
+            estimatesReceived: estimatesReceived,
+            estimatesExpected: estimatesExpected,
           );
 
     return PlanningRoomStatusInfo(
-      amAdmin: amAdmin,
-      alreadyEstimated: alreadyEstimated,
-      estimatedTaskInfo: estimatedTaskInfo,
-      userEstimationCards: userEstimationCardsUI,
-    );
+        amAdmin: amAdmin,
+        alreadyEstimated: alreadyEstimated,
+        estimatedTaskInfo: estimatedTaskInfo,
+        userEstimationCards: userEstimationCardsUI);
   }
-  
 }

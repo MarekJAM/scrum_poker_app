@@ -37,38 +37,49 @@ class EstimatesChartState extends State {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
-        builder: (context, state) {
-      return Stack(
-        alignment: Alignment.center,
-        children: [
-          SizedBox(
-            height: 160,
-            width: 160,
-            child: PieChart(
-              PieChartData(
-                borderData: FlBorderData(
-                  show: false,
+      buildWhen: (_, state) {
+        if (state is PlanningRoomRoomStatusLoaded) {
+          return true;
+        }
+        return false;
+      },
+      builder: (context, state) {
+        if (state is PlanningRoomRoomStatusLoaded) {
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                height: 160,
+                width: 160,
+                child: PieChart(
+                  PieChartData(
+                    borderData: FlBorderData(
+                      show: false,
+                    ),
+                    sectionsSpace: 2,
+                    centerSpaceRadius: 20,
+                    sections: showingSections(),
+                  ),
                 ),
-                sectionsSpace: 2,
-                centerSpaceRadius: 20,
-                sections: showingSections(),
               ),
-            ),
-          ),
-          Center(
-            child: CircleChart(
-              progressNumber: 4,
-              maxNumber: 10,
-              showRate: false,
-              width: 150,
-              height: 150,
-              progressColor: Theme.of(context).accentColor,
-              // rateTextStyle: TextStyle(),
-            ),
-          )
-        ],
-      );
-    });
+              Center(
+                child: CircleChart(
+                  progressNumber: state.planningRoomStatusInfo.estimatedTaskInfo
+                      .estimatesReceived,
+                  maxNumber: state.planningRoomStatusInfo.estimatedTaskInfo
+                      .estimatesExpected,
+                  width: 150,
+                  height: 150,
+                  progressColor: Theme.of(context).accentColor,
+                  // rateTextStyle: TextStyle(),
+                ),
+              )
+            ],
+          );
+        }
+        return Container();
+      },
+    );
   }
 
   List<PieChartSectionData> showingSections() {
@@ -88,9 +99,8 @@ class EstimatesChartState extends State {
 }
 
 class CircleChart extends StatefulWidget {
-  final double progressNumber;
+  final int progressNumber;
   final int maxNumber;
-  final bool showRate;
   final double width;
   final double height;
   final TextStyle rateTextStyle;
@@ -99,25 +109,26 @@ class CircleChart extends StatefulWidget {
   final Color backgroundColor;
   final List<Widget> children;
 
-  CircleChart(
-      {@required this.progressNumber,
-      @required this.maxNumber,
-      this.children,
-      this.showRate = true,
-      this.rateTextStyle,
-      this.animationDuration = const Duration(seconds: 1),
-      this.backgroundColor,
-      this.progressColor,
-      this.width = 128,
-      this.height = 128}) {
-    assert(progressNumber > 0 && maxNumber > 0 && progressNumber < maxNumber);
+  CircleChart({
+    @required this.progressNumber,
+    @required this.maxNumber,
+    this.children,
+    this.rateTextStyle,
+    this.animationDuration = const Duration(seconds: 1),
+    this.backgroundColor,
+    this.progressColor,
+    this.width = 128,
+    this.height = 128,
+  }) {
+    assert(maxNumber > 0 && progressNumber <= maxNumber);
   }
 
   @override
   State<StatefulWidget> createState() => CircleChartState();
 }
 
-class CircleChartState extends State<CircleChart> with SingleTickerProviderStateMixin {
+class CircleChartState extends State<CircleChart>
+    with SingleTickerProviderStateMixin {
   CirclePainter _painter;
   Animation<double> _animation;
   AnimationController _controller;
@@ -125,11 +136,15 @@ class CircleChartState extends State<CircleChart> with SingleTickerProviderState
 
   initState() {
     super.initState();
-    _controller = AnimationController(duration: widget.animationDuration, vsync: this);
+    _controller =
+        AnimationController(duration: widget.animationDuration, vsync: this);
     _animation = Tween(begin: 0.0, end: 1.0).animate(_controller)
       ..addListener(() {
         setState(() {
           _fraction = _animation.value;
+          if(_fraction == 1.0) {
+            _controller.reset();
+          }
         });
       });
     _controller.forward();
@@ -144,12 +159,15 @@ class CircleChartState extends State<CircleChart> with SingleTickerProviderState
   @override
   Widget build(BuildContext context) {
     _painter = CirclePainter(
-        animation: _controller,
-        fraction: _fraction,
-        progressNumber: widget.progressNumber,
-        maxNumber: widget.maxNumber,
-        backgroundColor: widget.backgroundColor,
-        progressColor: widget.progressColor);
+      animation: _controller,
+      fraction: _fraction,
+      progressNumber: widget.progressNumber,
+      maxNumber: widget.maxNumber,
+      backgroundColor: widget.backgroundColor,
+      progressColor: widget.progressColor,
+    );
+    print(_controller);
+    print(_painter);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -170,7 +188,6 @@ class CircleChartState extends State<CircleChart> with SingleTickerProviderState
                   ),
                 ),
               ),
-              
             ],
           ),
         ),
@@ -182,19 +199,20 @@ class CircleChartState extends State<CircleChart> with SingleTickerProviderState
 class CirclePainter extends CustomPainter {
   final Color progressColor;
   final Color backgroundColor;
-  final double progressNumber;
+  final int progressNumber;
   final int maxNumber;
   final double fraction;
   final Animation<double> animation;
   Paint _paint;
 
-  CirclePainter(
-      {@required this.progressNumber,
-      @required this.maxNumber,
-      @required this.fraction,
-      @required this.animation,
-      this.backgroundColor,
-      this.progressColor}) {
+  CirclePainter({
+    @required this.progressNumber,
+    @required this.maxNumber,
+    @required this.fraction,
+    @required this.animation,
+    this.backgroundColor,
+    this.progressColor,
+  }) {
     _paint = Paint()
       ..color = Colors.white
       ..strokeWidth = 10.0
@@ -204,18 +222,21 @@ class CirclePainter extends CustomPainter {
 
   void paint(Canvas canvas, Size size) {
     _paint.color = backgroundColor ?? Colors.black12;
-    canvas.drawArc(Offset.zero & size, -math.pi * 1.5 + math.pi / 4, (3 * math.pi) / 2, false, _paint);
+    canvas.drawArc(Offset.zero & size, -math.pi * 1.5 + math.pi / 4,
+        (3 * math.pi) / 2, false, _paint);
 
     _paint.color = progressColor ?? Colors.blue;
 
-    double progressRadians = ((progressNumber / maxNumber) * (3 * math.pi / 2) * (-animation.value));
+    double progressRadians =
+        ((progressNumber / maxNumber) * (3 * math.pi / 2) * (-animation.value));
     double startAngle = (-math.pi * 1.5 + math.pi / 4);
 
-    canvas.drawArc(Offset.zero & size, startAngle, -progressRadians, false, _paint);
+    canvas.drawArc(
+        Offset.zero & size, startAngle, -progressRadians, false, _paint);
   }
 
   @override
   bool shouldRepaint(CirclePainter oldDelegate) {
-    return oldDelegate.fraction != fraction;
+    return true;
   }
 }
