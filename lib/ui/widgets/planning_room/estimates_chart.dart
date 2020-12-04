@@ -33,6 +33,7 @@ class EstimatesChartState extends State {
     // ExampleModel(2, 2, Colors.brown),
     // ExampleModel(3, 1, Colors.green)
   ];
+  var chartAnimationProgress = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +109,7 @@ class CircleChart extends StatefulWidget {
   final Color progressColor;
   final Color backgroundColor;
   final List<Widget> children;
+  double animationProgress;
 
   CircleChart({
     @required this.progressNumber,
@@ -119,6 +121,7 @@ class CircleChart extends StatefulWidget {
     this.progressColor,
     this.width = 128,
     this.height = 128,
+    this.animationProgress,
   }) {
     assert(maxNumber > 0 && progressNumber <= maxNumber);
   }
@@ -128,7 +131,7 @@ class CircleChart extends StatefulWidget {
 }
 
 class CircleChartState extends State<CircleChart>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   CirclePainter _painter;
   Animation<double> _animation;
   AnimationController _controller;
@@ -142,11 +145,15 @@ class CircleChartState extends State<CircleChart>
       ..addListener(() {
         setState(() {
           _fraction = _animation.value;
-          if(_fraction == 1.0) {
-            _controller.reset();
-          }
         });
       });
+    _controller.forward();
+  }
+
+  @override
+  void didUpdateWidget(covariant CircleChart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _controller.reset();
     _controller.forward();
   }
 
@@ -158,6 +165,7 @@ class CircleChartState extends State<CircleChart>
 
   @override
   Widget build(BuildContext context) {
+    _controller.forward();
     _painter = CirclePainter(
       animation: _controller,
       fraction: _fraction,
@@ -166,8 +174,8 @@ class CircleChartState extends State<CircleChart>
       backgroundColor: widget.backgroundColor,
       progressColor: widget.progressColor,
     );
-    print(_controller);
-    print(_painter);
+    // print(_controller);
+    // print(_painter);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -225,7 +233,7 @@ class CirclePainter extends CustomPainter {
     canvas.drawArc(Offset.zero & size, -math.pi * 1.5 + math.pi / 4,
         (3 * math.pi) / 2, false, _paint);
 
-    _paint.color = progressColor ?? Colors.blue;
+    _paint.color = progressColor ?? Colors.orange;
 
     double progressRadians =
         ((progressNumber / maxNumber) * (3 * math.pi / 2) * (-animation.value));
