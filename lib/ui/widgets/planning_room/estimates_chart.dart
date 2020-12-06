@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scrum_poker_app/ui/ui_models/ui_models.dart';
 import 'dart:math' as math;
 
 import '../../../bloc/planning_room/planning_room_bloc.dart';
@@ -33,7 +34,7 @@ class EstimatesChartState extends State {
     // ExampleModel(2, 2, Colors.brown),
     // ExampleModel(3, 1, Colors.green)
   ];
-  var chartAnimationProgress = 0.0;
+  var chartProgress = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -65,13 +66,14 @@ class EstimatesChartState extends State {
               ),
               Center(
                 child: CircleChart(
-                  progressNumber: state.planningRoomStatusInfo.estimatedTaskInfo
+                  usersEstimatedNumber: state.planningRoomStatusInfo.estimatedTaskInfo
                       .estimatesReceived,
-                  maxNumber: state.planningRoomStatusInfo.estimatedTaskInfo
+                  usersTotalNumber: state.planningRoomStatusInfo.estimatedTaskInfo
                       .estimatesExpected,
                   width: 150,
                   height: 150,
                   progressColor: Theme.of(context).accentColor,
+                  chartProgress: chartProgress,
                   // rateTextStyle: TextStyle(),
                 ),
               )
@@ -100,8 +102,8 @@ class EstimatesChartState extends State {
 }
 
 class CircleChart extends StatefulWidget {
-  final int progressNumber;
-  final int maxNumber;
+  final int usersEstimatedNumber;
+  final int usersTotalNumber;
   final double width;
   final double height;
   final TextStyle rateTextStyle;
@@ -109,11 +111,11 @@ class CircleChart extends StatefulWidget {
   final Color progressColor;
   final Color backgroundColor;
   final List<Widget> children;
-  double animationProgress;
+  double chartProgress;
 
   CircleChart({
-    @required this.progressNumber,
-    @required this.maxNumber,
+    @required this.usersEstimatedNumber,
+    @required this.usersTotalNumber,
     this.children,
     this.rateTextStyle,
     this.animationDuration = const Duration(seconds: 1),
@@ -121,10 +123,8 @@ class CircleChart extends StatefulWidget {
     this.progressColor,
     this.width = 128,
     this.height = 128,
-    this.animationProgress,
-  }) {
-    assert(maxNumber > 0 && progressNumber <= maxNumber);
-  }
+    @required this.chartProgress,
+  });
 
   @override
   State<StatefulWidget> createState() => CircleChartState();
@@ -135,7 +135,6 @@ class CircleChartState extends State<CircleChart>
   CirclePainter _painter;
   Animation<double> _animation;
   AnimationController _controller;
-  double _fraction = 0.0;
 
   initState() {
     super.initState();
@@ -144,7 +143,6 @@ class CircleChartState extends State<CircleChart>
     _animation = Tween(begin: 0.0, end: 1.0).animate(_controller)
       ..addListener(() {
         setState(() {
-          _fraction = _animation.value;
         });
       });
     _controller.forward();
@@ -153,6 +151,7 @@ class CircleChartState extends State<CircleChart>
   @override
   void didUpdateWidget(covariant CircleChart oldWidget) {
     super.didUpdateWidget(oldWidget);
+          widget.chartProgress = _animation.value;
     _controller.reset();
     _controller.forward();
   }
@@ -168,9 +167,9 @@ class CircleChartState extends State<CircleChart>
     _controller.forward();
     _painter = CirclePainter(
       animation: _controller,
-      fraction: _fraction,
-      progressNumber: widget.progressNumber,
-      maxNumber: widget.maxNumber,
+      chartProgress: widget.chartProgress,
+      usersEstimatedNumber: widget.usersEstimatedNumber,
+      usersTotalNumber: widget.usersTotalNumber,
       backgroundColor: widget.backgroundColor,
       progressColor: widget.progressColor,
     );
@@ -207,16 +206,16 @@ class CircleChartState extends State<CircleChart>
 class CirclePainter extends CustomPainter {
   final Color progressColor;
   final Color backgroundColor;
-  final int progressNumber;
-  final int maxNumber;
-  final double fraction;
+  final int usersEstimatedNumber;
+  final int usersTotalNumber;
+  final double chartProgress;
   final Animation<double> animation;
   Paint _paint;
 
   CirclePainter({
-    @required this.progressNumber,
-    @required this.maxNumber,
-    @required this.fraction,
+    @required this.usersEstimatedNumber,
+    @required this.usersTotalNumber,
+    @required this.chartProgress,
     @required this.animation,
     this.backgroundColor,
     this.progressColor,
@@ -235,8 +234,13 @@ class CirclePainter extends CustomPainter {
 
     _paint.color = progressColor ?? Colors.orange;
 
+    if(usersEstimatedNumber > 0) {
+      canvas.drawArc(Offset.zero & size, -math.pi * 1.5 + math.pi / 4,
+        (3 * math.pi) * ((usersEstimatedNumber - 1 + chartProgress) / usersTotalNumber) / 2, false, _paint);
+    }
+
     double progressRadians =
-        ((progressNumber / maxNumber) * (3 * math.pi / 2) * (-animation.value));
+        ((usersEstimatedNumber / usersTotalNumber) * (3 * math.pi / 2) * (-animation.value));
     double startAngle = (-math.pi * 1.5 + math.pi / 4);
 
     canvas.drawArc(
