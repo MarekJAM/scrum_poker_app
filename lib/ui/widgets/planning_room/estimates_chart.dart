@@ -35,12 +35,20 @@ class EstimatesChartState extends State {
     // ExampleModel(3, 1, Colors.green)
   ];
   var chartProgress = 0.0;
+  String taskId;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
       buildWhen: (_, state) {
         if (state is PlanningRoomRoomStatusLoaded) {
+          if (state.planningRoomStatusInfo.estimatedTaskInfo.taskId != taskId &&
+              state
+                  .planningRoomStatusInfo.estimatedTaskInfo.taskId.isNotEmpty &&
+              taskId != null) {
+            taskId = state.planningRoomStatusInfo.estimatedTaskInfo.taskId;
+            chartProgress = 0.0;
+          }
           return true;
         }
         return false;
@@ -66,10 +74,10 @@ class EstimatesChartState extends State {
               ),
               Center(
                 child: CircleChart(
-                  usersEstimatedNumber: state.planningRoomStatusInfo.estimatedTaskInfo
-                      .estimatesReceived,
-                  usersTotalNumber: state.planningRoomStatusInfo.estimatedTaskInfo
-                      .estimatesExpected,
+                  usersEstimatedNumber: state.planningRoomStatusInfo
+                      .estimatedTaskInfo.estimatesReceived,
+                  usersTotalNumber: state.planningRoomStatusInfo
+                      .estimatedTaskInfo.estimatesExpected,
                   width: 150,
                   height: 150,
                   progressColor: Theme.of(context).accentColor,
@@ -135,23 +143,36 @@ class CircleChartState extends State<CircleChart>
   CirclePainter _painter;
   Animation<double> _animation;
   AnimationController _controller;
+  double _chartProgress;
 
   initState() {
     super.initState();
+
+    _chartProgress = widget.chartProgress;
+
     _controller =
         AnimationController(duration: widget.animationDuration, vsync: this);
     _animation = Tween(begin: 0.0, end: 1.0).animate(_controller)
       ..addListener(() {
         setState(() {
+          if(_animation.value == 1.0) {
+             _chartProgress = _chartProgress.ceilToDouble();
+          }
         });
       });
+
     _controller.forward();
   }
 
   @override
   void didUpdateWidget(covariant CircleChart oldWidget) {
     super.didUpdateWidget(oldWidget);
-          widget.chartProgress = _animation.value;
+
+    //This condition is neccessary because technically animation is triggered even if nothing happens on the screen (so before anyone estimates)
+    if (widget.usersEstimatedNumber > 1 && widget.usersEstimatedNumber <= widget.usersTotalNumber) {
+     _chartProgress += _animation.value;
+    }
+
     _controller.reset();
     _controller.forward();
   }
@@ -167,14 +188,12 @@ class CircleChartState extends State<CircleChart>
     _controller.forward();
     _painter = CirclePainter(
       animation: _controller,
-      chartProgress: widget.chartProgress,
+      chartProgress: _chartProgress,
       usersEstimatedNumber: widget.usersEstimatedNumber,
       usersTotalNumber: widget.usersTotalNumber,
       backgroundColor: widget.backgroundColor,
       progressColor: widget.progressColor,
     );
-    // print(_controller);
-    // print(_painter);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -234,14 +253,22 @@ class CirclePainter extends CustomPainter {
 
     _paint.color = progressColor ?? Colors.orange;
 
-    if(usersEstimatedNumber > 0) {
-      canvas.drawArc(Offset.zero & size, -math.pi * 1.5 + math.pi / 4,
-        (3 * math.pi) * ((usersEstimatedNumber - 1 + chartProgress) / usersTotalNumber) / 2, false, _paint);
+    if (usersEstimatedNumber > 0) {
+      canvas.drawArc(
+          Offset.zero & size,
+          -math.pi * 1.5 + math.pi / 4,
+          (3 * math.pi) * (chartProgress / usersTotalNumber) / 2,
+          false,
+          _paint);
     }
 
-    double progressRadians =
-        ((usersEstimatedNumber / usersTotalNumber) * (3 * math.pi / 2) * (-animation.value));
-    double startAngle = (-math.pi * 1.5 + math.pi / 4);
+    double progressRadians = (((usersEstimatedNumber - chartProgress) / usersTotalNumber) *
+        (3 * math.pi / 2) *
+        (-animation.value));
+    double startAngle = (-math.pi * 1.5 + math.pi / 4) + (3 * math.pi) * (chartProgress / usersTotalNumber) / 2;
+
+    print("chartProgress: $chartProgress");
+    print("progress radians: $progressRadians");
 
     canvas.drawArc(
         Offset.zero & size, startAngle, -progressRadians, false, _paint);
