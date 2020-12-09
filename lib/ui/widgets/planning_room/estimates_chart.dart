@@ -78,6 +78,8 @@ class EstimatesChartState extends State {
                       .estimatedTaskInfo.estimatesReceived,
                   usersTotalNumber: state.planningRoomStatusInfo
                       .estimatedTaskInfo.estimatesExpected,
+                  estimatedTaskId:
+                      state.planningRoomStatusInfo.estimatedTaskInfo.taskId,
                   width: 150,
                   height: 150,
                   progressColor: Theme.of(context).accentColor,
@@ -119,20 +121,21 @@ class CircleChart extends StatefulWidget {
   final Color progressColor;
   final Color backgroundColor;
   final List<Widget> children;
-  double chartProgress;
+  final String estimatedTaskId;
+  final double chartProgress;
 
-  CircleChart({
-    @required this.usersEstimatedNumber,
-    @required this.usersTotalNumber,
-    this.children,
-    this.rateTextStyle,
-    this.animationDuration = const Duration(seconds: 1),
-    this.backgroundColor,
-    this.progressColor,
-    this.width = 128,
-    this.height = 128,
-    @required this.chartProgress,
-  });
+  CircleChart(
+      {@required this.usersEstimatedNumber,
+      @required this.usersTotalNumber,
+      this.children,
+      this.rateTextStyle,
+      this.animationDuration = const Duration(seconds: 1),
+      this.backgroundColor,
+      this.progressColor,
+      this.width = 128,
+      this.height = 128,
+      @required this.chartProgress,
+      @required this.estimatedTaskId});
 
   @override
   State<StatefulWidget> createState() => CircleChartState();
@@ -144,19 +147,23 @@ class CircleChartState extends State<CircleChart>
   Animation<double> _animation;
   AnimationController _controller;
   double _chartProgress;
+  int countedEstimates = 0;
+  String taskId;
 
   initState() {
     super.initState();
 
     _chartProgress = widget.chartProgress;
 
+    taskId = widget.estimatedTaskId;
+
     _controller =
         AnimationController(duration: widget.animationDuration, vsync: this);
     _animation = Tween(begin: 0.0, end: 1.0).animate(_controller)
       ..addListener(() {
         setState(() {
-          if(_animation.value == 1.0) {
-             _chartProgress = _chartProgress.ceilToDouble();
+          if (_animation.value == 1.0) {
+            _chartProgress = _chartProgress.ceilToDouble();
           }
         });
       });
@@ -168,10 +175,17 @@ class CircleChartState extends State<CircleChart>
   void didUpdateWidget(covariant CircleChart oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    //This condition is neccessary because technically animation is triggered even if nothing happens on the screen (so before anyone estimates)
-    if (widget.usersEstimatedNumber > 1 && widget.usersEstimatedNumber <= widget.usersTotalNumber) {
-     _chartProgress += _animation.value;
+    if (taskId != widget.estimatedTaskId) {
+      _chartProgress = 0.0;
+      taskId = widget.estimatedTaskId;
     }
+
+    //This condition is neccessary because technically animation is triggered even if nothing happens on the screen (so before anyone estimates)
+    if (widget.usersEstimatedNumber > 1 && countedEstimates != widget.usersEstimatedNumber) {
+      _chartProgress += _animation.value;
+    }
+
+    countedEstimates = widget.usersEstimatedNumber;
 
     _controller.reset();
     _controller.forward();
@@ -262,13 +276,12 @@ class CirclePainter extends CustomPainter {
           _paint);
     }
 
-    double progressRadians = (((usersEstimatedNumber - chartProgress) / usersTotalNumber) *
-        (3 * math.pi / 2) *
-        (-animation.value));
-    double startAngle = (-math.pi * 1.5 + math.pi / 4) + (3 * math.pi) * (chartProgress / usersTotalNumber) / 2;
-
-    print("chartProgress: $chartProgress");
-    print("progress radians: $progressRadians");
+    double progressRadians =
+        (((usersEstimatedNumber - chartProgress) / usersTotalNumber) *
+            (3 * math.pi / 2) *
+            (-animation.value));
+    double startAngle = (-math.pi * 1.5 + math.pi / 4) +
+        (3 * math.pi) * (chartProgress / usersTotalNumber) / 2;
 
     canvas.drawArc(
         Offset.zero & size, startAngle, -progressRadians, false, _paint);

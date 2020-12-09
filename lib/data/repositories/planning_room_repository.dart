@@ -14,7 +14,11 @@ class PlanningRoomRepository {
         null);
     final estimatesReceived = roomStatus.estimates.length;
     final estimatesExpected =
-        (roomStatus.admins.length + roomStatus.estimators.length) >= roomStatus.estimates.length ? roomStatus.admins.length + roomStatus.estimators.length : roomStatus.estimates.length;
+        (roomStatus.admins.length + roomStatus.estimators.length) +
+            (roomStatus.estimates.where((element) {
+              return !roomStatus.estimators.contains(element.name) &&
+                  !roomStatus.admins.contains(element.name);
+            }).length);
 
     List<UserEstimationCard> userEstimationCardsUI = [];
     List<int> estimates = [];
