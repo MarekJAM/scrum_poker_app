@@ -1,7 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scrum_poker_app/ui/ui_models/ui_models.dart';
 import 'dart:math' as math;
 
 import '../../../bloc/planning_room/planning_room_bloc.dart';
@@ -282,6 +281,8 @@ class CirclePainter extends CustomPainter {
             (-animation.value));
     double startAngle = (-math.pi * 1.5 + math.pi / 4) +
         (3 * math.pi) * (chartProgress / usersTotalNumber) / 2;
+
+    print(chartProgress);
 
     canvas.drawArc(
         Offset.zero & size, startAngle, -progressRadians, false, _paint);
