@@ -354,81 +354,84 @@ class _PlanningScreenState extends State<PlanningScreen>
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: Container(
-        child: Wrap(children: [
-          Center(
-            child: BlocConsumer<PlanningRoomBloc, PlanningRoomState>(
-              listener: (_, state) {
-                if (state is PlanningRoomRoomStatusLoaded) {
-                  if (state.planningRoomStatusInfo.estimatedTaskInfo.taskId !=
-                          taskId &&
-                      state.planningRoomStatusInfo.estimatedTaskInfo.taskId
-                          .isNotEmpty &&
-                      !state.planningRoomStatusInfo.amAdmin &&
-                      taskId != null) {
-                    Notifier.notify();
+        child: Wrap(
+          children: [
+            Center(
+              child: BlocConsumer<PlanningRoomBloc, PlanningRoomState>(
+                listener: (_, state) {
+                  if (state is PlanningRoomRoomStatusLoaded) {
+                    if (state.planningRoomStatusInfo.estimatedTaskInfo.taskId !=
+                            taskId &&
+                        state.planningRoomStatusInfo.estimatedTaskInfo.taskId
+                            .isNotEmpty &&
+                        !state.planningRoomStatusInfo.amAdmin &&
+                        taskId != null) {
+                      Notifier.notify();
+                    }
                   }
-                }
-              },
-              buildWhen: (_, state) {
-                return state is PlanningRoomRoomStatusLoaded;
-              },
-              builder: (_, state) {
-                if (state is PlanningRoomRoomStatusLoaded) {
-                  taskId =
-                      state.planningRoomStatusInfo.estimatedTaskInfo.taskId;
-                  return taskId.isEmpty
-                      ? Container(
-                          height: taskInfoBarHeight,
-                          child: Center(
-                            child: Text(
-                              "No estimation in progress.",
-                              style: TextStyle(fontSize: 20),
-                              textAlign: TextAlign.center,
+                },
+                buildWhen: (_, state) {
+                  return state is PlanningRoomRoomStatusLoaded;
+                },
+                builder: (_, state) {
+                  if (state is PlanningRoomRoomStatusLoaded) {
+                    taskId =
+                        state.planningRoomStatusInfo.estimatedTaskInfo.taskId;
+                    return taskId.isEmpty
+                        ? Container(
+                            height: taskInfoBarHeight,
+                            child: Center(
+                              child: Text(
+                                "No estimation in progress.",
+                                style: TextStyle(fontSize: 20),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                          ),
-                        )
-                      : Container(
-                          width: deviceSize.width,
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 30),
-                                ),
-                                Expanded(child: EstimatesChart()),
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        "${state.planningRoomStatusInfo.estimatedTaskInfo.taskId}",
-                                        style: TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(top: 5),
-                                      ),
-                                      Text(
-                                        "Median: ${state.planningRoomStatusInfo.estimatedTaskInfo.median ?? '-'}\nAverage: ${state.planningRoomStatusInfo.estimatedTaskInfo.average ?? '-'}",
-                                        key: Key(Keys.textMedianAndAverage),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
+                          )
+                        : Container(
+                            width: deviceSize.width,
+                            child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 30),
                                   ),
-                                )
-                              ],
+                                  Expanded(child: EstimatesChart()),
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "${state.planningRoomStatusInfo.estimatedTaskInfo.taskId}",
+                                          style: TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.bold),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 5),
+                                        ),
+                                        Text(
+                                          "Median: ${state.planningRoomStatusInfo.estimatedTaskInfo.median ?? '-'}\nAverage: ${state.planningRoomStatusInfo.estimatedTaskInfo.average ?? '-'}",
+                                          key: Key(Keys.textMedianAndAverage),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                }
-                return Container();
-              },
+                          );
+                  }
+                  return Container();
+                },
+              ),
             ),
-          ),
-        ]),
+          ],
+        ),
         height: taskInfoBarHeight,
       ),
     );
