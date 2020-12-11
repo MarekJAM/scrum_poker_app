@@ -392,27 +392,32 @@ class _PlanningScreenState extends State<PlanningScreen>
                           child: Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                EstimatesChart(),
-                                Column(
-                                  children: [
-                                    Text(
-                                      "${state.planningRoomStatusInfo.estimatedTaskInfo.taskId}",
-                                      style: TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 5),
-                                    ),
-                                    Text(
-                                      "Median: ${state.planningRoomStatusInfo.estimatedTaskInfo.median ?? '-'}\nAverage: ${state.planningRoomStatusInfo.estimatedTaskInfo.average ?? '-'}",
-                                      key: Key(Keys.textMedianAndAverage),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ],
+                                Padding(
+                                  padding: EdgeInsets.only(left: 30),
+                                ),
+                                Expanded(child: EstimatesChart()),
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        "${state.planningRoomStatusInfo.estimatedTaskInfo.taskId}",
+                                        style: TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 5),
+                                      ),
+                                      Text(
+                                        "Median: ${state.planningRoomStatusInfo.estimatedTaskInfo.median ?? '-'}\nAverage: ${state.planningRoomStatusInfo.estimatedTaskInfo.average ?? '-'}",
+                                        key: Key(Keys.textMedianAndAverage),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
                                 )
                               ],
                             ),

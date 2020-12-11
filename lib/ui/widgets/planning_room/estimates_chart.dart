@@ -282,8 +282,6 @@ class CirclePainter extends CustomPainter {
     double startAngle = (-math.pi * 1.5 + math.pi / 4) +
         (3 * math.pi) * (chartProgress / usersTotalNumber) / 2;
 
-    print(chartProgress);
-
     canvas.drawArc(
         Offset.zero & size, startAngle, -progressRadians, false, _paint);
   }
