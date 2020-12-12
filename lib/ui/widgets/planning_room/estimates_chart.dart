@@ -4,14 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/planning_room/planning_room_bloc.dart';
 import 'circle_estimates_chart.dart';
-
-class PieChartDataModel {
-  int value;
-  double frequency;
-  Color color;
-
-  PieChartDataModel(this.value, this.frequency, this.color);
-}
+import '../../ui_models/pie_chart_data.dart';
 
 class EstimatesChart extends StatefulWidget {
   @override
