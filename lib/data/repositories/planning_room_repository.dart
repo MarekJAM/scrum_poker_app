@@ -19,6 +19,7 @@ class PlanningRoomRepository {
               return !roomStatus.estimators.contains(element.name) &&
                   !roomStatus.admins.contains(element.name);
             }).length);
+    Map<int, int> estimatesDistribution = {};
 
     List<UserEstimationCard> userEstimationCardsUI = [];
     List<int> estimates = [];
@@ -35,6 +36,8 @@ class PlanningRoomRepository {
     //checks if all users who estimated are still in the room, and if not adds them at the end of the list
     roomStatus.estimates.forEach((estimate) {
       estimates.add(estimate.estimate);
+
+      estimatesDistribution.update(estimate.estimate, (value) => ++value, ifAbsent: () => 1);
 
       var index = userEstimationCardsUI
           .indexWhere((card) => card.username == estimate.name);
@@ -62,6 +65,7 @@ class PlanningRoomRepository {
             median: Stats.median(estimates),
             estimatesReceived: estimatesReceived,
             estimatesExpected: estimatesExpected,
+            estimatesDistribution: estimatesDistribution
           );
 
     return PlanningRoomStatusInfo(

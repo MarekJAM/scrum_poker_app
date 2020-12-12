@@ -6,6 +6,7 @@ class EstimatedTaskInfo {
   final int median;
   final int estimatesReceived;
   final int estimatesExpected;
+  final Map<int, int> estimatesDistribution;
 
-  const EstimatedTaskInfo({@required this.taskId, this.average, this.median, this.estimatesReceived, this.estimatesExpected});
+  const EstimatedTaskInfo({@required this.taskId, this.average, this.median, this.estimatesReceived, this.estimatesExpected, this.estimatesDistribution});
 }

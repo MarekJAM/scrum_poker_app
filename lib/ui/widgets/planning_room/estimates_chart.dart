@@ -5,12 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../bloc/planning_room/planning_room_bloc.dart';
 import 'circle_estimates_chart.dart';
 
-class ExampleModel {
+class PieChartDataModel {
   int value;
   double frequency;
   Color color;
 
-  ExampleModel(this.value, this.frequency, this.color);
+  PieChartDataModel(this.value, this.frequency, this.color);
 }
 
 class EstimatesChart extends StatefulWidget {
@@ -19,19 +19,28 @@ class EstimatesChart extends StatefulWidget {
 }
 
 class EstimatesChartState extends State {
-  List<ExampleModel> list = [
-    // ExampleModel(1, 0, Colors.orange),
-    // ExampleModel(1, 1, Colors.black),
-    ExampleModel(2, 1, Colors.teal),
-    ExampleModel(3, 3, Colors.purple),
-    ExampleModel(4, 2, Colors.yellow),
-    ExampleModel(5, 1, Colors.pink),
-    ExampleModel(6, 2, Colors.orange),
-    ExampleModel(7, 1, Colors.green[200]),
-    ExampleModel(9, 1, Colors.red),
-    // ExampleModel(2, 1, Colors.blue),
-    // ExampleModel(2, 2, Colors.brown),
-    // ExampleModel(3, 1, Colors.green)
+  List<PieChartDataModel> list = [
+    PieChartDataModel(0, 1, Colors.grey),
+    PieChartDataModel(1, 0, Colors.blue[300]),
+    PieChartDataModel(2, 0, Colors.teal[300]),
+    PieChartDataModel(3, 0, Colors.purple[300]),
+    PieChartDataModel(4, 0, Colors.green[300]),
+    PieChartDataModel(5, 0, Colors.pink[300]),
+    PieChartDataModel(6, 0, Colors.orange[300]),
+    PieChartDataModel(7, 0, Colors.red[300]),
+    PieChartDataModel(8, 0, Colors.brown[300]),
+    PieChartDataModel(9, 0, Colors.amber[300]),
+    PieChartDataModel(10, 0, Colors.cyan[300]),
+    PieChartDataModel(11, 0, Colors.indigo[300]),
+    PieChartDataModel(12, 0, Colors.lightBlue),
+    PieChartDataModel(13, 0, Colors.lightGreen[600]),
+    PieChartDataModel(14, 0, Colors.lime[600]),
+    PieChartDataModel(15, 0, Colors.purple[700]),
+    PieChartDataModel(20, 0, Colors.teal[900]),
+    PieChartDataModel(25, 0, Colors.deepOrange[600]),
+    PieChartDataModel(30, 0, Colors.brown[900]),
+    PieChartDataModel(40, 0, Colors.purple[900]),
+    PieChartDataModel(50, 0, Colors.red[900]),
   ];
   var chartProgress = 0.0;
   String taskId;
@@ -65,9 +74,10 @@ class EstimatesChartState extends State {
                     borderData: FlBorderData(
                       show: false,
                     ),
-                    sectionsSpace: 2,
+                    sectionsSpace: 0,
                     centerSpaceRadius: 20,
-                    sections: showingSections(),
+                    sections: showingSections(state.planningRoomStatusInfo
+                        .estimatedTaskInfo.estimatesDistribution),
                   ),
                 ),
               ),
@@ -84,7 +94,7 @@ class EstimatesChartState extends State {
                   progressColor: Theme.of(context).accentColor,
                   chartProgress: chartProgress,
                 ),
-              )
+              ),
             ],
           );
         }
@@ -93,12 +103,19 @@ class EstimatesChartState extends State {
     );
   }
 
-  List<PieChartSectionData> showingSections() {
+  List<PieChartSectionData> showingSections(
+      Map<int, int> estimatesDistribution) {
+    if (estimatesDistribution == null) {
+      resetChart();
+    }
+
+    updateChart(estimatesDistribution);
+
     return list
         .map((e) => PieChartSectionData(
               color: e.color,
               value: e.frequency,
-              title: '${e.value}',
+              title: (e.frequency > 0 && e.value > 0) ? '${e.value}' : "",
               radius: 40,
               titleStyle: TextStyle(
                 fontSize: 12,
@@ -106,5 +123,23 @@ class EstimatesChartState extends State {
               ),
             ))
         .toList();
+  }
+
+  void updateChart(Map<int, int> estimatesDistribution) {
+    estimatesDistribution?.forEach((key, value) {
+      list[0].frequency = 0;
+      list[list.indexWhere((element) => element.value == key)].frequency =
+          value.toDouble();
+    });
+  }
+
+  void resetChart() {
+    list.forEach((element) {
+      if (element.value == 0) {
+        element.frequency = 1;
+      } else {
+        element.frequency = 0;
+      }
+    });
   }
 }
