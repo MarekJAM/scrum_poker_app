@@ -40,116 +40,123 @@ class _RegisterScreenState extends State<RegisterScreen> {
           width: deviceSize.width,
           child: Stack(
             children: [
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Form(
-                    key: _registerFormKey,
-                    child: BlocListener<RegisterBloc, RegisterState>(
-                      listener: (context, state) {
-                        if (state is RegisterSignUpError) {
-                          CommonWidgets.displaySnackBar(
-                            context: context,
-                            message: state.message,
-                            color: CustomColors.snackBarError,
-                            lightText: true
-                          );
-                        } else if (state is RegisterSignedUp) {
-                          Navigator.of(context).pop();
-                        }
-                      },
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextFormField(
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                              labelText: 'Server address',
-                              prefixIcon: Icon(
-                                Icons.dns,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Form(
+                        key: _registerFormKey,
+                        child: BlocListener<RegisterBloc, RegisterState>(
+                          listener: (context, state) {
+                            if (state is RegisterSignUpError) {
+                              CommonWidgets.displaySnackBar(
+                                context: context,
+                                message: state.message,
+                                color: CustomColors.snackBarError,
+                                lightText: true,
+                              );
+                            } else if (state is RegisterSignedUp) {
+                              Navigator.of(context).pop();
+                            }
+                          },
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextFormField(
+                                keyboardType: TextInputType.emailAddress,
+                                decoration: InputDecoration(
+                                  labelText: 'Server address',
+                                  prefixIcon: Icon(
+                                    Icons.dns,
+                                  ),
+                                ),
+                                controller: _serverController,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return "Provide server address.";
+                                  }
+                                  return null;
+                                },
                               ),
-                            ),
-                            controller: _serverController,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return "Provide server address.";
-                              }
-                              return null;
-                            },
-                          ),
-                          TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Username',
-                              prefixIcon: Icon(Icons.person),
-                            ),
-                            controller: _userController,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return "Provide username.";
-                              } else if (value.trim().length > 20) {
-                                return "Name too long - max. 20 characters.";
-                              }
-                              return null;
-                            },
-                          ),
-                          TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              prefixIcon: Icon(Icons.lock),
-                            ),
-                            obscureText: true,
-                            controller: _passwordController,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return "Provide password.";
-                              } else if (value.trim().length > 20) {
-                                return "Password too long - max. 20 characters.";
-                              }
-                              return null;
-                            },
-                          ),
-                          TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Confirm Password',
-                              prefixIcon: Icon(Icons.lock),
-                            ),
-                            obscureText: true,
-                            controller: _confirmPasswordController,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return "Confirm password.";
-                              } else if (value.trim().length > 20) {
-                                return "Password too long - max. 20 characters.";
-                              } else if (value != _passwordController.text) {
-                                return "Passwords must match.";
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          ConstrainedBox(
-                            constraints: const BoxConstraints(
-                              minWidth: double.infinity,
-                            ),
-                            child: RaisedButton(
-                              child: Text(
-                                'Sign Up',
+                              TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Username',
+                                  prefixIcon: Icon(Icons.person),
+                                ),
+                                controller: _userController,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return "Provide username.";
+                                  } else if (value.trim().length > 20) {
+                                    return "Name too long - max. 20 characters.";
+                                  }
+                                  return null;
+                                },
                               ),
-                              onPressed: () {
-                                if (_registerFormKey.currentState.validate()) {
-                                  FocusScope.of(context).unfocus();
-                                  _onFormSubmitted();
-                                }
-                              },
-                            ),
+                              TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Password',
+                                  prefixIcon: Icon(Icons.lock),
+                                ),
+                                obscureText: true,
+                                controller: _passwordController,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return "Provide password.";
+                                  } else if (value.trim().length > 20) {
+                                    return "Password too long - max. 20 characters.";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Confirm Password',
+                                  prefixIcon: Icon(Icons.lock),
+                                ),
+                                obscureText: true,
+                                controller: _confirmPasswordController,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return "Confirm password.";
+                                  } else if (value.trim().length > 20) {
+                                    return "Password too long - max. 20 characters.";
+                                  } else if (value !=
+                                      _passwordController.text) {
+                                    return "Passwords must match.";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  minWidth: double.infinity,
+                                ),
+                                child: RaisedButton(
+                                  child: Text(
+                                    'Sign Up',
+                                  ),
+                                  onPressed: () {
+                                    if (_registerFormKey.currentState
+                                        .validate()) {
+                                      FocusScope.of(context).unfocus();
+                                      _onFormSubmitted();
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
               Align(
                 alignment: FractionalOffset.bottomCenter,
