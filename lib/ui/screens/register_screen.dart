@@ -43,6 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Text('Create account', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
                   Center(
                     child: Padding(
                       padding: EdgeInsets.all(16),
