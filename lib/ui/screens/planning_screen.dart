@@ -43,11 +43,7 @@ class _PlanningScreenState extends State<PlanningScreen>
     13,
     14,
     15,
-    20,
-    25,
-    30,
-    40,
-    50
+    20
   ];
 
   @override
