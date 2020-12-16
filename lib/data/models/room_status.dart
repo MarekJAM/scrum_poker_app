@@ -3,19 +3,22 @@ import 'package:flutter/material.dart';
 class RoomStatus {
   final List<String> admins;
   final List<String> estimators;
+  final List<String> spectators;
   final String taskId;
   final List<Estimate> estimates;  
 
   const RoomStatus({
     @required this.admins,
     @required this.estimators,
+    @required this.spectators,
     @required this.taskId,
     @required this.estimates,
   });
 
   factory RoomStatus.fromJson(Map<String, dynamic> json) {
     List<String> adminsListJson = [];
-    List<String> usersListJson = [];
+    List<String> estimatorsListJson = [];
+    List<String> spectatorsListJson = [];
     final taskIdJson = json["room_status"]["task"]["id"] ?? "";
     List<Estimate> estimatesJson = [];
 
@@ -24,7 +27,10 @@ class RoomStatus {
         adminsListJson.add(admin);
       }
       for (var user in json["room_status"]["users"]["estimators"]) {
-        usersListJson.add(user);
+        estimatorsListJson.add(user);
+      }
+      for (var spectator in json["room_status"]["users"]["spectators"]) {
+        spectatorsListJson.add(spectator);
       }
       for (var estimate in json["room_status"]["task"]["estimates"]) {
         estimatesJson.add(Estimate(estimate["name"], estimate["estimate"]));
@@ -33,7 +39,8 @@ class RoomStatus {
 
     return RoomStatus(
       admins: adminsListJson,
-      estimators: usersListJson,
+      estimators: estimatorsListJson,
+      spectators: spectatorsListJson,
       taskId: taskIdJson,
       estimates: estimatesJson,
     );

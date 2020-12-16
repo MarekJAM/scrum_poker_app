@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:scrum_poker_app/ui/screens/screens.dart';
+import 'package:scrum_poker_app/ui/ui_models/user_card.dart';
 import 'dart:math' as math;
 
 import '../../ui/widgets/app_drawer.dart';
@@ -27,24 +29,7 @@ class _PlanningScreenState extends State<PlanningScreen>
     with TickerProviderStateMixin {
   final double taskInfoBarHeight = 155;
   String taskId;
-  final estimates = [
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    20
-  ];
+  final estimates = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20];
 
   @override
   void initState() {
@@ -124,7 +109,7 @@ class _PlanningScreenState extends State<PlanningScreen>
                 children: [
                   _buildTaskInfoBar(context, deviceSize),
                   Divider(),
-                  _buildUserEstimationCards(context, deviceSize),
+                  _buildUserCards(context, deviceSize),
                 ],
               ),
               _buildBottomCardsBar(context, deviceSize, estimates)
@@ -212,7 +197,7 @@ class _PlanningScreenState extends State<PlanningScreen>
     );
   }
 
-  Widget _buildUserEstimationCards(BuildContext context, Size deviceSize) {
+  Widget _buildUserCards(BuildContext context, Size deviceSize) {
     return Container(
       width: double.infinity,
       child: BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
@@ -225,52 +210,19 @@ class _PlanningScreenState extends State<PlanningScreen>
               alignment: WrapAlignment.start,
               direction: Axis.horizontal,
               children: [
-                for (var card
-                    in state.planningRoomStatusInfo.userEstimationCards)
-                  Container(
-                    width: deviceSize.width * 1 / 5,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Card(
-                            margin: EdgeInsets.zero,
-                            elevation: 8.0,
-                            shape: CircleBorder(
-                              side: card.isAdmin
-                                  ? BorderSide(
-                                      width: 2,
-                                      color: Theme.of(context).accentColor,
-                                    )
-                                  : BorderSide.none,
-                            ),
-                            clipBehavior: Clip.antiAlias,
-                            child: CircleAvatar(
-                              radius: 25,
-                              backgroundColor: card.isInRoom
-                                  ? CustomColors.buttonLightGrey
-                                  : CustomColors.buttonGrey,
-                              child: card.estimate == null
-                                  ? Icon(Icons.help_outline)
-                                  : Text(
-                                      card.estimate == null
-                                          ? ''
-                                          : '${card.estimate}',
-                                      style: TextStyle(
-                                        fontSize: 19,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                            ),
-                          ),
-                        ),
-                        Text(
-                          card.username,
-                          textAlign: TextAlign.center,
-                        )
-                      ],
-                    ),
+                for (var estimatorCard
+                    in state.planningRoomStatusInfo.estimatorCards)
+                  UserCard(
+                    card: estimatorCard,
+                    deviceSize: deviceSize,
                   ),
+                for (var spectatorCard
+                    in state.planningRoomStatusInfo.spectatorCards)
+                  UserCard(
+                    card: spectatorCard,
+                    deviceSize: deviceSize,
+                    isSpectator: true,
+                  )
               ],
             );
           }
@@ -296,6 +248,7 @@ class _PlanningScreenState extends State<PlanningScreen>
             return AnimatedSwitcher(
               duration: Duration(milliseconds: 250),
               child: (state is PlanningRoomRoomStatusLoaded &&
+                      !state.planningRoomStatusInfo.amSpectator &&
                       !state.planningRoomStatusInfo.alreadyEstimated &&
                       state.planningRoomStatusInfo.estimatedTaskInfo.taskId
                           .isNotEmpty)
@@ -467,6 +420,107 @@ class _PlanningScreenState extends State<PlanningScreen>
           child: ConfirmSendEstimateDialog(estimatedTask, estimate),
         );
       },
+    );
+  }
+}
+
+class UserCard extends StatelessWidget {
+  final UserCardModel card;
+  final Size deviceSize;
+  final bool isSpectator;
+
+  const UserCard({
+    @required this.card,
+    @required this.deviceSize,
+    this.isSpectator = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: deviceSize.width * 1 / 5,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: isSpectator
+                ? SpectatorCard(card: card)
+                : EstimatorCard(card: card),
+          ),
+          Text(
+            card.username,
+            textAlign: TextAlign.center,
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class EstimatorCard extends StatelessWidget {
+  final EstimatorCardModel card;
+
+  const EstimatorCard({
+    @required this.card,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.zero,
+      elevation: 8.0,
+      shape: CircleBorder(
+        side: card.isAdmin
+            ? BorderSide(
+                width: 2,
+                color: Theme.of(context).accentColor,
+              )
+            : BorderSide.none,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: CircleAvatar(
+        radius: 25,
+        backgroundColor: card.isInRoom
+            ? CustomColors.buttonLightGrey
+            : CustomColors.buttonGrey,
+        child: card.estimate == null
+            ? Icon(Icons.help_outline)
+            : Text(
+                card.estimate == null ? '' : '${card.estimate}',
+                style: TextStyle(
+                  fontSize: 19,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+      ),
+    );
+  }
+}
+
+class SpectatorCard extends StatelessWidget {
+  final SpectatorCardModel card;
+
+  const SpectatorCard({
+    @required this.card,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.zero,
+      elevation: 8.0,
+      shape: CircleBorder(
+        side: BorderSide(
+          width: 2,
+          color: Colors.lightBlue,
+        ),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: CircleAvatar(
+        radius: 25,
+        backgroundColor: CustomColors.buttonLightGrey,
+        child: Icon(Icons.remove_red_eye),
+      ),
     );
   }
 }

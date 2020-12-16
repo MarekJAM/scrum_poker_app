@@ -8,6 +8,7 @@ class PlanningRoomRepository {
       RoomStatus roomStatus) async {
     final myUsername = SessionDataSingleton().getUsername();
     final amAdmin = roomStatus.admins.contains(myUsername);
+    final amSpectator = roomStatus.spectators.contains(myUsername);
     final alreadyEstimated = ((roomStatus.estimates.singleWhere(
             (estimate) => estimate.name == myUsername,
             orElse: () => null)) !=
@@ -21,36 +22,52 @@ class PlanningRoomRepository {
             }).length);
     Map<int, int> estimatesDistribution = {};
 
-    List<UserEstimationCard> userEstimationCardsUI = [];
+    List<EstimatorCardModel> estimatorCardsUI = [];
+    List<SpectatorCardModel> spectatorCardsUI = [];
     List<int> estimates = [];
 
     roomStatus.admins.forEach((admin) {
-      userEstimationCardsUI.add(
-          UserEstimationCard(username: admin, isAdmin: true, isInRoom: true));
+      estimatorCardsUI.add(
+        EstimatorCardModel(
+          username: admin,
+          isAdmin: true,
+          isInRoom: true,
+        ),
+      );
     });
     roomStatus.estimators.forEach((estimator) {
-      userEstimationCardsUI.add(UserEstimationCard(
-          username: estimator, isAdmin: false, isInRoom: true));
+      estimatorCardsUI.add(
+        EstimatorCardModel(
+          username: estimator,
+          isAdmin: false,
+          isInRoom: true,
+        ),
+      );
     });
 
     //checks if all users who estimated are still in the room, and if not adds them at the end of the list
     roomStatus.estimates.forEach((estimate) {
       estimates.add(estimate.estimate);
 
-      estimatesDistribution.update(estimate.estimate, (value) => ++value, ifAbsent: () => 1);
+      estimatesDistribution.update(estimate.estimate, (value) => ++value,
+          ifAbsent: () => 1);
 
-      var index = userEstimationCardsUI
+      var index = estimatorCardsUI
           .indexWhere((card) => card.username == estimate.name);
       if (index >= 0) {
-        userEstimationCardsUI[index]
+        estimatorCardsUI[index]
           ..isInRoom = true
           ..estimate = estimate.estimate;
       } else {
-        userEstimationCardsUI.add(UserEstimationCard(
+        estimatorCardsUI.add(EstimatorCardModel(
           username: estimate.name,
           estimate: estimate.estimate,
         ));
       }
+    });
+
+    roomStatus.spectators.forEach((spectator) { 
+      spectatorCardsUI.add(SpectatorCardModel(username: spectator));
     });
 
     final estimatedTaskInfo = estimates.isEmpty
@@ -65,13 +82,16 @@ class PlanningRoomRepository {
             median: Stats.median(estimates),
             estimatesReceived: estimatesReceived,
             estimatesExpected: estimatesExpected,
-            estimatesDistribution: estimatesDistribution
+            estimatesDistribution: estimatesDistribution,
           );
 
     return PlanningRoomStatusInfo(
-        amAdmin: amAdmin,
-        alreadyEstimated: alreadyEstimated,
-        estimatedTaskInfo: estimatedTaskInfo,
-        userEstimationCards: userEstimationCardsUI);
+      amAdmin: amAdmin,
+      alreadyEstimated: alreadyEstimated,
+      estimatedTaskInfo: estimatedTaskInfo,
+      estimatorCards: estimatorCardsUI,
+      amSpectator: amSpectator,
+      spectatorCards: spectatorCardsUI
+    );
   }
 }
