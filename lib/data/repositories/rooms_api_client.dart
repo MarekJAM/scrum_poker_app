@@ -30,11 +30,11 @@ class RoomsApiClient extends ApiClient {
     return true;
   }
 
-  Future<bool> connectToRoom(String roomName) async {
+  Future<bool> connectToRoom(String roomName, bool asSpectator) async {
     http.Response response = await httpClient.patch(
         getBaseURL() + '$_connectToRoomEndpoint',
         headers: getRequestHeaders(),
-        body: OutgoingMessage.createConnectRoomJsonMsg(roomName));
+        body: OutgoingMessage.createConnectRoomJsonMsg(roomName, asSpectator));
 
     if (response.statusCode != 200) {
       throwException(response.statusCode,

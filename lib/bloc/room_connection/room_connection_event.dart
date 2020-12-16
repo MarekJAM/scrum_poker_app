@@ -18,8 +18,9 @@ class RoomConnectionCreateRoomE extends RoomConnectionEvent {
 
 class RoomConnectionConnectToRoomE extends RoomConnectionEvent {
   final String roomName;
+  final bool asSpectator;
 
-  RoomConnectionConnectToRoomE(this.roomName);
+  RoomConnectionConnectToRoomE(this.roomName, this.asSpectator);
 
   @override
   String toString() => 'RoomConnectionConnectToRoomE';

@@ -37,7 +37,7 @@ class RoomConnectionBloc
       event) async* {
     yield RoomConnectionConnecting();
     try {
-      await _roomsRepository.connectToRoom(event.roomName);
+      await _roomsRepository.connectToRoom(event.roomName, event.asSpectator);
       yield RoomConnectionConnectedToRoom(roomName: event.roomName);
     } catch (e) {
       print(e);

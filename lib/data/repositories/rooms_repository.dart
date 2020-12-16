@@ -11,8 +11,8 @@ class RoomsRepository {
     return await roomsApiClient.createRoom(roomName);
   }
 
-  Future<bool> connectToRoom(String roomName) async {
-    return await roomsApiClient.connectToRoom(roomName);
+  Future<bool> connectToRoom(String roomName, bool asSpectator) async {
+    return await roomsApiClient.connectToRoom(roomName, asSpectator);
   }
 
   Future<bool> disconnectFromRoom() async {

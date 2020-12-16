@@ -17,8 +17,8 @@ class OutgoingMessage {
     return json.encode({"roomname": roomName});
   }
 
-  static String createConnectRoomJsonMsg(String roomName) {
-    return json.encode({"roomname": roomName});
+  static String createConnectRoomJsonMsg(String roomName, bool asSpectator) {
+    return json.encode({"roomname": roomName, "role": asSpectator ? "spectator" : "estimator"});
   }
 
   static String createRequestEstimateJsonMsg(String taskNumber) {
