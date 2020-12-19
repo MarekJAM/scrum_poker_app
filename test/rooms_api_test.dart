@@ -105,10 +105,10 @@ void main() {
         when(httpClient.patch("http://127.0.0.1/rooms/connect",
             headers: requestHeaders,
             body: OutgoingMessage.createConnectRoomJsonMsg(
-              "testname",
+              "testname", true
             ))).thenAnswer((_) => Future.value(mockedResponse));
 
-        final isConnected = await roomsApiClient.connectToRoom("testname");
+        final isConnected = await roomsApiClient.connectToRoom("testname", true);
         expect(isConnected, true);
       });
 
@@ -121,10 +121,10 @@ void main() {
         when(httpClient.patch("http://127.0.0.1/rooms/connect",
             headers: requestHeaders,
             body: OutgoingMessage.createConnectRoomJsonMsg(
-              "testname",
+              "testname", true
             ))).thenAnswer((_) => Future.value(mockedResponse));
 
-        expect(() async => await roomsApiClient.connectToRoom("testname"),
+        expect(() async => await roomsApiClient.connectToRoom("testname", true),
             throwsA(isException));
       });
     });
