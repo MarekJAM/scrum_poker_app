@@ -181,7 +181,7 @@ class _CustomExpansionTileState extends State<CustomExpansionTile>
       ..end = theme.accentColor;
     _iconColorTween
       ..begin = theme.unselectedWidgetColor
-      ..end = theme.accentColor;
+      ..end = theme.unselectedWidgetColor;
     _backgroundColorTween
       ..begin = widget.collapsedBackgroundColor
       ..end = widget.backgroundColor;
