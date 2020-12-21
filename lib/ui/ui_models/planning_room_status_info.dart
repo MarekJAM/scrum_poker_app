@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'ui_models.dart';
 
-class PlanningRoomStatusInfo {
-  final EstimatedTaskInfo estimatedTaskInfo;
+class PlanningRoomStatusInfoUI {
+  final EstimatedTaskInfoUI estimatedTaskInfo;
   final bool amAdmin;
   final bool alreadyEstimated;
-  final List<EstimatorCardModel> estimatorCards;
-  final List<SpectatorCardModel> spectatorCards;
+  final List<EstimatorCardModelUI> estimatorCards;
+  final List<SpectatorCardModelUI> spectatorCards;
   final bool amSpectator;
 
-  PlanningRoomStatusInfo({
+  PlanningRoomStatusInfoUI({
     @required this.estimatedTaskInfo,
     @required this.amAdmin,
     @required this.alreadyEstimated,

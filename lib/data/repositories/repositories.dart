@@ -6,3 +6,4 @@ export 'rooms_repository.dart';
 export 'planning_room_repository.dart';
 export 'auth_repository.dart';
 export 'auth_api_client.dart';
+export 'lobby_repository.dart';

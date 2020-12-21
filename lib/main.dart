@@ -39,12 +39,14 @@ void main() async {
   final AuthRepository authRepository =
       AuthRepository(authApiClient: AuthApiClient(httpClient: http.Client()));
 
+  final LobbyRepository lobbyRepository = LobbyRepository();
+
   // ignore: close_sinks
   final webSocketBloc =
       WebSocketBloc(channel: channel, webSocketRepository: webSocketRepository);
   // ignore: close_sinks
   final roomsBloc =
-      LobbyBloc(webSocketBloc: webSocketBloc, roomsRepository: roomsRepository);
+      LobbyBloc(webSocketBloc: webSocketBloc, lobbyRepository: lobbyRepository);
   // ignore: close_sinks
   final loginBloc =
       LoginBloc(webSocketBloc: webSocketBloc, authRepository: authRepository);

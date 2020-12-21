@@ -18,9 +18,10 @@ class PlanningRoomRoomStatusLoading extends PlanningRoomState {
 }
 
 class PlanningRoomRoomStatusLoaded extends PlanningRoomState {
-  final PlanningRoomStatusInfo planningRoomStatusInfo;
+  final PlanningRoomStatusInfoUI planningRoomStatusInfo;
 
-  const PlanningRoomRoomStatusLoaded({@required this.planningRoomStatusInfo}) : assert(planningRoomStatusInfo != null);
+  const PlanningRoomRoomStatusLoaded({@required this.planningRoomStatusInfo})
+      : assert(planningRoomStatusInfo != null);
 
   @override
   String toString() => 'PlanningRoomRoomStatusLoaded $planningRoomStatusInfo';

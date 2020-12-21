@@ -8,6 +8,7 @@ import 'screens.dart';
 import '../../ui/widgets/common/widgets.dart';
 import '../../utils/keys.dart';
 import '../../utils/custom_colors.dart';
+import '../../ui/ui_models/ui_models.dart';
 
 class LobbyScreen extends StatelessWidget {
   static const routeName = '/rooms';
@@ -17,7 +18,7 @@ class LobbyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> rooms = [];
+    List<RoomUI> rooms = [];
 
     return Stack(
       children: [
@@ -71,31 +72,7 @@ class LobbyScreen extends StatelessWidget {
                           }
                           rooms = state.lobbyStatus.rooms;
                           return rooms.length > 0
-                              ? ListView.builder(
-                                  itemCount: rooms.length,
-                                  itemBuilder: (ctx, int i) => Card(
-                                    child: ExpansionTile(
-                                      title: Text(
-                                        rooms[i],
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      childrenPadding: EdgeInsets.symmetric(
-                                        horizontal: 2,
-                                        vertical: 1,
-                                      ),
-                                      children: [
-                                        Container(
-                                          color: Theme.of(context)
-                                              .scaffoldBackgroundColor,
-                                          child: JoinOptionsColumn(
-                                            roomName: rooms[i],
-                                          ),
-                                        )
-                                      ],
-                                      maintainState: true,
-                                    ),
-                                  ),
-                                )
+                              ? RoomList(rooms: rooms)
                               : Center(
                                   child: Text(
                                     'There are no available rooms at the moment.\nWhy don\'t you create one?',
@@ -144,6 +121,60 @@ class LobbyScreen extends StatelessWidget {
           },
         )
       ],
+    );
+  }
+}
+
+class RoomList extends StatefulWidget {
+  final List<RoomUI> rooms;
+
+  const RoomList({
+    @required this.rooms,
+  });
+
+  @override
+  _RoomListState createState() => _RoomListState();
+}
+
+class _RoomListState extends State<RoomList> {
+  Key expandedTileKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: widget.rooms.length,
+      itemBuilder: (ctx, int i) {
+        return Card(
+          child: CustomExpansionTile(
+            key: widget.rooms[i].key,
+            shouldCollapse: expandedTileKey != widget.rooms[i].key,
+            title: Text(
+              widget.rooms[i].name,
+              style: TextStyle(color: Colors.white),
+            ),
+            childrenPadding: EdgeInsets.symmetric(
+              horizontal: 2,
+              vertical: 1,
+            ),
+            onExpansionChanged: (value) {
+              setState(() {
+                if (value) {
+                  expandedTileKey = widget.rooms[i].key;
+                }
+              });
+            },
+            children: [
+              Container(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: JoinOptionsColumn(
+                  roomName: widget.rooms[i].name,
+                ),
+              )
+            ],
+            maintainState: true,
+          ),
+        );
+      },
     );
   }
 }

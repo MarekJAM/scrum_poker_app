@@ -4,7 +4,7 @@ import '../../ui/ui_models/ui_models.dart';
 import '../../data/models/models.dart';
 
 class PlanningRoomRepository {
-  Future<PlanningRoomStatusInfo> processRoomStatusToUIModel(
+  Future<PlanningRoomStatusInfoUI> processRoomStatusToUIModel(
       RoomStatus roomStatus) async {
     final myUsername = SessionDataSingleton().getUsername();
     final amAdmin = roomStatus.admins.contains(myUsername);
@@ -22,13 +22,13 @@ class PlanningRoomRepository {
             }).length);
     Map<int, int> estimatesDistribution = {};
 
-    List<EstimatorCardModel> estimatorCardsUI = [];
-    List<SpectatorCardModel> spectatorCardsUI = [];
+    List<EstimatorCardModelUI> estimatorCardsUI = [];
+    List<SpectatorCardModelUI> spectatorCardsUI = [];
     List<int> estimates = [];
 
     roomStatus.admins.forEach((admin) {
       estimatorCardsUI.add(
-        EstimatorCardModel(
+        EstimatorCardModelUI(
           username: admin,
           isAdmin: true,
           isInRoom: true,
@@ -37,7 +37,7 @@ class PlanningRoomRepository {
     });
     roomStatus.estimators.forEach((estimator) {
       estimatorCardsUI.add(
-        EstimatorCardModel(
+        EstimatorCardModelUI(
           username: estimator,
           isAdmin: false,
           isInRoom: true,
@@ -52,31 +52,31 @@ class PlanningRoomRepository {
       estimatesDistribution.update(estimate.estimate, (value) => ++value,
           ifAbsent: () => 1);
 
-      var index = estimatorCardsUI
-          .indexWhere((card) => card.username == estimate.name);
+      var index =
+          estimatorCardsUI.indexWhere((card) => card.username == estimate.name);
       if (index >= 0) {
         estimatorCardsUI[index]
           ..isInRoom = true
           ..estimate = estimate.estimate;
       } else {
-        estimatorCardsUI.add(EstimatorCardModel(
+        estimatorCardsUI.add(EstimatorCardModelUI(
           username: estimate.name,
           estimate: estimate.estimate,
         ));
       }
     });
 
-    roomStatus.spectators.forEach((spectator) { 
-      spectatorCardsUI.add(SpectatorCardModel(username: spectator));
+    roomStatus.spectators.forEach((spectator) {
+      spectatorCardsUI.add(SpectatorCardModelUI(username: spectator));
     });
 
     final estimatedTaskInfo = estimates.isEmpty
-        ? EstimatedTaskInfo(
+        ? EstimatedTaskInfoUI(
             taskId: roomStatus.taskId,
             estimatesReceived: estimatesReceived,
             estimatesExpected: estimatesExpected,
           )
-        : EstimatedTaskInfo(
+        : EstimatedTaskInfoUI(
             taskId: roomStatus.taskId,
             average: Stats.average(estimates),
             median: Stats.median(estimates),
@@ -85,13 +85,12 @@ class PlanningRoomRepository {
             estimatesDistribution: estimatesDistribution,
           );
 
-    return PlanningRoomStatusInfo(
-      amAdmin: amAdmin,
-      alreadyEstimated: alreadyEstimated,
-      estimatedTaskInfo: estimatedTaskInfo,
-      estimatorCards: estimatorCardsUI,
-      amSpectator: amSpectator,
-      spectatorCards: spectatorCardsUI
-    );
+    return PlanningRoomStatusInfoUI(
+        amAdmin: amAdmin,
+        alreadyEstimated: alreadyEstimated,
+        estimatedTaskInfo: estimatedTaskInfo,
+        estimatorCards: estimatorCardsUI,
+        amSpectator: amSpectator,
+        spectatorCards: spectatorCardsUI);
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class EstimatedTaskInfo {
+class EstimatedTaskInfoUI {
   final String taskId;
   final int average;
   final int median;
@@ -8,5 +8,11 @@ class EstimatedTaskInfo {
   final int estimatesExpected;
   final Map<int, int> estimatesDistribution;
 
-  const EstimatedTaskInfo({@required this.taskId, this.average, this.median, this.estimatesReceived, this.estimatesExpected, this.estimatesDistribution});
+  const EstimatedTaskInfoUI(
+      {@required this.taskId,
+      this.average,
+      this.median,
+      this.estimatesReceived,
+      this.estimatesExpected,
+      this.estimatesDistribution});
 }

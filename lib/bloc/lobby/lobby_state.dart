@@ -18,12 +18,14 @@ class LobbyLoading extends LobbyState {
 }
 
 class LobbyStatusLoaded extends LobbyState {
-  final LobbyStatus lobbyStatus;
+  final LobbyStatusUI lobbyStatus;
 
-  const LobbyStatusLoaded({@required this.lobbyStatus}) : assert(lobbyStatus != null);
+  const LobbyStatusLoaded({@required this.lobbyStatus})
+      : assert(lobbyStatus != null);
 
   @override
-  String toString() => 'LobbyStatusLoaded ${lobbyStatus.rooms} ${lobbyStatus.leftRoomReason}';
+  String toString() =>
+      'LobbyStatusLoaded ${lobbyStatus.rooms} ${lobbyStatus.leftRoomReason}';
 }
 
 class LobbyLoadingError extends LobbyState {

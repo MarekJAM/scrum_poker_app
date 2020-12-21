@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-abstract class UserCardModel {
+abstract class UserCardModelUI {
   final String username;
 
-  UserCardModel({@required this.username});
+  UserCardModelUI({@required this.username});
 }
 
-class EstimatorCardModel extends UserCardModel {
+class EstimatorCardModelUI extends UserCardModelUI {
   final bool isAdmin;
   bool isInRoom;
   int estimate;
 
-  EstimatorCardModel({
+  EstimatorCardModelUI({
     @required String username,
     this.estimate,
     this.isAdmin = false,
@@ -19,8 +19,8 @@ class EstimatorCardModel extends UserCardModel {
   }) : super(username: username);
 }
 
-class SpectatorCardModel extends UserCardModel {
-  SpectatorCardModel({
+class SpectatorCardModelUI extends UserCardModelUI {
+  SpectatorCardModelUI({
     @required String username,
   }) : super(username: username);
 }

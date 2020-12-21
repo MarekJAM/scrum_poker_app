@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class PieChartDataModel {
+class PieChartDataModelUI {
   int value;
   double frequency;
   Color color;
 
-  PieChartDataModel(this.value, this.frequency, this.color);
+  PieChartDataModelUI(this.value, this.frequency, this.color);
 }

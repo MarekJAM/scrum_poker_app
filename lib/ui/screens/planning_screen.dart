@@ -425,7 +425,7 @@ class _PlanningScreenState extends State<PlanningScreen>
 }
 
 class UserCard extends StatelessWidget {
-  final UserCardModel card;
+  final UserCardModelUI card;
   final Size deviceSize;
   final bool isSpectator;
 
@@ -458,7 +458,7 @@ class UserCard extends StatelessWidget {
 }
 
 class EstimatorCard extends StatelessWidget {
-  final EstimatorCardModel card;
+  final EstimatorCardModelUI card;
 
   const EstimatorCard({
     @required this.card,
@@ -498,7 +498,7 @@ class EstimatorCard extends StatelessWidget {
 }
 
 class SpectatorCard extends StatelessWidget {
-  final SpectatorCardModel card;
+  final SpectatorCardModelUI card;
 
   const SpectatorCard({
     @required this.card,

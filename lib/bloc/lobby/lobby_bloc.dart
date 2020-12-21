@@ -6,9 +6,9 @@ import 'package:equatable/equatable.dart';
 
 import '../../data/models/models.dart';
 import '../../data/repositories/repositories.dart';
-import '../../data/repositories/rooms_repository.dart';
 import '../../data/models/lobby_status.dart';
 import '../websocket/websocket_bloc.dart';
+import '../../ui/ui_models/ui_models.dart';
 
 part 'lobby_event.dart';
 part 'lobby_state.dart';
@@ -16,12 +16,14 @@ part 'lobby_state.dart';
 class LobbyBloc extends Bloc<LobbyEvent, LobbyState> {
   final WebSocketBloc _webSocketBloc;
   StreamSubscription webSocketSubscription;
+  final LobbyRepository _lobbyRepository;
 
-  LobbyBloc(
-      {@required WebSocketBloc webSocketBloc,
-      @required RoomsRepository roomsRepository})
-      : assert(webSocketBloc != null),
+  LobbyBloc({
+    @required WebSocketBloc webSocketBloc,
+    @required LobbyRepository lobbyRepository,
+  })  : assert(webSocketBloc != null),
         _webSocketBloc = webSocketBloc,
+        _lobbyRepository = lobbyRepository,
         super(LobbyInitial()) {
     webSocketSubscription = _webSocketBloc.listen((state) {
       if (state is WSMessageLoaded && state.message is LobbyStatus) {
@@ -40,7 +42,9 @@ class LobbyBloc extends Bloc<LobbyEvent, LobbyState> {
   Stream<LobbyState> _mapLobbyLoadedEToState(event) async* {
     yield LobbyLoading();
     try {
-      yield LobbyStatusLoaded(lobbyStatus: event.lobbyStatus);
+      final lobbyStatus =
+          await _lobbyRepository.processLobbyStatusToUIModel(event.lobbyStatus);
+      yield LobbyStatusLoaded(lobbyStatus: lobbyStatus);
     } catch (e) {
       print(e);
       yield LobbyLoadingError(message: "Could not load lobby status.");
