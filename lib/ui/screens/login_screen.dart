@@ -133,28 +133,40 @@ class _LoginScreenState extends State<LoginScreen>
                                 child: Container(
                                   child: _loginMode == LoginMode.AsGuest
                                       ? null
-                                      : TextFormField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Password',
-                                            prefixIcon: Icon(Icons.lock),
-                                          ),
-                                          obscureText: true,
-                                          controller: _passwordController,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return "Provide password.";
-                                            } else if (value.trim().length >
-                                                20) {
-                                              return "Password too long - max. 20 characters.";
-                                            }
-                                            return null;
-                                          },
+                                      : Column(
+                                          children: [
+                                            TextFormField(
+                                              decoration: InputDecoration(
+                                                labelText: 'Password',
+                                                prefixIcon: Icon(Icons.lock),
+                                              ),
+                                              obscureText: true,
+                                              controller: _passwordController,
+                                              validator: (value) {
+                                                if (value.isEmpty) {
+                                                  return "Provide password.";
+                                                } else if (value.trim().length >
+                                                    20) {
+                                                  return "Password too long - max. 20 characters.";
+                                                }
+                                                return null;
+                                              },
+                                            ),
+                                            Align(
+                                              alignment: Alignment.centerRight,
+                                              child: FlatButton(
+                                                onPressed: () {},
+                                                child: Text('Forgot password?'),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                 ),
                               ),
-                              SizedBox(
-                                height: 20,
-                              ),
+                              if (_loginMode == LoginMode.Regular)
+                                SizedBox(
+                                  height: 10,
+                                ),
                               ConstrainedBox(
                                 constraints: const BoxConstraints(
                                   minWidth: double.infinity,

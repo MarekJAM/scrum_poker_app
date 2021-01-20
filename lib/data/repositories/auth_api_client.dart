@@ -57,11 +57,15 @@ class AuthApiClient extends ApiClient {
     return true;
   }
 
-  Future<bool> register(String username, String password) async {
+  Future<bool> register(String username, String password,
+      String securityQuestion, String answer) async {
+    print(OutgoingMessage.createRegisterMessage(
+        username, password, securityQuestion, answer));
     http.Response response = await httpClient
         .post(getBaseURL() + '$_registerEndpoint',
             headers: {"Content-Type": "application/json"},
-            body: OutgoingMessage.createLoginMessage(username, password))
+            body: OutgoingMessage.createRegisterMessage(
+                username, password, securityQuestion, answer))
         .timeout(const Duration(seconds: 5),
             onTimeout: () => throw SocketException("Register timeout."));
 

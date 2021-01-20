@@ -9,6 +9,16 @@ class OutgoingMessage {
     return json.encode({"username": username, "password": password});
   }
 
+  static String createRegisterMessage(String username, String password,
+      String securityQuestion, String answer) {
+    return json.encode({
+      "username": username,
+      "password": password,
+      "security_question": securityQuestion,
+      "security_answer": answer,
+    });
+  }
+
   static String createLoginAsGuestMessage(String username) {
     return json.encode({"username": username});
   }
@@ -18,7 +28,10 @@ class OutgoingMessage {
   }
 
   static String createConnectRoomJsonMsg(String roomName, bool asSpectator) {
-    return json.encode({"roomname": roomName, "role": asSpectator ? "spectator" : "estimator"});
+    return json.encode({
+      "roomname": roomName,
+      "role": asSpectator ? "spectator" : "estimator"
+    });
   }
 
   static String createRequestEstimateJsonMsg(String taskNumber) {

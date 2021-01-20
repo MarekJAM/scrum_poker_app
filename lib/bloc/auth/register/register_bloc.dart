@@ -33,7 +33,12 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     try {
       await SessionDataSingleton().setServerAddress(event.serverAddress);
 
-      await _authRepository.register(event.username, event.password);
+      await _authRepository.register(
+        event.username,
+        event.password,
+        event.securityQuestion,
+        event.answer,
+      );
 
       yield RegisterSignedUp();
     } on SocketException catch (e) {

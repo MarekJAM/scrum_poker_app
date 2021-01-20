@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 import '../../utils/custom_colors.dart';
 import '../../bloc/auth/register/register_bloc.dart';
@@ -22,6 +23,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController _userController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
+  TextEditingController _answerController = TextEditingController();
+  String _securityQuestion;
+
+  List<String> suggestedQuestions = [
+    "What was your favorite place to visit as a child?",
+    "Who was your childhood hero?",
+    "What was your childhood nickname?",
+    "What is your preferred musical genre?",
+    "What was your first car?",
+    "What color are les tenes?",
+  ];
 
   @override
   void initState() {
@@ -43,7 +55,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Create account', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                  Text(
+                    'Create account',
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
                   Center(
                     child: Padding(
                       padding: EdgeInsets.all(16),
@@ -131,6 +146,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   return null;
                                 },
                               ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 8.0,
+                                ),
+                                child: DropdownSearch<String>(
+                                  mode: Mode.MENU,
+                                  showSelectedItem: true,
+                                  items: suggestedQuestions,
+                                  label: "Security question",
+                                  hint: "Select your security question",
+                                  onChanged: (value) {
+                                    _securityQuestion = value;
+                                  },
+                                  validator: (value) {
+                                    if (value == null) {
+                                      return "Choose your security question.";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Answer',
+                                  prefixIcon: Icon(Icons.question_answer),
+                                ),
+                                controller: _answerController,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return "Input answer.";
+                                  } else if (value.trim().length > 20) {
+                                    return "Answer too long - max. 20 characters.";
+                                  }
+                                  return null;
+                                },
+                              ),
                               SizedBox(
                                 height: 20,
                               ),
@@ -198,8 +249,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _onFormSubmitted() {
     BlocProvider.of<RegisterBloc>(context).add(
-      RegisterSignUpE(_serverController.text, _userController.text,
-          _passwordController.text),
+      RegisterSignUpE(
+        _serverController.text,
+        _userController.text,
+        _passwordController.text,
+        _securityQuestion,
+        _answerController.text,
+      ),
     );
   }
 }

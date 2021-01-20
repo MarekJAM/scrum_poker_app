@@ -15,7 +15,17 @@ class AuthRepository {
     return await authApiClient.loginAsGuest(username);
   }
 
-  Future<bool> register(String username, String password) async {
-    return await authApiClient.register(username, password);
+  Future<bool> register(
+    String username,
+    String password,
+    String securityQuestion,
+    String answer,
+  ) async {
+    return await authApiClient.register(
+      username,
+      password,
+      securityQuestion,
+      answer,
+    );
   }
 }
