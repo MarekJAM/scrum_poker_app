@@ -57,8 +57,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       await SessionDataSingleton().init();
       yield LoginDisconnectedFromServer(
-          username: SessionDataSingleton().getUsername(),
-          serverAddress: SessionDataSingleton().getServerAddress());
+        username: SessionDataSingleton().getUsername(),
+        serverAddress: SessionDataSingleton().getServerAddress(),
+      );
     } catch (e) {
       print(e);
       yield LoginConnectionError(message: "Connection error occured.");

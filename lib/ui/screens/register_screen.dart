@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 
+import '../../ui/widgets/dropdown_search/dropdown_search.dart';
 import '../../utils/custom_colors.dart';
 import '../../bloc/auth/register/register_bloc.dart';
 import '../../ui/widgets/common/widgets.dart';
