@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -10,6 +11,8 @@ class AuthApiClient extends ApiClient {
   final _loginEndpoint = '/auth/login';
   final _loginAsGuestEndpoint = '/auth/login/guest';
   final _registerEndpoint = '/auth/register';
+  final _authRecoveryStepOne = '/auth/recovery';
+  final _authRecoveryStepTwo = '/auth/recovery/answer';
 
   final http.Client httpClient;
 
@@ -59,8 +62,6 @@ class AuthApiClient extends ApiClient {
 
   Future<bool> register(String username, String password,
       String securityQuestion, String answer) async {
-    print(OutgoingMessage.createRegisterMessage(
-        username, password, securityQuestion, answer));
     http.Response response = await httpClient
         .post(getBaseURL() + '$_registerEndpoint',
             headers: {"Content-Type": "application/json"},
@@ -75,5 +76,37 @@ class AuthApiClient extends ApiClient {
     }
 
     return true;
+  }
+
+  Future<RecoveryMessage> recoverStepOne(String username) async {
+    http.Response response = await httpClient
+        .post(getBaseURL() + '$_authRecoveryStepOne',
+            headers: {"Content-Type": "application/json"},
+            body: OutgoingMessage.createGetRecoveryTokenMessage(username))
+        .timeout(const Duration(seconds: 5),
+            onTimeout: () => throw SocketException("Recovery timeout."));
+
+    if (response.statusCode != 200) {
+      throwException(response.statusCode,
+          decodeErrorMessage(response) ?? "Recovery failed");
+    }
+
+    return RecoveryMessage.fromJson(jsonDecode(response.body));
+  }
+
+  Future<String> recoverStepTwo(String token, String answer) async {
+    http.Response response = await httpClient
+        .post(getBaseURL() + '$_authRecoveryStepTwo',
+            headers: getRequestHeaders(token: token),
+            body: OutgoingMessage.createSendRecoveryAnswerMessage(answer))
+        .timeout(const Duration(seconds: 5),
+            onTimeout: () => throw SocketException("Recovery timeout."));
+
+    if (response.statusCode != 200) {
+      throwException(response.statusCode,
+          decodeErrorMessage(response) ?? "Recovery failed");
+    }
+
+    return jsonDecode(response.body)['token'];
   }
 }

@@ -41,4 +41,12 @@ class OutgoingMessage {
   static String createEstimateJsonMsg(int estimate) {
     return json.encode({"estimate": estimate});
   }
+
+  static String createGetRecoveryTokenMessage(String username) {
+    return json.encode({"username": username});
+  }
+
+  static String createSendRecoveryAnswerMessage(String answer) {
+    return json.encode({"security_answer": answer});
+  }
 }

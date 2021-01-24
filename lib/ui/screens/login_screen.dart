@@ -155,7 +155,18 @@ class _LoginScreenState extends State<LoginScreen>
                                             Align(
                                               alignment: Alignment.centerRight,
                                               child: FlatButton(
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          RecoverPasswordScreen(
+                                                        passedServerAddress:
+                                                            _serverController
+                                                                .text,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
                                                 child: Text('Forgot password?'),
                                               ),
                                             ),

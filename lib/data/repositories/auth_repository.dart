@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'repositories.dart';
+import '../models/recovery_message.dart';
 
 class AuthRepository {
   final AuthApiClient authApiClient;
@@ -27,5 +29,13 @@ class AuthRepository {
       securityQuestion,
       answer,
     );
+  }
+
+  Future<RecoveryMessage> recoverStepOne(String username) async {
+    return await authApiClient.recoverStepOne(username);
+  }
+
+  Future<String> recoverStepTwo(String answer, String token) async {
+    return await authApiClient.recoverStepTwo(token, answer);
   }
 }

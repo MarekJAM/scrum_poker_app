@@ -17,6 +17,7 @@ import './bloc/simple_bloc_observer.dart';
 import './data/repositories/repositories.dart';
 import './ui/widgets/common/common_widgets.dart';
 import './bloc/auth/register/register_bloc.dart';
+import './bloc/auth/recovery/recovery_bloc.dart';
 import './utils/custom_colors.dart';
 
 void main() async {
@@ -59,6 +60,7 @@ void main() async {
       RoomConnectionBloc(roomsRepository: roomsRepository);
   // ignore: close_sinks
   final registerBloc = RegisterBloc(authRepository: authRepository);
+  final recoveryBloc = RecoveryBloc(authRepository: authRepository);
 
   runApp(
     LocalizedApp(
@@ -72,6 +74,7 @@ void main() async {
         roomConnectionBloc: roomConnectionBloc,
         authRepository: authRepository,
         registerBloc: registerBloc,
+        recoveryBloc: recoveryBloc,
       ),
     ),
   );
@@ -88,6 +91,7 @@ class App extends StatelessWidget {
     @required this.roomConnectionBloc,
     @required this.authRepository,
     @required this.registerBloc,
+    @required this.recoveryBloc,
   }) : super(key: key);
 
   final WebSocketBloc webSocketBloc;
@@ -98,6 +102,7 @@ class App extends StatelessWidget {
   final RoomConnectionBloc roomConnectionBloc;
   final AuthRepository authRepository;
   final RegisterBloc registerBloc;
+  final RecoveryBloc recoveryBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -106,31 +111,35 @@ class App extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
     return RepositoryProvider(
-        create: (context) => roomsRepository,
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider<WebSocketBloc>(
-              create: (context) => webSocketBloc,
-            ),
-            BlocProvider<LoginBloc>(
-              create: (context) => LoginBloc(
-                  webSocketBloc: webSocketBloc, authRepository: authRepository),
-            ),
-            BlocProvider<RegisterBloc>(
-              create: (context) => RegisterBloc(authRepository: authRepository),
-            ),
-            BlocProvider<LobbyBloc>(
-              create: (context) => roomsBloc,
-            ),
-            BlocProvider<PlanningRoomBloc>(
-              create: (context) => planningRoomBloc,
-            ),
-            BlocProvider<RoomConnectionBloc>(
-              create: (context) => roomConnectionBloc,
-            ),
-          ],
-          child: AppView(),
-        ));
+      create: (context) => roomsRepository,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<WebSocketBloc>(
+            create: (context) => webSocketBloc,
+          ),
+          BlocProvider<LoginBloc>(
+            create: (context) => LoginBloc(
+                webSocketBloc: webSocketBloc, authRepository: authRepository),
+          ),
+          BlocProvider<RegisterBloc>(
+            create: (context) => RegisterBloc(authRepository: authRepository),
+          ),
+          BlocProvider<LobbyBloc>(
+            create: (context) => roomsBloc,
+          ),
+          BlocProvider<PlanningRoomBloc>(
+            create: (context) => planningRoomBloc,
+          ),
+          BlocProvider<RoomConnectionBloc>(
+            create: (context) => roomConnectionBloc,
+          ),
+          BlocProvider<RecoveryBloc>(
+            create: (context) => recoveryBloc,
+          ),
+        ],
+        child: AppView(),
+      ),
+    );
   }
 }
 
@@ -195,10 +204,11 @@ class _AppViewState extends State<AppView> {
                   );
                   if (state.message.isNotEmpty) {
                     CommonWidgets.displaySnackBar(
-                        context: context,
-                        message: state.message,
-                        color: CustomColors.snackBarError,
-                        lightText: true);
+                      context: context,
+                      message: state.message,
+                      color: CustomColors.snackBarError,
+                      lightText: true,
+                    );
                   }
                 }
               },
@@ -211,6 +221,7 @@ class _AppViewState extends State<AppView> {
           LobbyScreen.routeName: (ctx) => LobbyScreen(),
           PlanningScreen.routeName: (ctx) => PlanningScreen(),
           CreateRoomScreen.routeName: (ctx) => CreateRoomScreen(),
+          RecoverPasswordScreen.routeName: (ctx) => RecoverPasswordScreen(),
         },
         onGenerateRoute: (_) => SplashScreen.route());
   }

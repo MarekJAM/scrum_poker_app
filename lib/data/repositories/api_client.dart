@@ -29,10 +29,10 @@ class ApiClient {
     }
   }
 
-  Map<String, String> getRequestHeaders() {
+  Map<String, String> getRequestHeaders({String token}) {
     return {
       "Content-Type": "application/json",
-      "Authorization": 'Bearer ' + _sessionDataSingleton.getToken()
+      "Authorization": 'Bearer ' + token ?? _sessionDataSingleton.getToken()
     };
   }
 
