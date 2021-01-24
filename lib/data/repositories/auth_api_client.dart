@@ -97,7 +97,7 @@ class AuthApiClient extends ApiClient {
   Future<String> recoverStepTwo(String token, String answer) async {
     http.Response response = await httpClient
         .post(getBaseURL() + '$_authRecoveryStepTwo',
-            headers: getRequestHeaders(token: token),
+            headers: getRequestHeaders(token),
             body: OutgoingMessage.createSendRecoveryAnswerMessage(answer))
         .timeout(const Duration(seconds: 5),
             onTimeout: () => throw SocketException("Recovery timeout."));
