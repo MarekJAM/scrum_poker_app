@@ -19,7 +19,6 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _registerFormKey = GlobalKey<FormState>();
 
-  TextEditingController _serverController = TextEditingController();
   TextEditingController _userController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
@@ -38,7 +37,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void initState() {
     super.initState();
-    _serverController.text = widget.passedServerAddress ?? "";
   }
 
   @override
@@ -80,22 +78,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              TextFormField(
-                                keyboardType: TextInputType.emailAddress,
-                                decoration: InputDecoration(
-                                  labelText: 'Server address',
-                                  prefixIcon: Icon(
-                                    Icons.dns,
-                                  ),
-                                ),
-                                controller: _serverController,
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return "Provide server address.";
-                                  }
-                                  return null;
-                                },
-                              ),
                               TextFormField(
                                 decoration: InputDecoration(
                                   labelText: 'Username',
@@ -250,7 +232,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void _onFormSubmitted() {
     BlocProvider.of<RegisterBloc>(context).add(
       RegisterSignUpE(
-        _serverController.text,
         _userController.text,
         _passwordController.text,
         _securityQuestion,

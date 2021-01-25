@@ -10,6 +10,7 @@ import '../../utils/custom_colors.dart';
 import '../../utils/asset_paths.dart';
 import '../../bloc/auth/register/register_bloc.dart';
 import '../../utils/session_data_singleton.dart';
+import '../../utils/debouncer.dart';
 
 enum LoginMode { Regular, AsGuest }
 
@@ -27,12 +28,14 @@ class _LoginScreenState extends State<LoginScreen>
     with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _serverController = TextEditingController(
-    text: "192.168.0.14:8080",
+    text: "192.168.0.25:8080",
   );
   TextEditingController _userController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
   LoginMode _loginMode = LoginMode.Regular;
+
+  final _debouncer = Debouncer(milliseconds: 500);
 
   @override
   void initState() {
@@ -103,6 +106,10 @@ class _LoginScreenState extends State<LoginScreen>
                                   ),
                                 ),
                                 controller: _serverController,
+                                onChanged: (value) {
+                                  _debouncer.run(() => SessionDataSingleton()
+                                      .setServerAddress(value));
+                                },
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return "Provide server address.";

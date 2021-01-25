@@ -31,8 +31,6 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       RegisterSignUpE event) async* {
     yield RegisterSigningUp();
     try {
-      await SessionDataSingleton().setServerAddress(event.serverAddress);
-
       await _authRepository.register(
         event.username,
         event.password,

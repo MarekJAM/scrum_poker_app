@@ -8,14 +8,12 @@ abstract class RegisterEvent extends Equatable {
 }
 
 class RegisterSignUpE extends RegisterEvent {
-  final String serverAddress;
   final String username;
   final String password;
   final String securityQuestion;
   final String answer;
 
   RegisterSignUpE(
-    this.serverAddress,
     this.username,
     this.password,
     this.securityQuestion,

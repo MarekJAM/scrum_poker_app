@@ -70,8 +70,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       LoginConnectToServerE event) async* {
     yield LoginConnectingToServer();
     try {
-      //this is temporary solution only
-      await SessionDataSingleton().setServerAddress(event.serverAddress);
       await SessionDataSingleton().setUsername(event.username);
 
       event.isLoggingAsGuest

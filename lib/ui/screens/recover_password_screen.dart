@@ -20,7 +20,6 @@ class RecoverPasswordScreen extends StatefulWidget {
 class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
   final _recoveryFormKey = GlobalKey<FormState>();
 
-  TextEditingController _serverController = TextEditingController();
   TextEditingController _userController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
@@ -29,7 +28,6 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
   @override
   void initState() {
     super.initState();
-    _serverController.text = widget.passedServerAddress ?? "";
   }
 
   @override
@@ -85,22 +83,6 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                               return Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  TextFormField(
-                                    keyboardType: TextInputType.emailAddress,
-                                    decoration: InputDecoration(
-                                      labelText: 'Server address',
-                                      prefixIcon: Icon(
-                                        Icons.dns,
-                                      ),
-                                    ),
-                                    controller: _serverController,
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return "Provide server address.";
-                                      }
-                                      return null;
-                                    },
-                                  ),
                                   if (state is RecoveryInitial)
                                     TextFormField(
                                       decoration: InputDecoration(

@@ -49,7 +49,6 @@ class RecoveryBloc extends Bloc<RecoveryEvent, RecoveryState> {
     yield RecoveryLoading();
 
     try {
-      print(event.answer);
       token = await _authRepository.recoverStepTwo(event.answer, token);
 
       yield RecoveryStepTwoDone();
