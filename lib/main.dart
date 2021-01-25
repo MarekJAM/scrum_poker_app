@@ -60,6 +60,7 @@ void main() async {
       RoomConnectionBloc(roomsRepository: roomsRepository);
   // ignore: close_sinks
   final registerBloc = RegisterBloc(authRepository: authRepository);
+  // ignore: close_sinks
   final recoveryBloc = RecoveryBloc(authRepository: authRepository);
 
   runApp(
@@ -110,8 +111,15 @@ class App extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return RepositoryProvider(
-      create: (context) => roomsRepository,
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(
+          create: (context) => roomsRepository,
+        ),
+        RepositoryProvider(
+          create: (context) => authRepository,
+        ),
+      ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider<WebSocketBloc>(
@@ -132,9 +140,6 @@ class App extends StatelessWidget {
           ),
           BlocProvider<RoomConnectionBloc>(
             create: (context) => roomConnectionBloc,
-          ),
-          BlocProvider<RecoveryBloc>(
-            create: (context) => recoveryBloc,
           ),
         ],
         child: AppView(),
