@@ -190,7 +190,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                                     ),
                                     child: RaisedButton(
                                       child: Text(
-                                        'Recover',
+                                        _getButtonText(state),
                                       ),
                                       onPressed: () {
                                         if (_recoveryFormKey.currentState
@@ -263,5 +263,16 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
         ),
       ),
     );
+  }
+
+  String _getButtonText(RecoveryState state) {
+    if (state is RecoveryInitial) {
+      return "Recover password";
+    } else if (state is RecoveryStepOneDone) {
+      return "Answer";
+    } else if (state is RecoveryStepTwoDone) {
+      return "Change password";
+    }
+    return "";
   }
 }
