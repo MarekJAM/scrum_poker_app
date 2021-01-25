@@ -220,7 +220,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                       child: RaisedButton(
                         color: CustomColors.buttonGrey,
                         child: Text(
-                          'Back',
+                          'Return to login screen',
                           style: TextStyle(color: CustomColors.textDark),
                         ),
                         onPressed: () {
