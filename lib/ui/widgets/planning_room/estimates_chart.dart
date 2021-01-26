@@ -76,12 +76,9 @@ class EstimatesChartState extends State {
                       .estimatedTaskInfo.estimatesReceived,
                   usersTotalNumber: state.planningRoomStatusInfo
                       .estimatedTaskInfo.estimatesExpected,
-                  estimatedTaskId:
-                      state.planningRoomStatusInfo.estimatedTaskInfo.taskId,
                   width: 150,
                   height: 150,
                   progressColor: Theme.of(context).accentColor,
-                  chartProgress: chartProgress,
                 ),
               ),
             ],
