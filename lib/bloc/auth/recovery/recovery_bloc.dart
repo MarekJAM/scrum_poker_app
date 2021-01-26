@@ -26,6 +26,8 @@ class RecoveryBloc extends Bloc<RecoveryEvent, RecoveryState> {
       yield* _mapRecoveryStartToState(event);
     } else if (event is RecoverySendAnswer) {
       yield* _mapRecoverySendAnswerToState(event);
+    } else if (event is RecoverySendPassword) {
+      yield* _mapRecoverySendPasswordToState(event);
     }
   }
 
@@ -52,6 +54,21 @@ class RecoveryBloc extends Bloc<RecoveryEvent, RecoveryState> {
       token = await _authRepository.recoverStepTwo(event.answer, token);
 
       yield RecoveryStepTwoDone();
+    } catch (e) {
+      print(e);
+      yield RecoveryError(message: e.message ?? "Something went wrong.");
+    }
+  }
+
+  Stream<RecoveryState> _mapRecoverySendPasswordToState(
+      RecoverySendPassword event) async* {
+    print(token);
+    yield RecoveryLoading();
+
+    try {
+      await _authRepository.recoverStepThree(event.password, token);
+
+      yield RecoveryStepThreeDone();
     } catch (e) {
       print(e);
       yield RecoveryError(message: e.message ?? "Something went wrong.");

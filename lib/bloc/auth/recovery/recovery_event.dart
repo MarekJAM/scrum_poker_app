@@ -24,3 +24,12 @@ class RecoverySendAnswer extends RecoveryEvent {
   @override
   String toString() => 'RecoveryStart: $answer';
 }
+
+class RecoverySendPassword extends RecoveryEvent {
+  final String password;
+
+  RecoverySendPassword({@required this.password});
+
+  @override
+  String toString() => 'RecoverySendPassword: $password';
+}

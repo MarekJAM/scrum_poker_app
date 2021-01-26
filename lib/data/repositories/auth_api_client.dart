@@ -13,6 +13,7 @@ class AuthApiClient extends ApiClient {
   final _registerEndpoint = '/auth/register';
   final _authRecoveryStepOne = '/auth/recovery';
   final _authRecoveryStepTwo = '/auth/recovery/answer';
+  final _authRecoveryStepThree = '/auth/recovery/password';
 
   final http.Client httpClient;
 
@@ -108,5 +109,19 @@ class AuthApiClient extends ApiClient {
     }
 
     return jsonDecode(response.body)['token'];
+  }
+
+  Future<void> recoverStepThree(String token, String password) async {
+    http.Response response = await httpClient
+        .patch(getBaseURL() + '$_authRecoveryStepThree',
+            headers: getRequestHeaders(token),
+            body: OutgoingMessage.createSendRecoveryPasswordMessage(password))
+        .timeout(const Duration(seconds: 5),
+            onTimeout: () => throw SocketException("Recovery timeout."));
+
+    if (response.statusCode != 200) {
+      throwException(response.statusCode,
+          decodeErrorMessage(response) ?? "Recovery failed");
+    }
   }
 }

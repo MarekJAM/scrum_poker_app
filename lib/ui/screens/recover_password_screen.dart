@@ -1,10 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/auth/recovery/recovery_bloc.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../utils/custom_colors.dart';
-import '../../bloc/auth/register/register_bloc.dart';
 import '../../ui/widgets/common/widgets.dart';
 
 class RecoverPasswordScreen extends StatefulWidget {
@@ -24,11 +25,6 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
   TextEditingController _answerController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +63,6 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                                   color: CustomColors.snackBarError,
                                   lightText: true,
                                 );
-                              } else if (state is RegisterSignedUp) {
-                                Navigator.of(context).pop();
                               }
                             },
                             buildWhen: (_, state) {
@@ -80,6 +74,20 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                               return true;
                             },
                             builder: (context, state) {
+                              if (state is RecoveryStepThreeDone) {
+                                return Container(
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        Icons.done,
+                                        color: Colors.green,
+                                        size: 60,
+                                      ),
+                                      Text('Password has been changed.')
+                                    ],
+                                  ),
+                                );
+                              }
                               return Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -183,8 +191,8 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                                                     context)
                                                 .add(
                                               RecoveryStart(
-                                                  username:
-                                                      _userController.text),
+                                                username: _userController.text,
+                                              ),
                                             );
                                           } else if (state
                                               is RecoveryStepOneDone) {
@@ -192,8 +200,18 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                                                     context)
                                                 .add(
                                               RecoverySendAnswer(
-                                                  answer:
-                                                      _answerController.text),
+                                                answer: _answerController.text,
+                                              ),
+                                            );
+                                          } else if (state
+                                              is RecoveryStepTwoDone) {
+                                            BlocProvider.of<RecoveryBloc>(
+                                                    context)
+                                                .add(
+                                              RecoverySendPassword(
+                                                password:
+                                                    _passwordController.text,
+                                              ),
                                             );
                                           }
                                         }

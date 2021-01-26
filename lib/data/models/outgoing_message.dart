@@ -49,4 +49,8 @@ class OutgoingMessage {
   static String createSendRecoveryAnswerMessage(String answer) {
     return json.encode({"security_answer": answer});
   }
+
+  static String createSendRecoveryPasswordMessage(String password) {
+    return json.encode({"password": password});
+  }
 }

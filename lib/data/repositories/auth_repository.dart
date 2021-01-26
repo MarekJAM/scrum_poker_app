@@ -38,4 +38,8 @@ class AuthRepository {
   Future<String> recoverStepTwo(String answer, String token) async {
     return await authApiClient.recoverStepTwo(token, answer);
   }
+
+  Future<void> recoverStepThree(String password, String token) async {
+    return await authApiClient.recoverStepThree(token, password);
+  }
 }

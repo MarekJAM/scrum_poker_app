@@ -28,6 +28,11 @@ class RecoveryStepTwoDone extends RecoveryState {
   String toString() => 'RecoveryStepTwoDone';
 }
 
+class RecoveryStepThreeDone extends RecoveryState {
+  @override
+  String toString() => 'RecoveryStepThreeDone';
+}
+
 class RecoveryError extends RecoveryState {
   final String message;
 
