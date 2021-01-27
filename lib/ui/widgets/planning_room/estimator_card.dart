@@ -104,14 +104,6 @@ class CustomClipPath extends CustomClipper<Path> {
     path.quadraticBezierTo(size.width * 3 / 4, 47, size.width / 2, 40);
     path.quadraticBezierTo(size.width / 4, 33, 0, 40);
 
-    //  path.moveTo(0, 45);
-    // path.lineTo(0.0, size.height);
-    // path.lineTo(size.width, size.height);
-    // path.lineTo(size.width, 37);
-
-    // path.quadraticBezierTo(size.width * 3 / 4, 45, size.width / 2, 40);
-    // path.quadraticBezierTo(size.width / 4, 35, 0, 40);
-
     return path;
   }
 
