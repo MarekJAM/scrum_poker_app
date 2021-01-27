@@ -19,7 +19,7 @@ class SpectatorCard extends StatelessWidget {
       shape: CircleBorder(
         side: BorderSide(
           width: 2,
-          color: Colors.lightBlue,
+          color: Colors.green[700],
         ),
       ),
       clipBehavior: Clip.antiAlias,
