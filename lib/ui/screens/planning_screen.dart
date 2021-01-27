@@ -13,9 +13,10 @@ import '../../bloc/lobby/lobby_bloc.dart';
 import '../../bloc/planning_room/planning_room_bloc.dart';
 import '../../bloc/room_connection/room_connection_bloc.dart';
 import 'lobby_screen.dart';
-import '../../utils/keys.dart';
-import '../../utils/custom_colors.dart';
+import '../../configurable/keys.dart';
+import '../../configurable/custom_colors.dart';
 import '../../utils/wakelock_wrapper.dart';
+import '../../configurable/estimates.dart';
 
 class PlanningScreen extends StatefulWidget {
   static const routeName = '/planning';
@@ -27,7 +28,6 @@ class PlanningScreen extends StatefulWidget {
 class _PlanningScreenState extends State<PlanningScreen>
     with TickerProviderStateMixin {
   String taskId;
-  final estimates = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20];
 
   @override
   void initState() {
@@ -112,7 +112,7 @@ class _PlanningScreenState extends State<PlanningScreen>
                   UserCardsContainer(deviceSize: deviceSize),
                 ],
               ),
-              BottomCardsBar(deviceSize: deviceSize, estimates: estimates)
+              BottomCardsBar(deviceSize: deviceSize)
             ],
           ),
         ),

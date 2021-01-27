@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/room_connection/room_connection_bloc.dart';
-import '../../../utils/keys.dart';
-import '../../../utils/custom_colors.dart';
+import '../../../configurable/keys.dart';
+import '../../../configurable/custom_colors.dart';
 
 class ConfirmDestroyRoomDialog extends StatelessWidget {
   @override

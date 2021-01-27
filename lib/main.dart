@@ -18,7 +18,7 @@ import './data/repositories/repositories.dart';
 import './ui/widgets/common/common_widgets.dart';
 import './bloc/auth/register/register_bloc.dart';
 import './bloc/auth/recovery/recovery_bloc.dart';
-import './utils/custom_colors.dart';
+import 'configurable/custom_colors.dart';
 
 void main() async {
   var delegate = await LocalizationDelegate.create(

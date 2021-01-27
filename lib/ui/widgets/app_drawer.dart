@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../ui/screens/screens.dart';
 import '../../bloc/room_connection/room_connection_bloc.dart';
 import '../../bloc/auth/login/login_bloc.dart';
-import '../../utils/keys.dart';
-import '../../utils/asset_paths.dart';
+import '../../configurable/keys.dart';
+import '../../configurable/asset_paths.dart';
 import '../../utils/session_data_singleton.dart';
 
 class AppDrawer extends StatelessWidget {

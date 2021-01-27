@@ -2,7 +2,7 @@
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
-import '../lib/utils/keys.dart';
+import '../lib/configurable/keys.dart';
 
 void main() {
   final serverAddress = '192.168.0.14:8080';
@@ -18,15 +18,20 @@ void main() {
     final inputUsername = find.byValueKey(Keys.inputUsername);
     final titleLobby = find.byValueKey(Keys.titleLobby);
     final locateDrawer = find.byTooltip('Open navigation menu');
-    final buttonNavigateToCreateRoomScreen = find.byValueKey(Keys.buttonNavigateToCreateRoomScreen);
+    final buttonNavigateToCreateRoomScreen =
+        find.byValueKey(Keys.buttonNavigateToCreateRoomScreen);
     final inputRoomname = find.byValueKey(Keys.inputRoomname);
     final buttonCreateRoom = find.byValueKey(Keys.buttonCreateRoom);
     final buttonDestroyRoom = find.byValueKey(Keys.buttonDestroyRoom);
-    final buttonDestroyRoomConfirm = find.byValueKey(Keys.buttonDestroyRoomConfirm);
-    final buttonRequestEstimateOpenDialog = find.byValueKey(Keys.buttonRequestEstimateOpenDialog);
-    final buttonRequestEstimateConfirm = find.byValueKey(Keys.buttonRequestEstimateConfirm);
+    final buttonDestroyRoomConfirm =
+        find.byValueKey(Keys.buttonDestroyRoomConfirm);
+    final buttonRequestEstimateOpenDialog =
+        find.byValueKey(Keys.buttonRequestEstimateOpenDialog);
+    final buttonRequestEstimateConfirm =
+        find.byValueKey(Keys.buttonRequestEstimateConfirm);
     final inputEstimatedTask = find.byValueKey(Keys.inputEstimatedTask);
-    final buttonSendEstimateConfirm = find.byValueKey(Keys.buttonSendEstimateConfirm);
+    final buttonSendEstimateConfirm =
+        find.byValueKey(Keys.buttonSendEstimateConfirm);
     final textMedianAndAverage = find.byValueKey(Keys.textMedianAndAverage);
 
     FlutterDriver driver;
@@ -101,7 +106,8 @@ void main() {
       });
     });
 
-    test('connect, create room, request estimate, estimate, disconnect', () async {
+    test('connect, create room, request estimate, estimate, disconnect',
+        () async {
       await driver.runUnsynchronized(() async {
         await connect();
 

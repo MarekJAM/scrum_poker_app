@@ -2,14 +2,14 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../configurable/estimates.dart';
 import '../../../ui/widgets/planning_room/widgets.dart';
 import '../../../bloc/planning_room/planning_room_bloc.dart';
 
 class BottomCardsBar extends StatefulWidget {
   final Size deviceSize;
-  final List<int> estimates;
 
-  BottomCardsBar({@required this.deviceSize, @required this.estimates});
+  BottomCardsBar({@required this.deviceSize});
 
   @override
   _BottomCardsBarState createState() => _BottomCardsBarState();
@@ -44,21 +44,21 @@ class _BottomCardsBarState extends State<BottomCardsBar>
                       width: widget.deviceSize.width,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: widget.estimates.length,
+                        itemCount: Estimates.values.length,
                         itemBuilder: (context, index) => GestureDetector(
                           onTap: () {
                             _showEstimateConfirmationDialog(
                                 context,
                                 state.planningRoomStatusInfo.estimatedTaskInfo
                                     .taskId,
-                                widget.estimates[index]);
+                                Estimates.values[index].value);
                           },
                           child: Card(
                             elevation: 5,
                             child: Container(
                               child: Center(
                                 child: AutoSizeText(
-                                  '${widget.estimates[index]}',
+                                  '${Estimates.values[index].value}',
                                   minFontSize: 24,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,

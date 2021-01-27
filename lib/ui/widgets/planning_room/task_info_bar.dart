@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utils/notifier.dart';
-import '../../../utils/keys.dart';
+import '../../../configurable/keys.dart';
 import '../../../bloc/planning_room/planning_room_bloc.dart';
 import '../../../ui/widgets/planning_room/widgets.dart';
 

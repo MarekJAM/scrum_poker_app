@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'screens.dart';
 import '../../ui/widgets/common/widgets.dart';
-import '../../utils/keys.dart';
+import '../../configurable/keys.dart';
 import '../../ui/widgets/common/common_widgets.dart';
 import '../../bloc/auth/login/login_bloc.dart';
-import '../../utils/custom_colors.dart';
-import '../../utils/asset_paths.dart';
+import '../../configurable/custom_colors.dart';
+import '../../configurable/asset_paths.dart';
 import '../../bloc/auth/register/register_bloc.dart';
 import '../../utils/session_data_singleton.dart';
 import '../../utils/debouncer.dart';

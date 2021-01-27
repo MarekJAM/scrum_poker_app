@@ -6,8 +6,8 @@ import '../widgets/app_drawer.dart';
 import '../../bloc/room_connection/room_connection_bloc.dart';
 import 'screens.dart';
 import '../../ui/widgets/common/widgets.dart';
-import '../../utils/keys.dart';
-import '../../utils/custom_colors.dart';
+import '../../configurable/keys.dart';
+import '../../configurable/custom_colors.dart';
 import '../../ui/ui_models/ui_models.dart';
 
 class LobbyScreen extends StatelessWidget {

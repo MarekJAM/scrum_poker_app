@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:scrum_poker_app/ui/ui_models/estimate.dart';
 
 class PieChartDataModelUI {
-  int value;
+  EstimateUI estimateUI;
   double frequency;
-  Color color;
 
-  PieChartDataModelUI(this.value, this.frequency, this.color);
+  PieChartDataModelUI(this.estimateUI, this.frequency);
 }

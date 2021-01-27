@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../ui/ui_models/ui_models.dart';
-import '../../../utils/custom_colors.dart';
-import '../../../utils/asset_paths.dart';
+import '../../../configurable/custom_colors.dart';
+import '../../../configurable/asset_paths.dart';
 
 class SpectatorCard extends StatelessWidget {
   final SpectatorCardModelUI card;

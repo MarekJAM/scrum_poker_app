@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/room_connection/room_connection_bloc.dart';
-import '../../utils/keys.dart';
+import '../../configurable/keys.dart';
 import '../../ui/widgets/common/widgets.dart';
 
 class CreateRoomScreen extends StatelessWidget {

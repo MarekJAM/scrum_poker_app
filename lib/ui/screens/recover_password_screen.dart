@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/auth/recovery/recovery_bloc.dart';
 import '../../data/repositories/auth_repository.dart';
-import '../../utils/custom_colors.dart';
+import '../../configurable/custom_colors.dart';
 import '../../ui/widgets/common/widgets.dart';
 
 class RecoverPasswordScreen extends StatefulWidget {
