@@ -69,6 +69,8 @@ flutter:
   assets:
     - assets/skram_logo_osvg.svg
     - assets/skram_logo.png
+    - assets/crown_icon.png
+    - assets/user_icon.png
     - assets/i18n/
   #   - images/a_dot_ham.jpeg
 

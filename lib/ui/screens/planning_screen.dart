@@ -17,6 +17,7 @@ import '../../utils/keys.dart';
 import '../../utils/custom_colors.dart';
 import '../../utils/notifier.dart';
 import '../../utils/wakelock_wrapper.dart';
+import '../../utils/asset_paths.dart';
 
 class PlanningScreen extends StatefulWidget {
   static const routeName = '/planning';
@@ -215,6 +216,8 @@ class _PlanningScreenState extends State<PlanningScreen>
                   UserCard(
                     card: estimatorCard,
                     deviceSize: deviceSize,
+                    estimatedTask:
+                        state.planningRoomStatusInfo.estimatedTaskInfo.taskId,
                   ),
                 for (var spectatorCard
                     in state.planningRoomStatusInfo.spectatorCards)
@@ -428,11 +431,13 @@ class UserCard extends StatelessWidget {
   final UserCardModelUI card;
   final Size deviceSize;
   final bool isSpectator;
+  final String estimatedTask;
 
   const UserCard({
     @required this.card,
     @required this.deviceSize,
     this.isSpectator = false,
+    this.estimatedTask = '',
   });
 
   @override
@@ -445,7 +450,10 @@ class UserCard extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: isSpectator
                 ? SpectatorCard(card: card)
-                : EstimatorCard(card: card),
+                : EstimatorCard(
+                    card: card,
+                    estimatedTask: estimatedTask,
+                  ),
           ),
           Text(
             card.username,
@@ -459,9 +467,11 @@ class UserCard extends StatelessWidget {
 
 class EstimatorCard extends StatelessWidget {
   final EstimatorCardModelUI card;
+  final String estimatedTask;
 
   const EstimatorCard({
     @required this.card,
+    @required this.estimatedTask,
   });
 
   @override
@@ -484,7 +494,20 @@ class EstimatorCard extends StatelessWidget {
             ? CustomColors.buttonLightGrey
             : CustomColors.buttonGrey,
         child: card.estimate == null
-            ? Icon(Icons.help_outline)
+            ? card.isAdmin
+                ? Image.asset(
+                    AssetPaths.crownIcon,
+                    height: 30,
+                  )
+                : estimatedTask.isEmpty
+                    ? Image.asset(
+                        AssetPaths.userIcon,
+                        height: 25,
+                      )
+                    : Icon(
+                        Icons.help_outline,
+                        size: 30,
+                      )
             : Text(
                 card.estimate == null ? '' : '${card.estimate}',
                 style: TextStyle(
