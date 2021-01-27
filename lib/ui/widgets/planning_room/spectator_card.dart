@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../ui/ui_models/ui_models.dart';
 import '../../../utils/custom_colors.dart';
+import '../../../utils/asset_paths.dart';
 
 class SpectatorCard extends StatelessWidget {
   final SpectatorCardModelUI card;
@@ -25,7 +26,10 @@ class SpectatorCard extends StatelessWidget {
       child: CircleAvatar(
         radius: 25,
         backgroundColor: CustomColors.buttonLightGrey,
-        child: Icon(Icons.remove_red_eye),
+        child: Image.asset(
+          AssetPaths.binocularsIcon,
+          height: 30,
+        ),
       ),
     );
   }

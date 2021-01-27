@@ -3,4 +3,5 @@ class AssetPaths {
   static const String logoPNG = "assets/skram_logo.png";
   static const String crownIcon = "assets/crown_icon.png";
   static const String userIcon = "assets/user_icon.png";
+  static const String binocularsIcon = "assets/binoculars_icon.png";
 }
