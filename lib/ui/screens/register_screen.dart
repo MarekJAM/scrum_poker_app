@@ -5,6 +5,7 @@ import '../../ui/widgets/dropdown_search/dropdown_search.dart';
 import '../../configurable/custom_colors.dart';
 import '../../bloc/auth/register/register_bloc.dart';
 import '../../ui/widgets/common/widgets.dart';
+import '../../utils/hash.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const routeName = '/register';
@@ -233,9 +234,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     BlocProvider.of<RegisterBloc>(context).add(
       RegisterSignUpE(
         _userController.text,
-        _passwordController.text,
+        Hash.encrypt(_passwordController.text),
         _securityQuestion,
-        _answerController.text,
+        Hash.encrypt(_answerController.text),
       ),
     );
   }

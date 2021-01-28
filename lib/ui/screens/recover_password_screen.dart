@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,6 +5,7 @@ import '../../bloc/auth/recovery/recovery_bloc.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../configurable/custom_colors.dart';
 import '../../ui/widgets/common/widgets.dart';
+import '../../utils/hash.dart';
 
 class RecoverPasswordScreen extends StatefulWidget {
   static const routeName = '/recovery';
@@ -200,7 +199,8 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                                                     context)
                                                 .add(
                                               RecoverySendAnswer(
-                                                answer: _answerController.text,
+                                                answer: Hash.encrypt(
+                                                    _answerController.text),
                                               ),
                                             );
                                           } else if (state
@@ -209,8 +209,8 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                                                     context)
                                                 .add(
                                               RecoverySendPassword(
-                                                password:
-                                                    _passwordController.text,
+                                                password: Hash.encrypt(
+                                                    _passwordController.text),
                                               ),
                                             );
                                           }

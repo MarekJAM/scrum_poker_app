@@ -12,6 +12,7 @@ import '../../bloc/auth/register/register_bloc.dart';
 import '../../utils/session_data_singleton.dart';
 import '../../utils/debouncer.dart';
 import '../../configurable/app_config.dart';
+import '../../utils/hash.dart';
 
 enum LoginMode { Regular, AsGuest }
 
@@ -279,7 +280,7 @@ class _LoginScreenState extends State<LoginScreen>
             LoginConnectToServerE(
               serverAddress: _serverController.text,
               username: _userController.text,
-              password: _passwordController.text,
+              password: Hash.encrypt(_passwordController.text),
             ),
           )
         : BlocProvider.of<LoginBloc>(context).add(
