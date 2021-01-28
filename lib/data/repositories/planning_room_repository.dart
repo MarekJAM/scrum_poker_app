@@ -13,13 +13,14 @@ class PlanningRoomRepository {
             (estimate) => estimate.name == myUsername,
             orElse: () => null)) !=
         null);
-    final estimatesReceived = roomStatus.estimates.length;
-    final estimatesExpected =
-        (roomStatus.admins.length + roomStatus.estimators.length) +
-            (roomStatus.estimates.where((element) {
-              return !roomStatus.estimators.contains(element.name) &&
-                  !roomStatus.admins.contains(element.name);
-            }).length);
+    final estimatesReceived = roomStatus.estimates
+        .where((el) => !roomStatus.admins.contains(el.name))
+        .length;
+    final estimatesExpected = (roomStatus.estimators.length) +
+        (roomStatus.estimates.where((element) {
+          return !roomStatus.estimators.contains(element.name) &&
+              !roomStatus.admins.contains(element.name);
+        }).length);
     Map<int, int> estimatesDistribution = {};
 
     List<EstimatorCardModelUI> estimatorCardsUI = [];

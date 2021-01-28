@@ -5,7 +5,7 @@ class RoomStatus {
   final List<String> estimators;
   final List<String> spectators;
   final String taskId;
-  final List<Estimate> estimates;  
+  final List<Estimate> estimates;
 
   const RoomStatus({
     @required this.admins,
