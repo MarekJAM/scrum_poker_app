@@ -98,8 +98,9 @@ class CirclePainter extends CustomPainter {
           _paint);
     }
 
-    double progressRadians =
-        ((usersEstimatedNumber / usersTotalNumber) * (3 * math.pi / 2));
+    double progressRadians = ((usersEstimatedNumber /
+            (usersTotalNumber > 0 ? usersTotalNumber : 1)) *
+        (3 * math.pi / 2));
     double startAngle = (-math.pi * 1.5 + math.pi / 4) +
         (3 * math.pi) * (usersEstimatedNumber / usersTotalNumber) / 2;
 
