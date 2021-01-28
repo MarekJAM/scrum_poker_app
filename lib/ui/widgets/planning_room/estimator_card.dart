@@ -43,21 +43,20 @@ class _EstimatorCardState extends State<EstimatorCard> {
             : CustomColors.buttonGrey,
         child: Stack(
           children: [
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: ClipPath(
-                clipper: CustomClipPath(),
-                child: Container(
-                  height: 60,
-                  width: 60,
-                  color: widget.card?.estimate == null
-                      ? Colors.white
-                      : Estimates.values
-                          .firstWhere((el) => el.value == widget.card.estimate)
-                          .color,
+            if (widget.card?.estimate != null)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: ClipPath(
+                  clipper: CustomClipPath(),
+                  child: Container(
+                    height: 60,
+                    width: 60,
+                    color: Estimates.values
+                        .firstWhere((el) => el.value == widget.card.estimate)
+                        .color,
+                  ),
                 ),
               ),
-            ),
             Center(
               child: widget.card.estimate == null
                   ? widget.card.isAdmin
