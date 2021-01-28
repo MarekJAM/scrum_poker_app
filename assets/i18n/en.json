@@ -19,5 +19,6 @@
         "UserNotExists": "User does not exist.",
         "WrongSecurityAnswer": "Wrong answer.",
         "SecurityAnswerMoreThan20Chars": "Security answer too long (max 20 characters)." 
-	}
+        },
+        "username must be unique": "This username is already taken."
 }
