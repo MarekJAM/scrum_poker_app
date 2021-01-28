@@ -1,9 +1,11 @@
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../configurable/app_config.dart';
 import 'storage/storage_wrapper.dart';
 
 class SessionDataSingleton {
-  static final SessionDataSingleton _singleton = SessionDataSingleton._internal();
+  static final SessionDataSingleton _singleton =
+      SessionDataSingleton._internal();
 
   factory SessionDataSingleton() {
     return _singleton;
@@ -18,7 +20,6 @@ class SessionDataSingleton {
   String _serverAddress;
   StorageWrapper _storageWrapper;
   PackageInfo _packageInfo;
-
 
   Future<void> init() async {
     _token = await _storageWrapper.readToken();
@@ -43,10 +44,10 @@ class SessionDataSingleton {
   Future<void> setUsername(String username) async {
     _username = username;
     await _storageWrapper.writeUsername(username);
-  } 
+  }
 
   String getServerAddress() {
-    return _serverAddress;
+    return _serverAddress ?? "${AppConfig.serverIp}:${AppConfig.port}";
   }
 
   Future<void> setServerAddress(String url) async {

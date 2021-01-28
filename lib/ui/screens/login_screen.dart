@@ -11,6 +11,7 @@ import '../../configurable/asset_paths.dart';
 import '../../bloc/auth/register/register_bloc.dart';
 import '../../utils/session_data_singleton.dart';
 import '../../utils/debouncer.dart';
+import '../../configurable/app_config.dart';
 
 enum LoginMode { Regular, AsGuest }
 
@@ -28,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen>
     with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _serverController = TextEditingController(
-    text: "192.168.0.25:8080",
+    text: "${AppConfig.serverIp}:${AppConfig.port}",
   );
   TextEditingController _userController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
