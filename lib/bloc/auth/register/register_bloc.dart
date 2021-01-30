@@ -6,7 +6,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/repositories/auth_repository.dart';
-import '../../../utils/session_data_singleton.dart';
 
 part 'register_event.dart';
 part 'register_state.dart';

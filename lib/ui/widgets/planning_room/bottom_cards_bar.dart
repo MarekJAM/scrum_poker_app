@@ -45,32 +45,37 @@ class _BottomCardsBarState extends State<BottomCardsBar>
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: Estimates.values.length,
-                        itemBuilder: (context, index) => GestureDetector(
-                          onTap: () {
-                            _showEstimateConfirmationDialog(
-                                context,
-                                state.planningRoomStatusInfo.estimatedTaskInfo
-                                    .taskId,
-                                Estimates.values[index].value);
-                          },
-                          child: Card(
-                            elevation: 5,
-                            child: Container(
-                              child: Center(
-                                child: AutoSizeText(
-                                  '${Estimates.values[index].value}',
-                                  minFontSize: 24,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                        itemBuilder: (context, index) {
+                          if (index > 0) {
+                            return GestureDetector(
+                              onTap: () {
+                                _showEstimateConfirmationDialog(
+                                    context,
+                                    state.planningRoomStatusInfo
+                                        .estimatedTaskInfo.taskId,
+                                    Estimates.values[index].value);
+                              },
+                              child: Card(
+                                elevation: 5,
+                                child: Container(
+                                  child: Center(
+                                    child: AutoSizeText(
+                                      '${Estimates.values[index].value}',
+                                      minFontSize: 24,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
+                                  width: widget.deviceSize.width * 0.12,
                                 ),
                               ),
-                              width: widget.deviceSize.width * 0.12,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
+                      ))
                   : Container(
                       key: ValueKey(2),
                     ),
