@@ -249,7 +249,7 @@ class _LoginScreenState extends State<LoginScreen>
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => RegisterScreen(
-                              passedServerAddress: _serverController.text,
+                              passedServerAddress: _serverController.text.trim(),
                             ),
                           ),
                         );
@@ -278,15 +278,15 @@ class _LoginScreenState extends State<LoginScreen>
     _loginMode == LoginMode.Regular
         ? BlocProvider.of<LoginBloc>(context).add(
             LoginConnectToServerE(
-              serverAddress: _serverController.text,
-              username: _userController.text,
-              password: Hash.encrypt(_passwordController.text),
+              serverAddress: _serverController.text.trim(),
+              username: _userController.text.trim(),
+              password: Hash.encrypt(_passwordController.text.trim()),
             ),
           )
         : BlocProvider.of<LoginBloc>(context).add(
             LoginConnectToServerE(
-              serverAddress: _serverController.text,
-              username: _userController.text,
+              serverAddress: _serverController.text.trim(),
+              username: _userController.text.trim(),
               isLoggingAsGuest: true,
             ),
           );

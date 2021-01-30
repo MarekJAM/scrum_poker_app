@@ -123,7 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   } else if (value.trim().length > 20) {
                                     return "Password too long - max. 20 characters.";
                                   } else if (value !=
-                                      _passwordController.text) {
+                                      _passwordController.text.trim()) {
                                     return "Passwords must match.";
                                   }
                                   return null;
@@ -233,10 +233,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void _onFormSubmitted() {
     BlocProvider.of<RegisterBloc>(context).add(
       RegisterSignUpE(
-        _userController.text,
-        Hash.encrypt(_passwordController.text),
+        _userController.text.trim(),
+        Hash.encrypt(_passwordController.text.trim()),
         _securityQuestion,
-        Hash.encrypt(_answerController.text),
+        Hash.encrypt(_answerController.text.trim()),
       ),
     );
   }
