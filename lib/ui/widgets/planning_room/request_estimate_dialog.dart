@@ -34,7 +34,7 @@ class RequestEstimateDialog extends StatelessWidget {
                   decoration: InputDecoration(labelText: "Task id"),
                   controller: _taskController,
                   validator: (value) {
-                    if (value.isEmpty) {
+                    if (value.trim().isEmpty) {
                       return "Provide task id.";
                     } else if (value.trim().length > 20) {
                       return "Text too long - max. 20 characters.";

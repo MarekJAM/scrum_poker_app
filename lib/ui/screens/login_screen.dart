@@ -110,10 +110,10 @@ class _LoginScreenState extends State<LoginScreen>
                                 controller: _serverController,
                                 onChanged: (value) {
                                   _debouncer.run(() => SessionDataSingleton()
-                                      .setServerAddress(value));
+                                      .setServerAddress(value.trim()));
                                 },
                                 validator: (value) {
-                                  if (value.isEmpty) {
+                                  if (value.trim().isEmpty) {
                                     return "Provide server address.";
                                   }
                                   return null;
@@ -127,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen>
                                 ),
                                 controller: _userController,
                                 validator: (value) {
-                                  if (value.isEmpty) {
+                                  if (value.trim().isEmpty) {
                                     return "Provide username.";
                                   } else if (value.trim().length > 20) {
                                     return "Name too long - max. 20 characters.";
@@ -152,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen>
                                               obscureText: true,
                                               controller: _passwordController,
                                               validator: (value) {
-                                                if (value.isEmpty) {
+                                                if (value.trim().isEmpty) {
                                                   return "Provide password.";
                                                 } else if (value.trim().length >
                                                     20) {
@@ -171,7 +171,8 @@ class _LoginScreenState extends State<LoginScreen>
                                                           RecoverPasswordScreen(
                                                         passedServerAddress:
                                                             _serverController
-                                                                .text,
+                                                                .text
+                                                                .trim(),
                                                       ),
                                                     ),
                                                   );
@@ -249,7 +250,8 @@ class _LoginScreenState extends State<LoginScreen>
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => RegisterScreen(
-                              passedServerAddress: _serverController.text.trim(),
+                              passedServerAddress:
+                                  _serverController.text.trim(),
                             ),
                           ),
                         );

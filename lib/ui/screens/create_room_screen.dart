@@ -36,7 +36,7 @@ class CreateRoomScreen extends StatelessWidget {
                       decoration: InputDecoration(labelText: "Room name"),
                       controller: _roomController,
                       validator: (value) {
-                        if (value.isEmpty) {
+                        if (value.trim().isEmpty) {
                           return "Provide room name.";
                         } else if (value.trim().length > 20) {
                           return "Name too long - max. 20 characters.";

@@ -98,7 +98,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                                       ),
                                       controller: _userController,
                                       validator: (value) {
-                                        if (value.isEmpty) {
+                                        if (value.trim().isEmpty) {
                                           return "Provide username.";
                                         } else if (value.trim().length > 20) {
                                           return "Name too long - max. 20 characters.";
@@ -125,7 +125,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                                       ),
                                       controller: _answerController,
                                       validator: (value) {
-                                        if (value.isEmpty) {
+                                        if (value.trim().isEmpty) {
                                           return "Input answer.";
                                         } else if (value.trim().length > 20) {
                                           return "Answer too long - max. 20 characters.";
@@ -142,7 +142,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                                       obscureText: true,
                                       controller: _passwordController,
                                       validator: (value) {
-                                        if (value.isEmpty) {
+                                        if (value.trim().isEmpty) {
                                           return "Provide password.";
                                         } else if (value.trim().length > 20) {
                                           return "Password too long - max. 20 characters.";
@@ -159,7 +159,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                                       obscureText: true,
                                       controller: _confirmPasswordController,
                                       validator: (value) {
-                                        if (value.isEmpty) {
+                                        if (value.trim().isEmpty) {
                                           return "Confirm new password.";
                                         } else if (value.trim().length > 20) {
                                           return "Password too long - max. 20 characters.";
@@ -190,7 +190,8 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                                                     context)
                                                 .add(
                                               RecoveryStart(
-                                                username: _userController.text.trim(),
+                                                username:
+                                                    _userController.text.trim(),
                                               ),
                                             );
                                           } else if (state
@@ -200,7 +201,8 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                                                 .add(
                                               RecoverySendAnswer(
                                                 answer: Hash.encrypt(
-                                                    _answerController.text.trim()),
+                                                    _answerController.text
+                                                        .trim()),
                                               ),
                                             );
                                           } else if (state
@@ -210,7 +212,8 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                                                 .add(
                                               RecoverySendPassword(
                                                 password: Hash.encrypt(
-                                                    _passwordController.text.trim()),
+                                                    _passwordController.text
+                                                        .trim()),
                                               ),
                                             );
                                           }

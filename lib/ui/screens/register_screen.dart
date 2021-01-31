@@ -86,7 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 controller: _userController,
                                 validator: (value) {
-                                  if (value.isEmpty) {
+                                  if (value.trim().isEmpty) {
                                     return "Provide username.";
                                   } else if (value.trim().length > 20) {
                                     return "Name too long - max. 20 characters.";
@@ -102,7 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 obscureText: true,
                                 controller: _passwordController,
                                 validator: (value) {
-                                  if (value.isEmpty) {
+                                  if (value.trim().isEmpty) {
                                     return "Provide password.";
                                   } else if (value.trim().length > 20) {
                                     return "Password too long - max. 20 characters.";
@@ -118,11 +118,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 obscureText: true,
                                 controller: _confirmPasswordController,
                                 validator: (value) {
-                                  if (value.isEmpty) {
+                                  if (value.trim().isEmpty) {
                                     return "Confirm password.";
                                   } else if (value.trim().length > 20) {
                                     return "Password too long - max. 20 characters.";
-                                  } else if (value !=
+                                  } else if (value.trim() !=
                                       _passwordController.text.trim()) {
                                     return "Passwords must match.";
                                   }
@@ -157,7 +157,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 controller: _answerController,
                                 validator: (value) {
-                                  if (value.isEmpty) {
+                                  if (value.trim().isEmpty) {
                                     return "Input answer.";
                                   } else if (value.trim().length > 20) {
                                     return "Answer too long - max. 20 characters.";
