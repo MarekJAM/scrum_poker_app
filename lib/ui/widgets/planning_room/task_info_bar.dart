@@ -19,6 +19,10 @@ class _TaskInfoBarState extends State<TaskInfoBar> {
   final double taskInfoBarHeight = 155;
   String taskId;
 
+  TextEditingController taskController = TextEditingController();
+  TextEditingController medianController = TextEditingController();
+  TextEditingController averageController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -45,6 +49,18 @@ class _TaskInfoBarState extends State<TaskInfoBar> {
                 },
                 builder: (_, state) {
                   if (state is PlanningRoomRoomStatusLoaded) {
+                    taskController.text = state
+                            .planningRoomStatusInfo.estimatedTaskInfo?.taskId ??
+                        '-';
+                    medianController.text = state
+                            .planningRoomStatusInfo.estimatedTaskInfo.median
+                            ?.toString() ??
+                        '-';
+                    averageController.text = state
+                            .planningRoomStatusInfo.estimatedTaskInfo.average
+                            ?.toString() ??
+                        '-';
+
                     taskId =
                         state.planningRoomStatusInfo.estimatedTaskInfo.taskId;
                     return taskId.isEmpty
@@ -66,29 +82,89 @@ class _TaskInfoBarState extends State<TaskInfoBar> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 30),
-                                  ),
                                   Expanded(child: EstimatesChart()),
                                   Expanded(
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          "${state.planningRoomStatusInfo.estimatedTaskInfo.taskId}",
-                                          style: TextStyle(
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.bold),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 5),
-                                        ),
-                                        Text(
-                                          "Median: ${state.planningRoomStatusInfo.estimatedTaskInfo.median ?? '-'}\nAverage: ${state.planningRoomStatusInfo.estimatedTaskInfo.average ?? '-'}",
-                                          key: Key(Keys.textMedianAndAverage),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: Column(
+                                        children: [
+                                          TextFormField(
+                                            textAlign: TextAlign.center,
+                                            decoration: InputDecoration(
+                                              labelText: 'Task',
+                                              labelStyle: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20),
+                                              border: OutlineInputBorder(),
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                horizontal: 10,
+                                                vertical: 20,
+                                              ),
+                                            ),
+                                            readOnly: true,
+                                            style: TextStyle(
+                                              fontSize: 17,
+                                            ),
+                                            controller: taskController,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 5),
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: TextFormField(
+                                                  textAlign: TextAlign.center,
+                                                  decoration: InputDecoration(
+                                                    labelText: 'Median',
+                                                    labelStyle:
+                                                        TextStyle(fontSize: 18),
+                                                    border:
+                                                        OutlineInputBorder(),
+                                                    contentPadding:
+                                                        EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 20,
+                                                    ),
+                                                  ),
+                                                  readOnly: true,
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                  ),
+                                                  controller: medianController,
+                                                ),
+                                              ),
+                                              Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 2)),
+                                              Expanded(
+                                                child: TextFormField(
+                                                  textAlign: TextAlign.center,
+                                                  decoration: InputDecoration(
+                                                    labelText: 'Average',
+                                                    labelStyle:
+                                                        TextStyle(fontSize: 18),
+                                                    border:
+                                                        OutlineInputBorder(),
+                                                    contentPadding:
+                                                        EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 20,
+                                                    ),
+                                                  ),
+                                                  readOnly: true,
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                  ),
+                                                  controller: averageController,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   )
                                 ],

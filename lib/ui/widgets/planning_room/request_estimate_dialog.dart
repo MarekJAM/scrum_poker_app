@@ -36,8 +36,8 @@ class RequestEstimateDialog extends StatelessWidget {
                   validator: (value) {
                     if (value.trim().isEmpty) {
                       return "Provide task id.";
-                    } else if (value.trim().length > 20) {
-                      return "Text too long - max. 20 characters.";
+                    } else if (value.trim().length > 10) {
+                      return "Text too long - max. 10 characters.";
                     }
                     return null;
                   },
