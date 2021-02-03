@@ -63,6 +63,9 @@ class _EstimatorCardState extends State<EstimatorCard> {
                       ? Image.asset(
                           AssetPaths.crownIcon,
                           height: 30,
+                          color: widget.card.alreadyEstimated
+                              ? Theme.of(context).accentColor
+                              : Theme.of(context).canvasColor,
                         )
                       : widget.estimatedTask.isEmpty
                           ? Image.asset(
@@ -72,6 +75,9 @@ class _EstimatorCardState extends State<EstimatorCard> {
                           : Icon(
                               Icons.help_outline,
                               size: 30,
+                              color: widget.card.alreadyEstimated
+                                  ? Theme.of(context).accentColor
+                                  : Theme.of(context).canvasColor,
                             )
                   : Text(
                       widget.card.estimate == null

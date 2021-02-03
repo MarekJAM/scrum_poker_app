@@ -21,6 +21,7 @@ class PlanningRoomRepository {
           return !roomStatus.estimators.contains(element.name) &&
               !roomStatus.admins.contains(element.name);
         }).length);
+
     Map<int, int> estimatesDistribution = {};
 
     List<EstimatorCardModelUI> estimatorCardsUI = [];
@@ -45,27 +46,35 @@ class PlanningRoomRepository {
         ),
       );
     });
+    roomStatus.estimates.forEach((estimate) {
+      if (estimatorCardsUI.firstWhere((el) => el.username == estimate.name,
+              orElse: () => null) ==
+          null) {
+        estimatorCardsUI.add(
+          EstimatorCardModelUI(
+            username: estimate.name,
+            isAdmin: false,
+            isInRoom: false,
+          ),
+        );
+      }
+    });
 
-    //checks if all users who estimated are still in the room, and if not adds them at the end of the list
-    roomStatus.estimates
-        .where((estimate) => estimate.estimate != -1)
-        .forEach((estimate) {
-      estimates.add(estimate.estimate);
-
-      estimatesDistribution.update(estimate.estimate, (value) => ++value,
-          ifAbsent: () => 1);
-
+    roomStatus.estimates.forEach((estimate) {
       var index =
           estimatorCardsUI.indexWhere((card) => card.username == estimate.name);
-      if (index >= 0) {
-        estimatorCardsUI[index]
-          ..isInRoom = true
-          ..estimate = estimate.estimate;
+
+      if (estimate.estimate < 1) {
+        estimatorCardsUI[index]..alreadyEstimated = true;
       } else {
-        estimatorCardsUI.add(EstimatorCardModelUI(
-          username: estimate.name,
-          estimate: estimate.estimate,
-        ));
+        estimates.add(estimate.estimate);
+
+        estimatesDistribution.update(estimate.estimate, (value) => ++value,
+            ifAbsent: () => 1);
+
+        estimatorCardsUI[index]
+          ..estimate = estimate.estimate
+          ..alreadyEstimated = true;
       }
     });
 

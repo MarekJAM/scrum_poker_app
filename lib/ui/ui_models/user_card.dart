@@ -10,12 +10,14 @@ class EstimatorCardModelUI extends UserCardModelUI {
   final bool isAdmin;
   bool isInRoom;
   int estimate;
+  bool alreadyEstimated;
 
   EstimatorCardModelUI({
     @required String username,
     this.estimate,
     this.isAdmin = false,
     this.isInRoom = false,
+    this.alreadyEstimated = false,
   }) : super(username: username);
 }
 
