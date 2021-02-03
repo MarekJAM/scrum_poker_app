@@ -47,7 +47,9 @@ class PlanningRoomRepository {
     });
 
     //checks if all users who estimated are still in the room, and if not adds them at the end of the list
-    roomStatus.estimates.forEach((estimate) {
+    roomStatus.estimates
+        .where((estimate) => estimate.estimate != -1)
+        .forEach((estimate) {
       estimates.add(estimate.estimate);
 
       estimatesDistribution.update(estimate.estimate, (value) => ++value,
