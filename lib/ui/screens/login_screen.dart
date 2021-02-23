@@ -145,6 +145,7 @@ class _LoginScreenState extends State<LoginScreen>
                                       : Column(
                                           children: [
                                             TextFormField(
+                                              key: Key(Keys.inputPassword),
                                               decoration: InputDecoration(
                                                 labelText: 'Password',
                                                 prefixIcon: Icon(Icons.lock),

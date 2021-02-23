@@ -3,6 +3,7 @@ class Keys {
   static const String buttonConnect = 'buttonConnect';
   static const String inputServerAddress = 'inputServerAddress';
   static const String inputUsername = 'inputUsername';
+  static const String inputPassword = 'inputPassword';
 
   // app drawer
   static const String buttonDisconnect = 'buttonDisconnect';
@@ -22,5 +23,5 @@ class Keys {
   static const String inputEstimatedTask = 'inputEstimatedTask';
   static const String buttonRequestEstimateConfirm = 'buttonRequestEstimateConfirm';
   static const String buttonSendEstimateConfirm = 'buttonSendEstimateConfirm';
-  static const String textMedianAndAverage = 'textMedianAndAverage';
+  static const String textMedian = 'textMedian';
 }

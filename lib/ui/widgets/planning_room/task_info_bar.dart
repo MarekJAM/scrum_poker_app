@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../configurable/keys.dart';
 import '../../../utils/notifier.dart';
 import '../../../bloc/planning_room/planning_room_bloc.dart';
 import '../../../ui/widgets/planning_room/widgets.dart';
@@ -115,6 +116,7 @@ class _TaskInfoBarState extends State<TaskInfoBar> {
                                             children: [
                                               Expanded(
                                                 child: TextFormField(
+                                                  key: Key(Keys.textMedian),
                                                   textAlign: TextAlign.center,
                                                   decoration: InputDecoration(
                                                     labelText: 'Median',

@@ -5,8 +5,9 @@ import 'package:test/test.dart';
 import '../lib/configurable/keys.dart';
 
 void main() {
-  final serverAddress = '192.168.0.14:8080';
+  final serverAddress = '192.168.0.25:8080';
   final username = 'tester';
+  final password = '123';
   final roomname = 'testroom';
   final estimatedTask = 'testtask';
   final estimate = '4';
@@ -16,28 +17,38 @@ void main() {
     final buttonDisconnect = find.byValueKey(Keys.buttonDisconnect);
     final inputServerAddress = find.byValueKey(Keys.inputServerAddress);
     final inputUsername = find.byValueKey(Keys.inputUsername);
+    final inputPassword = find.byValueKey(Keys.inputPassword);
     final titleLobby = find.byValueKey(Keys.titleLobby);
     final locateDrawer = find.byTooltip('Open navigation menu');
-    final buttonNavigateToCreateRoomScreen =
-        find.byValueKey(Keys.buttonNavigateToCreateRoomScreen);
+    final buttonNavigateToCreateRoomScreen = find.byValueKey(Keys.buttonNavigateToCreateRoomScreen);
     final inputRoomname = find.byValueKey(Keys.inputRoomname);
     final buttonCreateRoom = find.byValueKey(Keys.buttonCreateRoom);
     final buttonDestroyRoom = find.byValueKey(Keys.buttonDestroyRoom);
-    final buttonDestroyRoomConfirm =
-        find.byValueKey(Keys.buttonDestroyRoomConfirm);
-    final buttonRequestEstimateOpenDialog =
-        find.byValueKey(Keys.buttonRequestEstimateOpenDialog);
-    final buttonRequestEstimateConfirm =
-        find.byValueKey(Keys.buttonRequestEstimateConfirm);
+    final buttonDestroyRoomConfirm = find.byValueKey(Keys.buttonDestroyRoomConfirm);
+    final buttonRequestEstimateOpenDialog = find.byValueKey(Keys.buttonRequestEstimateOpenDialog);
+    final buttonRequestEstimateConfirm = find.byValueKey(Keys.buttonRequestEstimateConfirm);
     final inputEstimatedTask = find.byValueKey(Keys.inputEstimatedTask);
-    final buttonSendEstimateConfirm =
-        find.byValueKey(Keys.buttonSendEstimateConfirm);
-    final textMedianAndAverage = find.byValueKey(Keys.textMedianAndAverage);
+    final buttonSendEstimateConfirm = find.byValueKey(Keys.buttonSendEstimateConfirm);
+    final textMedian = find.byValueKey(Keys.textMedian);
 
     FlutterDriver driver;
 
+    Future<FlutterDriver> setupAndGetDriver() async {
+      FlutterDriver driver = await FlutterDriver.connect();
+      var connected = false;
+      while (!connected) {
+        try {
+          await driver.waitUntilFirstFrameRasterized();
+          connected = true;
+        } catch (e) {
+          print(e);
+        }
+      }
+      return driver;
+    }
+
     setUpAll(() async {
-      driver = await FlutterDriver.connect();
+      driver = await setupAndGetDriver();
     });
 
     tearDownAll(() async {
@@ -56,6 +67,10 @@ void main() {
       await driver.tap(inputUsername);
 
       await driver.enterText(username);
+
+      await driver.tap(inputPassword);
+
+      await driver.enterText(password);
 
       await driver.tap(buttonConnect);
 
@@ -137,7 +152,7 @@ void main() {
 
         await driver.tap(buttonSendEstimateConfirm);
 
-        await driver.waitFor(textMedianAndAverage);
+        await driver.waitFor(textMedian);
 
         await disconnect();
       });
