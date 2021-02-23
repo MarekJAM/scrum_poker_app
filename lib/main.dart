@@ -2,11 +2,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:scrum_poker_app/utils/custom_page_transition_builder.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_translate/flutter_translate.dart';
 
+import './utils/custom_page_transition_builder.dart';
 import './bloc/room_connection/room_connection_bloc.dart';
 import './bloc/planning_room/planning_room_bloc.dart';
 import './bloc/lobby/lobby_bloc.dart';

@@ -1,8 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scrum_poker_app/ui/ui_models/estimate.dart';
 
+import '../../../ui/ui_models/estimate.dart';
 import '../../../bloc/planning_room/planning_room_bloc.dart';
 import 'circle_estimates_chart.dart';
 import '../../ui_models/pie_chart_data.dart';

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scrum_poker_app/ui/screens/screens.dart';
 import 'dart:math' as math;
 
+import '../../ui/screens/screens.dart';
 import '../../ui/widgets/app_drawer.dart';
 import '../../ui/icons/custom_icons.dart';
 import '../../ui/widgets/common/common_widgets.dart';
@@ -11,7 +11,6 @@ import '../widgets/planning_room/widgets.dart';
 import '../../bloc/lobby/lobby_bloc.dart';
 import '../../bloc/planning_room/planning_room_bloc.dart';
 import '../../bloc/room_connection/room_connection_bloc.dart';
-import 'lobby_screen.dart';
 import '../../configurable/keys.dart';
 import '../../configurable/custom_colors.dart';
 import '../../utils/wakelock_wrapper.dart';
