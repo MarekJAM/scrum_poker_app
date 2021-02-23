@@ -5,13 +5,13 @@ import 'widgets.dart';
 
 class UserCardArea extends StatelessWidget {
   final UserCardModelUI card;
-  final Size deviceSize;
+  final Size size;
   final bool isSpectator;
   final String estimatedTask;
 
   const UserCardArea({
     @required this.card,
-    @required this.deviceSize,
+    @required this.size,
     this.isSpectator = false,
     this.estimatedTask = '',
   });
@@ -19,7 +19,7 @@ class UserCardArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: deviceSize.width * 1 / 5,
+      width: size.width * 1 / 5,
       child: Column(
         children: [
           Padding(

@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utils/notifier.dart';
-import '../../../configurable/keys.dart';
 import '../../../bloc/planning_room/planning_room_bloc.dart';
 import '../../../ui/widgets/planning_room/widgets.dart';
 
 class TaskInfoBar extends StatefulWidget {
-  final Size deviceSize;
+  final double width;
 
-  TaskInfoBar({@required this.deviceSize});
+  TaskInfoBar({@required this.width});
 
   @override
   _TaskInfoBarState createState() => _TaskInfoBarState();
@@ -75,7 +74,7 @@ class _TaskInfoBarState extends State<TaskInfoBar> {
                             ),
                           )
                         : Container(
-                            width: widget.deviceSize.width,
+                            width: widget.width,
                             child: Padding(
                               padding: const EdgeInsets.all(2.0),
                               child: Row(

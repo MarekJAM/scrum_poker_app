@@ -31,37 +31,39 @@ class AppDrawer extends StatelessWidget {
           decoration: BoxDecoration(
             color: Theme.of(context).scaffoldBackgroundColor,
           ),
-          child: Column(
-            children: <Widget>[
-              UserAccountsDrawerHeader(
-                accountName: Image.asset(
-                  AssetPaths.logoPNG,
-                  width: 150,
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                UserAccountsDrawerHeader(
+                  accountName: Image.asset(
+                    AssetPaths.logoPNG,
+                    width: 150,
+                  ),
+                  accountEmail: Text(
+                    'v' + SessionDataSingleton().getAppVersion(),
+                    style: TextStyle(fontSize: 12),
+                  ),
                 ),
-                accountEmail: Text(
-                  'v' + SessionDataSingleton().getAppVersion(),
-                  style: TextStyle(fontSize: 12),
+                if (passedWidgets != null && passedWidgets.length > 0)
+                  ...passedWidgets,
+                ListTile(
+                  enabled: false,
+                  leading: Icon(Icons.settings),
+                  title: Text('Settings'),
+                  onTap: () {},
                 ),
-              ),
-              if (passedWidgets != null && passedWidgets.length > 0)
-                ...passedWidgets,
-              ListTile(
-                enabled: false,
-                leading: Icon(Icons.settings),
-                title: Text('Settings'),
-                onTap: () {},
-              ),
-              Divider(),
-              ListTile(
-                key: Key(Keys.buttonDisconnect),
-                leading: Icon(Icons.exit_to_app),
-                title: Text('Disconnect'),
-                onTap: () {
-                  BlocProvider.of<LoginBloc>(context)
-                      .add(LoginDisconnectFromServerE());
-                },
-              ),
-            ],
+                Divider(),
+                ListTile(
+                  key: Key(Keys.buttonDisconnect),
+                  leading: Icon(Icons.exit_to_app),
+                  title: Text('Disconnect'),
+                  onTap: () {
+                    BlocProvider.of<LoginBloc>(context)
+                        .add(LoginDisconnectFromServerE());
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

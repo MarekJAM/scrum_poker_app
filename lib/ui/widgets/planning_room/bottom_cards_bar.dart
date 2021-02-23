@@ -7,9 +7,11 @@ import '../../../ui/widgets/planning_room/widgets.dart';
 import '../../../bloc/planning_room/planning_room_bloc.dart';
 
 class BottomCardsBar extends StatefulWidget {
-  final Size deviceSize;
+  final MediaQueryData mediaQuery;
 
-  BottomCardsBar({@required this.deviceSize});
+  BottomCardsBar({
+    @required this.mediaQuery,
+  });
 
   @override
   _BottomCardsBarState createState() => _BottomCardsBarState();
@@ -40,8 +42,11 @@ class _BottomCardsBarState extends State<BottomCardsBar>
                         color: Theme.of(context).primaryColor,
                       ),
                       padding: EdgeInsets.all(3),
-                      height: widget.deviceSize.height * 0.12,
-                      width: widget.deviceSize.width,
+                      height:
+                          widget.mediaQuery.orientation == Orientation.portrait
+                              ? widget.mediaQuery.size.height * 0.12
+                              : widget.mediaQuery.size.height * 0.2,
+                      width: widget.mediaQuery.size.width,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: Estimates.values.length,
@@ -50,10 +55,12 @@ class _BottomCardsBarState extends State<BottomCardsBar>
                             return GestureDetector(
                               onTap: () {
                                 _showEstimateConfirmationDialog(
-                                    context,
-                                    state.planningRoomStatusInfo
-                                        .estimatedTaskInfo.taskId,
-                                    Estimates.values[index].value);
+                                  context,
+                                  state.planningRoomStatusInfo.estimatedTaskInfo
+                                      .taskId,
+                                  Estimates.values[index].value,
+                                  widget.mediaQuery,
+                                );
                               },
                               child: Card(
                                 elevation: 5,
@@ -67,7 +74,10 @@ class _BottomCardsBarState extends State<BottomCardsBar>
                                       ),
                                     ),
                                   ),
-                                  width: widget.deviceSize.width * 0.12,
+                                  width: widget.mediaQuery.orientation ==
+                                          Orientation.portrait
+                                      ? widget.mediaQuery.size.width * 0.12
+                                      : widget.mediaQuery.size.width * 0.06,
                                 ),
                               ),
                             );
@@ -91,6 +101,7 @@ void _showEstimateConfirmationDialog(
   BuildContext context,
   String estimatedTask,
   int estimate,
+  MediaQueryData mediaQuery,
 ) {
   showDialog(
     context: context,
@@ -103,7 +114,7 @@ void _showEstimateConfirmationDialog(
             Navigator.of(context).pop();
           }
         },
-        child: ConfirmSendEstimateDialog(estimatedTask, estimate),
+        child: ConfirmSendEstimateDialog(estimatedTask, estimate, mediaQuery),
       );
     },
   );

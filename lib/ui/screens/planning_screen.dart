@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:scrum_poker_app/ui/screens/screens.dart';
-import 'package:scrum_poker_app/ui/ui_models/user_card.dart';
 import 'dart:math' as math;
 
 import '../../ui/widgets/app_drawer.dart';
@@ -16,7 +15,6 @@ import 'lobby_screen.dart';
 import '../../configurable/keys.dart';
 import '../../configurable/custom_colors.dart';
 import '../../utils/wakelock_wrapper.dart';
-import '../../configurable/estimates.dart';
 
 class PlanningScreen extends StatefulWidget {
   static const routeName = '/planning';
@@ -32,24 +30,34 @@ class _PlanningScreenState extends State<PlanningScreen>
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
     WakelockWrapper.enable();
   }
 
   @override
   void dispose() {
     super.dispose();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     WakelockWrapper.disable();
   }
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
+    final mediaQuery = MediaQuery.of(context);
     final roomName = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
       appBar: AppBar(
         actions: [
-          _buildAdminAppBarAction(context),
+          _buildAdminAppBarAction(context, mediaQuery),
         ],
         title: Text(roomName),
       ),
@@ -101,18 +109,40 @@ class _PlanningScreenState extends State<PlanningScreen>
           },
           child: Stack(
             children: [
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  TaskInfoBar(
-                    deviceSize: deviceSize,
-                  ),
-                  Divider(),
-                  UserCardsContainer(deviceSize: deviceSize),
-                ],
+              Container(
+                height: mediaQuery.size.height,
+                child: mediaQuery.orientation == Orientation.portrait
+                    ? Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          TaskInfoBar(
+                            width: mediaQuery.size.width,
+                          ),
+                          Divider(),
+                          UserCardsContainer(size: mediaQuery.size),
+                        ],
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 28.0),
+                              child: TaskInfoBar(
+                                width: mediaQuery.size.width / 2,
+                              ),
+                            ),
+                            UserCardsContainer(size: mediaQuery.size / 2),
+                          ],
+                        ),
+                      ),
               ),
-              BottomCardsBar(deviceSize: deviceSize)
+              BottomCardsBar(
+                mediaQuery: mediaQuery,
+              )
             ],
           ),
         ),
@@ -174,7 +204,8 @@ class _PlanningScreenState extends State<PlanningScreen>
     );
   }
 
-  Widget _buildAdminAppBarAction(BuildContext context) {
+  Widget _buildAdminAppBarAction(
+      BuildContext context, MediaQueryData mediaQuery) {
     return BlocBuilder<PlanningRoomBloc, PlanningRoomState>(
       buildWhen: (_, state) {
         return state is PlanningRoomRoomStatusLoaded;
@@ -188,7 +219,7 @@ class _PlanningScreenState extends State<PlanningScreen>
               CustomIcons.estimate_request,
             ),
             onPressed: () {
-              _showRequestEstimateDialog(context);
+              _showRequestEstimateDialog(context, mediaQuery);
             },
           );
         }
@@ -197,7 +228,8 @@ class _PlanningScreenState extends State<PlanningScreen>
     );
   }
 
-  void _showRequestEstimateDialog(BuildContext context) {
+  void _showRequestEstimateDialog(
+      BuildContext context, MediaQueryData mediaQuery) {
     TextEditingController _taskController = TextEditingController();
     final _reqestEstimateKey = GlobalKey<FormState>();
 
@@ -207,6 +239,7 @@ class _PlanningScreenState extends State<PlanningScreen>
         return RequestEstimateDialog(
           reqestEstimateKey: _reqestEstimateKey,
           taskController: _taskController,
+          mediaQuery: mediaQuery,
         );
       },
     );
