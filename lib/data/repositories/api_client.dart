@@ -7,9 +7,9 @@ import '../../utils/session_data_singleton.dart';
 
 class ApiClient {
   ApiClient({SessionDataSingleton sessionDataSingleton})
-      : _sessionDataSingleton = sessionDataSingleton ?? SessionDataSingleton();
+      : sessionDataSingleton = sessionDataSingleton ?? SessionDataSingleton();
 
-  final SessionDataSingleton _sessionDataSingleton;
+  final SessionDataSingleton sessionDataSingleton;
 
   void throwException(int statusCode, String message) {
     if (statusCode == 400) {
@@ -32,12 +32,12 @@ class ApiClient {
   Map<String, String> getRequestHeaders([String token]) {
     return {
       "Content-Type": "application/json",
-      "Authorization": 'Bearer ' + (token ?? _sessionDataSingleton.getToken())
+      "Authorization": 'Bearer ' + (token ?? sessionDataSingleton.getToken())
     };
   }
 
   String getBaseURL() {
-    return 'http://' + _sessionDataSingleton.getServerAddress();
+    return 'http://' + sessionDataSingleton.getServerAddress();
   }
 
   String decodeErrorMessage(response) {
@@ -51,6 +51,6 @@ class ApiClient {
   }
 
   dynamic jsonParse(response) {
-    return jsonDecode(utf8.decode(response.bodyBytes));
+    return jsonDecode(response.body);
   }
 }

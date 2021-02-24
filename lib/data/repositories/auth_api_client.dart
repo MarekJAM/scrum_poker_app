@@ -36,7 +36,7 @@ class AuthApiClient extends ApiClient {
 
     var token = jsonParse(response)['token'];
 
-    await SessionDataSingleton().setToken(token);
+    await super.sessionDataSingleton.setToken(token);
 
     return true;
   }
@@ -56,7 +56,7 @@ class AuthApiClient extends ApiClient {
 
     var token = jsonParse(response)['token'];
 
-    await SessionDataSingleton().setToken(token);
+    await super.sessionDataSingleton.setToken(token);
 
     return true;
   }
@@ -92,7 +92,7 @@ class AuthApiClient extends ApiClient {
           decodeErrorMessage(response) ?? "Recovery failed");
     }
 
-    return RecoveryMessage.fromJson(jsonDecode(response.body));
+    return RecoveryMessage.fromJson(jsonParse(response));
   }
 
   Future<String> recoverStepTwo(String token, String answer) async {
@@ -108,7 +108,7 @@ class AuthApiClient extends ApiClient {
           decodeErrorMessage(response) ?? "Recovery failed");
     }
 
-    return jsonDecode(response.body)['token'];
+    return jsonParse(response)['token'];
   }
 
   Future<void> recoverStepThree(String token, String password) async {
