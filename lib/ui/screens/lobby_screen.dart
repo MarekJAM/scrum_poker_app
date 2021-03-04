@@ -101,10 +101,10 @@ class LobbyScreen extends StatelessWidget {
             key: Key(Keys.buttonNavigateToCreateRoomScreen),
             backgroundColor: Colors.grey[200],
             elevation: 15,
-            child: Text(
-              '+',
-              style:
-                  TextStyle(fontSize: 35, color: Theme.of(context).accentColor),
+            child: Icon(
+              Icons.add,
+              color: Theme.of(context).accentColor,
+              size: 30,
             ),
             onPressed: () {
               Navigator.of(context).pushNamed(CreateRoomScreen.routeName);
