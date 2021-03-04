@@ -27,7 +27,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    setWindowMinSize(const Size(500, 700));
+    setWindowMinSize(const Size(450, 700));
   }
 
   var delegate = await LocalizationDelegate.create(
