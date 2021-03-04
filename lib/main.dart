@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:window_size/window_size.dart';
 
 import './utils/custom_page_transition_builder.dart';
 import './bloc/room_connection/room_connection_bloc.dart';
@@ -21,6 +24,12 @@ import './bloc/auth/recovery/recovery_bloc.dart';
 import 'configurable/custom_colors.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    setWindowMinSize(const Size(500, 700));
+  }
+
   var delegate = await LocalizationDelegate.create(
     fallbackLocale: 'en_US',
     supportedLocales: ['en_US'],
