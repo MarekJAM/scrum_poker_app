@@ -7,6 +7,7 @@ import '../../bloc/auth/login/login_bloc.dart';
 import '../../configurable/keys.dart';
 import '../../configurable/asset_paths.dart';
 import '../../utils/session_data_singleton.dart';
+import '../../configurable/versions.dart';
 
 class AppDrawer extends StatelessWidget {
   final List<Widget> passedWidgets;
@@ -40,7 +41,7 @@ class AppDrawer extends StatelessWidget {
                     width: 150,
                   ),
                   accountEmail: Text(
-                    'v' + SessionDataSingleton().getAppVersion(),
+                    'v' + Versions.appVersion,
                     style: TextStyle(fontSize: 12),
                   ),
                 ),

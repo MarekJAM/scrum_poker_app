@@ -1,5 +1,6 @@
 import 'storage_wrapper_stub.dart'
-    if (dart.library.io) 'mobile_storage_wrapper.dart'
+    if (UniversalPlatform.isWindows) 'windows_storage_wrapper.dart'
+    if (dart.library.io) 'non_mobile_storage_wrapper.dart'
     if (dart.library.html) 'web_storage_wrapper.dart';
 
 abstract class StorageWrapper {
