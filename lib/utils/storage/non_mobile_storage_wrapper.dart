@@ -1,8 +1,10 @@
-import '../../utils/storage/windows_storage_wrapper.dart';
+import 'dart:io';
 
+import '../../utils/storage/linux_storage_wrapper.dart';
+import '../../utils/storage/windows_storage_wrapper.dart';
 import 'mobile_storage_wrapper.dart';
 import 'storage_wrapper.dart';
-import 'dart:io';
+
 
 StorageWrapper getStorageWrapper() {
   if (Platform.isAndroid || Platform.isIOS) {
@@ -10,6 +12,6 @@ StorageWrapper getStorageWrapper() {
   } else if (Platform.isWindows) {
     return WindowsStorageWrapper();
   } else {
-    return MobileStorageWrapper();
+    return LinuxStorageWrapper();
   }
 }
