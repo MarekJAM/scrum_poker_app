@@ -43,9 +43,7 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
       }, onError: (e) {
         print(e);
         add(WSConnectionErrorReceivedE("Could not establish connection."));
-      }, onDone: () {
-        print("Websocket connection close code: ${channel.closeCode}");
-        
+      }, onDone: () {        
         var message = channel.closeCode == intentionalCloseCode ? "" : "Disconnected. Check your internet connection";
 
         add(WSDisconnectedFromServerE(message: message));

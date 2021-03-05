@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,9 @@ void main() async {
     supportedLocales: ['en_US'],
   );
 
-  Bloc.observer = SimpleBlocObserver();
+  if (kDebugMode) {
+    Bloc.observer = SimpleBlocObserver();
+  }
 
   WebSocketChannel channel;
   final webSocketRepository = WebSocketRepository();
