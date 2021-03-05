@@ -177,7 +177,7 @@ class _AppViewState extends State<AppView> {
 
   @override
   Widget build(BuildContext context) {
-    final title = 'Scrum Poker';
+    final title = 'Skram';
     var localizationDelegate = LocalizedApp.of(context).delegate;
     return MaterialApp(
         title: title,
