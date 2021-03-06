@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart' hide Fake;
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
 
-import '../lib/data/models/recovery_message.dart';
 import '../lib/data/repositories/auth_api_client.dart';
 import '../lib/data/models/outgoing_message.dart';
 import '../lib/data/repositories/repositories.dart';

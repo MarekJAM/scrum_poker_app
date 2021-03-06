@@ -51,11 +51,8 @@ class RequestEstimateDialog extends StatelessWidget {
                       },
                     ),
                   ),
-                  RaisedButton(
+                  ElevatedButton(
                     key: Key(Keys.buttonRequestEstimateConfirm),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
                     child: Text(
                       "Start estimation",
                     ),

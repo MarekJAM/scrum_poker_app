@@ -17,8 +17,8 @@ class CreateRoomScreen extends StatelessWidget {
       children: [
         Scaffold(
           appBar: AppBar(
-            leading: FlatButton(
-                child: Icon(Icons.arrow_back),
+            leading: IconButton(
+                icon: Icon(Icons.arrow_back),
                 onPressed: () {
                   Navigator.of(context).pop();
                 }),
@@ -60,14 +60,17 @@ class CreateRoomScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            RaisedButton(
+                            TextButton(
                               key: Key(Keys.buttonCreateRoom),
                               child: Text(
                                 "Create",
                               ),
-                              color: Theme.of(context).accentColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
                               ),
                               onPressed: () {
                                 if (_formKey.currentState.validate()) {

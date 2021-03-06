@@ -227,15 +227,13 @@ class _JoinOptionsColumnState extends State<JoinOptionsColumn> {
             ),
           ],
         ),
-        FlatButton(
+        TextButton(
           onPressed: () {
-            print(asSpectator);
             BlocProvider.of<RoomConnectionBloc>(context).add(
               RoomConnectionConnectToRoomE(widget.roomName, asSpectator),
             );
           },
           child: Text('Join'),
-          color: Theme.of(context).buttonColor,
         )
       ],
     );

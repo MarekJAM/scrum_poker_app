@@ -34,11 +34,8 @@ class ConfirmDestroyRoomDialog extends StatelessWidget {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  RaisedButton(
+                  ElevatedButton(
                     key: Key(Keys.buttonDestroyRoomConfirm),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
                     child: Text(
                       "Yes",
                     ),
@@ -50,10 +47,11 @@ class ConfirmDestroyRoomDialog extends StatelessWidget {
                   ),
                   Builder(
                     builder: (context) {
-                      return RaisedButton(
-                        color: CustomColors.buttonGrey,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                      return ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                            CustomColors.buttonGrey,
+                          ),
                         ),
                         child: Text(
                           "No",

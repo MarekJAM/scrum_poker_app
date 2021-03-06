@@ -212,9 +212,10 @@ class _PlanningScreenState extends State<PlanningScreen>
       builder: (context, state) {
         if (state is PlanningRoomRoomStatusLoaded &&
             state.planningRoomStatusInfo.amAdmin) {
-          return FlatButton(
+          return IconButton(
             key: Key(Keys.buttonRequestEstimateOpenDialog),
-            child: Icon(
+            padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            icon: Icon(
               CustomIcons.estimate_request,
             ),
             onPressed: () {

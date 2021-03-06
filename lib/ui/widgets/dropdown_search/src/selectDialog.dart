@@ -174,7 +174,7 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
           title: Text("Error while getting online items"),
           content: _errorWidget(error),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: new Text("OK"),
               onPressed: () {
                 Navigator.of(context).pop(false);

@@ -177,7 +177,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                                     constraints: const BoxConstraints(
                                       minWidth: double.infinity,
                                     ),
-                                    child: RaisedButton(
+                                    child: ElevatedButton(
                                       child: Text(
                                         _getButtonText(state),
                                       ),
@@ -238,8 +238,8 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                       constraints: const BoxConstraints(
                         minWidth: double.infinity,
                       ),
-                      child: RaisedButton(
-                        color: CustomColors.buttonGrey,
+                      child: ElevatedButton(
+                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(CustomColors.buttonGrey)),
                         child: Text(
                           'Return to login screen',
                           style: TextStyle(color: CustomColors.textDark),

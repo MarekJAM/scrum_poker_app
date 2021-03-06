@@ -6,7 +6,6 @@ import '../../bloc/room_connection/room_connection_bloc.dart';
 import '../../bloc/auth/login/login_bloc.dart';
 import '../../configurable/keys.dart';
 import '../../configurable/asset_paths.dart';
-import '../../utils/session_data_singleton.dart';
 import '../../configurable/versions.dart';
 
 class AppDrawer extends StatelessWidget {

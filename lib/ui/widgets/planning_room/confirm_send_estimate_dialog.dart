@@ -58,11 +58,8 @@ class ConfirmSendEstimateDialog extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  RaisedButton(
+                  ElevatedButton(
                     key: Key(Keys.buttonSendEstimateConfirm),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
                     child: Text(
                       "Yes",
                     ),
@@ -75,10 +72,11 @@ class ConfirmSendEstimateDialog extends StatelessWidget {
                       Navigator.of(context).pop();
                     },
                   ),
-                  RaisedButton(
-                    color: CustomColors.buttonGrey,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        CustomColors.buttonGrey,
+                      ),
                     ),
                     child: Text(
                       "No",

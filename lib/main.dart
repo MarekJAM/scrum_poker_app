@@ -190,7 +190,6 @@ class _AppViewState extends State<AppView> {
           accentColor: Color(0xFFE07A5F),
           buttonColor: Color(0xFFE07A5F),
           scaffoldBackgroundColor: Color(0xFF3D405B),
-          textSelectionHandleColor: Color(0xFFE07A5F),
           cardColor: Color(0xFFE07A5F),
           dialogBackgroundColor: Color(0xFF3D405B),
           pageTransitionsTheme: PageTransitionsTheme(
@@ -198,6 +197,29 @@ class _AppViewState extends State<AppView> {
               TargetPlatform.android: CustomPageTransitionBuilder(),
               TargetPlatform.iOS: CustomPageTransitionBuilder()
             },
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+              padding: MaterialStateProperty.all(
+                EdgeInsets.symmetric(horizontal: 35),
+              ),
+              backgroundColor: MaterialStateProperty.all(
+                Color(0xFFE07A5F),
+              ),
+            ),
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: ButtonStyle(
+              padding: MaterialStateProperty.all(
+                EdgeInsets.symmetric(horizontal: 35),
+              ),
+              backgroundColor: MaterialStateProperty.all(
+                Color(0xFFE07A5F),
+              ),
+              foregroundColor: MaterialStateProperty.all(
+                CustomColors.buttonLightGrey,
+              ),
+            ),
           ),
         ),
         localizationsDelegates: [

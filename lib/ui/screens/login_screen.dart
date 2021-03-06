@@ -164,21 +164,39 @@ class _LoginScreenState extends State<LoginScreen>
                                             ),
                                             Align(
                                               alignment: Alignment.centerRight,
-                                              child: FlatButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          RecoverPasswordScreen(
-                                                        passedServerAddress:
-                                                            _serverController
-                                                                .text
-                                                                .trim(),
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(top: 2.0),
+                                                child: TextButton(
+                                                  style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty.all(
+                                                      Theme.of(context)
+                                                          .scaffoldBackgroundColor,
+                                                    ),
+                                                    padding:
+                                                        MaterialStateProperty.all(
+                                                      EdgeInsets.symmetric(
+                                                        horizontal: 15,
                                                       ),
                                                     ),
-                                                  );
-                                                },
-                                                child: Text('Forgot password?'),
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            RecoverPasswordScreen(
+                                                          passedServerAddress:
+                                                              _serverController
+                                                                  .text
+                                                                  .trim(),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Text(
+                                                    'Forgot password?',
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -192,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen>
                                 constraints: const BoxConstraints(
                                   minWidth: double.infinity,
                                 ),
-                                child: RaisedButton(
+                                child: TextButton(
                                   key: Key(Keys.buttonConnect),
                                   child: Text(
                                     _loginMode == LoginMode.Regular
@@ -208,8 +226,12 @@ class _LoginScreenState extends State<LoginScreen>
                                 ),
                               ),
                               Divider(),
-                              FlatButton(
-                                padding: const EdgeInsets.all(8.0),
+                              TextButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                  ),
+                                ),
                                 child: Text(_loginMode == LoginMode.Regular
                                     ? 'Continue as Guest'
                                     : 'Go Back'),
@@ -240,8 +262,12 @@ class _LoginScreenState extends State<LoginScreen>
                     constraints: const BoxConstraints(
                       minWidth: double.infinity,
                     ),
-                    child: RaisedButton(
-                      color: CustomColors.buttonGrey,
+                    child: TextButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                          CustomColors.buttonGrey,
+                        ),
+                      ),
                       child: Text(
                         'Create Account',
                         style: TextStyle(color: CustomColors.textDark),

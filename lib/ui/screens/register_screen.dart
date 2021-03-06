@@ -172,7 +172,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 constraints: const BoxConstraints(
                                   minWidth: double.infinity,
                                 ),
-                                child: RaisedButton(
+                                child: TextButton(
                                   child: Text(
                                     'Sign Up',
                                   ),
@@ -201,8 +201,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     constraints: const BoxConstraints(
                       minWidth: double.infinity,
                     ),
-                    child: RaisedButton(
-                      color: CustomColors.buttonGrey,
+                    child: TextButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                          CustomColors.buttonGrey,
+                        ),
+                      ),
                       child: Text(
                         'Back',
                         style: TextStyle(color: CustomColors.textDark),
