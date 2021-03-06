@@ -185,10 +185,9 @@ class _LoginScreenState extends State<LoginScreen>
                                         ),
                                 ),
                               ),
-                              if (_loginMode == LoginMode.Regular)
-                                SizedBox(
-                                  height: 10,
-                                ),
+                              SizedBox(
+                                height: 10,
+                              ),
                               ConstrainedBox(
                                 constraints: const BoxConstraints(
                                   minWidth: double.infinity,
