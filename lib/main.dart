@@ -27,10 +27,12 @@ import 'configurable/custom_colors.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    var screen = await getCurrentScreen();
-    setWindowMinSize(const Size(450, 700));
-    setWindowMaxSize(screen.visibleFrame.size);
+  if (!kIsWeb) {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      var screen = await getCurrentScreen();
+      setWindowMinSize(const Size(450, 700));
+      setWindowMaxSize(screen.visibleFrame.size);
+    }
   }
 
   var delegate = await LocalizationDelegate.create(
@@ -184,6 +186,7 @@ class _AppViewState extends State<AppView> {
     var localizationDelegate = LocalizedApp.of(context).delegate;
     return MaterialApp(
         title: title,
+        themeMode: ThemeMode.dark,
         theme: ThemeData(
           brightness: Brightness.dark,
           primaryColor: Color(0xFF292B3D),
