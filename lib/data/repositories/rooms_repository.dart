@@ -4,8 +4,7 @@ import 'repositories.dart';
 class RoomsRepository {
   final RoomsApiClient roomsApiClient;
 
-  RoomsRepository({@required this.roomsApiClient})
-      : assert(RoomsApiClient != null);
+  RoomsRepository({@required this.roomsApiClient}) : assert(RoomsApiClient != null);
 
   Future<bool> createRoom(String roomName) async {
     return await roomsApiClient.createRoom(roomName);

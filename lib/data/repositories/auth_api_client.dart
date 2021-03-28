@@ -22,15 +22,18 @@ class AuthApiClient extends ApiClient {
 
   Future<bool> loginWithCredentials(String username, String password) async {
     http.Response response = await httpClient
-        .post(getBaseURL() + '$_loginEndpoint',
-            headers: {"Content-Type": "application/json"},
-            body: OutgoingMessage.createLoginMessage(username, password))
-        .timeout(const Duration(seconds: 5),
-            onTimeout: () => throw SocketException("Login timeout."));
+        .post(
+          getBaseURL() + '$_loginEndpoint',
+          headers: {"Content-Type": "application/json"},
+          body: OutgoingMessage.createLoginMessage(username, password),
+        )
+        .timeout(
+          const Duration(seconds: 5),
+          onTimeout: () => throw SocketException("Login timeout."),
+        );
 
     if (response.statusCode != 200) {
-      throwException(
-          response.statusCode, decodeErrorMessage(response) ?? "Login failed");
+      throwException(response.statusCode, decodeErrorMessage(response) ?? "Login failed");
     }
 
     var token = jsonParse(response)['token'];
@@ -42,15 +45,18 @@ class AuthApiClient extends ApiClient {
 
   Future<bool> loginAsGuest(String username) async {
     http.Response response = await httpClient
-        .post(getBaseURL() + '$_loginAsGuestEndpoint',
-            headers: {"Content-Type": "application/json"},
-            body: OutgoingMessage.createLoginAsGuestMessage(username))
-        .timeout(const Duration(seconds: 5),
-            onTimeout: () => throw SocketException("Login timeout."));
+        .post(
+          getBaseURL() + '$_loginAsGuestEndpoint',
+          headers: {"Content-Type": "application/json"},
+          body: OutgoingMessage.createLoginAsGuestMessage(username),
+        )
+        .timeout(
+          const Duration(seconds: 5),
+          onTimeout: () => throw SocketException("Login timeout."),
+        );
 
     if (response.statusCode != 200) {
-      throwException(
-          response.statusCode, decodeErrorMessage(response) ?? "Login failed");
+      throwException(response.statusCode, decodeErrorMessage(response) ?? "Login failed");
     }
 
     var token = jsonParse(response)['token'];
@@ -60,19 +66,20 @@ class AuthApiClient extends ApiClient {
     return true;
   }
 
-  Future<bool> register(String username, String password,
-      String securityQuestion, String answer) async {
+  Future<bool> register(String username, String password, String securityQuestion, String answer) async {
     http.Response response = await httpClient
-        .post(getBaseURL() + '$_registerEndpoint',
-            headers: {"Content-Type": "application/json"},
-            body: OutgoingMessage.createRegisterMessage(
-                username, password, securityQuestion, answer))
-        .timeout(const Duration(seconds: 5),
-            onTimeout: () => throw SocketException("Register timeout."));
+        .post(
+          getBaseURL() + '$_registerEndpoint',
+          headers: {"Content-Type": "application/json"},
+          body: OutgoingMessage.createRegisterMessage(username, password, securityQuestion, answer),
+        )
+        .timeout(
+          const Duration(seconds: 5),
+          onTimeout: () => throw SocketException("Register timeout."),
+        );
 
     if (response.statusCode != 201) {
-      throwException(response.statusCode,
-          decodeErrorMessage(response) ?? "Register failed");
+      throwException(response.statusCode, decodeErrorMessage(response) ?? "Register failed");
     }
 
     return true;
@@ -83,12 +90,13 @@ class AuthApiClient extends ApiClient {
         .post(getBaseURL() + '$_authRecoveryStepOne',
             headers: {"Content-Type": "application/json"},
             body: OutgoingMessage.createGetRecoveryTokenMessage(username))
-        .timeout(const Duration(seconds: 5),
-            onTimeout: () => throw SocketException("Recovery timeout."));
+        .timeout(
+          const Duration(seconds: 5),
+          onTimeout: () => throw SocketException("Recovery timeout."),
+        );
 
     if (response.statusCode != 200) {
-      throwException(response.statusCode,
-          decodeErrorMessage(response) ?? "Recovery failed");
+      throwException(response.statusCode, decodeErrorMessage(response) ?? "Recovery failed");
     }
 
     return RecoveryMessage.fromJson(jsonParse(response));
@@ -96,15 +104,18 @@ class AuthApiClient extends ApiClient {
 
   Future<String> recoverStepTwo(String token, String answer) async {
     http.Response response = await httpClient
-        .post(getBaseURL() + '$_authRecoveryStepTwo',
-            headers: getRequestHeaders(token),
-            body: OutgoingMessage.createSendRecoveryAnswerMessage(answer))
-        .timeout(const Duration(seconds: 5),
-            onTimeout: () => throw SocketException("Recovery timeout."));
+        .post(
+          getBaseURL() + '$_authRecoveryStepTwo',
+          headers: getRequestHeaders(token),
+          body: OutgoingMessage.createSendRecoveryAnswerMessage(answer),
+        )
+        .timeout(
+          const Duration(seconds: 5),
+          onTimeout: () => throw SocketException("Recovery timeout."),
+        );
 
     if (response.statusCode != 200) {
-      throwException(response.statusCode,
-          decodeErrorMessage(response) ?? "Recovery failed");
+      throwException(response.statusCode, decodeErrorMessage(response) ?? "Recovery failed");
     }
 
     return jsonParse(response)['token'];
@@ -112,15 +123,18 @@ class AuthApiClient extends ApiClient {
 
   Future<void> recoverStepThree(String token, String password) async {
     http.Response response = await httpClient
-        .patch(getBaseURL() + '$_authRecoveryStepThree',
-            headers: getRequestHeaders(token),
-            body: OutgoingMessage.createSendRecoveryPasswordMessage(password))
-        .timeout(const Duration(seconds: 5),
-            onTimeout: () => throw SocketException("Recovery timeout."));
+        .patch(
+          getBaseURL() + '$_authRecoveryStepThree',
+          headers: getRequestHeaders(token),
+          body: OutgoingMessage.createSendRecoveryPasswordMessage(password),
+        )
+        .timeout(
+          const Duration(seconds: 5),
+          onTimeout: () => throw SocketException("Recovery timeout."),
+        );
 
     if (response.statusCode != 200) {
-      throwException(response.statusCode,
-          decodeErrorMessage(response) ?? "Recovery failed");
+      throwException(response.statusCode, decodeErrorMessage(response) ?? "Recovery failed");
     }
   }
 }

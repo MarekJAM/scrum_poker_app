@@ -4,8 +4,7 @@ import '../../ui/ui_models/ui_models.dart';
 import '../../data/models/models.dart';
 
 class LobbyRepository {
-  Future<LobbyStatusUI> processLobbyStatusToUIModel(
-      LobbyStatus lobbyStatus) async {
+  Future<LobbyStatusUI> processLobbyStatusToUIModel(LobbyStatus lobbyStatus) async {
     List<RoomUI> rooms = [];
 
     lobbyStatus.rooms.forEach((room) {

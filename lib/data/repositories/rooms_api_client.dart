@@ -18,13 +18,13 @@ class RoomsApiClient extends ApiClient {
 
   Future<bool> createRoom(String roomName) async {
     http.Response response = await httpClient.put(
-        getBaseURL() + '$_createRoomEndpoint',
-        headers: getRequestHeaders(),
-        body: OutgoingMessage.createCreateRoomJsonMsg(roomName));
+      getBaseURL() + '$_createRoomEndpoint',
+      headers: getRequestHeaders(),
+      body: OutgoingMessage.createCreateRoomJsonMsg(roomName),
+    );
 
     if (response.statusCode != 201) {
-      throwException(response.statusCode,
-          decodeErrorMessage(response) ?? "Error while creating room");
+      throwException(response.statusCode, decodeErrorMessage(response) ?? "Error while creating room");
     }
 
     return true;
@@ -32,13 +32,13 @@ class RoomsApiClient extends ApiClient {
 
   Future<bool> connectToRoom(String roomName, bool asSpectator) async {
     http.Response response = await httpClient.patch(
-        getBaseURL() + '$_connectToRoomEndpoint',
-        headers: getRequestHeaders(),
-        body: OutgoingMessage.createConnectRoomJsonMsg(roomName, asSpectator));
+      getBaseURL() + '$_connectToRoomEndpoint',
+      headers: getRequestHeaders(),
+      body: OutgoingMessage.createConnectRoomJsonMsg(roomName, asSpectator),
+    );
 
     if (response.statusCode != 200) {
-      throwException(response.statusCode,
-          decodeErrorMessage(response) ?? 'Error while connecting to room');
+      throwException(response.statusCode, decodeErrorMessage(response) ?? 'Error while connecting to room');
     }
 
     return true;
@@ -51,10 +51,7 @@ class RoomsApiClient extends ApiClient {
     );
 
     if (response.statusCode != 200) {
-      throwException(
-          response.statusCode,
-          decodeErrorMessage(response) ??
-              'Error while disconnecting from room');
+      throwException(response.statusCode, decodeErrorMessage(response) ?? 'Error while disconnecting from room');
     }
 
     return true;
@@ -67,8 +64,7 @@ class RoomsApiClient extends ApiClient {
     );
 
     if (response.statusCode != 200) {
-      throwException(response.statusCode,
-          decodeErrorMessage(response) ?? 'Error while destroying room');
+      throwException(response.statusCode, decodeErrorMessage(response) ?? 'Error while destroying room');
     }
 
     return true;

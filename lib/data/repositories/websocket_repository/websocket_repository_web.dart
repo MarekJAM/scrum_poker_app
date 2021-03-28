@@ -15,8 +15,7 @@ class WebSocketRepositoryWeb extends WebSocketRepository {
     WebSocket ws = WebSocket(url);
     ws.onOpen
       ..listen((_) {
-        ws.send(OutgoingMessage.createWebSocketTokenMessage(
-            SessionDataSingleton().getToken()));
+        ws.send(OutgoingMessage.createWebSocketTokenMessage(SessionDataSingleton().getToken()));
       })
       ..timeout(Duration(seconds: 5));
     return HtmlWebSocketChannel(ws);

@@ -6,8 +6,7 @@ import '../models/recovery_message.dart';
 class AuthRepository {
   final AuthApiClient authApiClient;
 
-  AuthRepository({@required this.authApiClient})
-      : assert(AuthApiClient != null);
+  AuthRepository({@required this.authApiClient}) : assert(AuthApiClient != null);
 
   Future<bool> loginWithCredentials(String username, String password) async {
     return await authApiClient.loginWithCredentials(username, password);

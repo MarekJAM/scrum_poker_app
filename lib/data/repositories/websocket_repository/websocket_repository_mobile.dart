@@ -13,8 +13,7 @@ class WebSocketRepositoryMobile extends WebSocketRepository {
   Future<IOWebSocketChannel> establishConnection(String url) async {
     return IOWebSocketChannel(
       await WebSocket.connect(url.toString()).timeout(Duration(seconds: 5))
-        ..add(OutgoingMessage.createWebSocketTokenMessage(
-            SessionDataSingleton().getToken()))
+        ..add(OutgoingMessage.createWebSocketTokenMessage(SessionDataSingleton().getToken()))
         ..pingInterval = Duration(seconds: 10),
     );
   }
