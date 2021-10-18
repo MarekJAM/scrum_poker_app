@@ -18,7 +18,7 @@ class RoomsApiClient extends ApiClient {
 
   Future<bool> createRoom(String roomName) async {
     http.Response response = await httpClient.put(
-      getBaseURL() + '$_createRoomEndpoint',
+      Uri.parse(getBaseURL() + '$_createRoomEndpoint'),
       headers: getRequestHeaders(),
       body: OutgoingMessage.createCreateRoomJsonMsg(roomName),
     );
@@ -32,7 +32,7 @@ class RoomsApiClient extends ApiClient {
 
   Future<bool> connectToRoom(String roomName, bool asSpectator) async {
     http.Response response = await httpClient.patch(
-      getBaseURL() + '$_connectToRoomEndpoint',
+      Uri.parse(getBaseURL() + '$_connectToRoomEndpoint'),
       headers: getRequestHeaders(),
       body: OutgoingMessage.createConnectRoomJsonMsg(roomName, asSpectator),
     );
@@ -46,7 +46,7 @@ class RoomsApiClient extends ApiClient {
 
   Future<bool> disconnectFromRoom() async {
     http.Response response = await httpClient.patch(
-      getBaseURL() + '$_disconnectFromRoomEndpoint',
+      Uri.parse(getBaseURL() + '$_disconnectFromRoomEndpoint'),
       headers: getRequestHeaders(),
     );
 
@@ -59,7 +59,7 @@ class RoomsApiClient extends ApiClient {
 
   Future<bool> destroyRoom() async {
     http.Response response = await httpClient.delete(
-      getBaseURL() + '$_destroyRoomEndpoint',
+      Uri.parse(getBaseURL() + '$_destroyRoomEndpoint'),
       headers: getRequestHeaders(),
     );
 

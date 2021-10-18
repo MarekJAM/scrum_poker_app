@@ -47,33 +47,25 @@ void main() async {
   WebSocketChannel channel;
   final webSocketRepository = WebSocketRepository();
 
-  final RoomsRepository roomsRepository = RoomsRepository(
-      roomsApiClient: RoomsApiClient(httpClient: http.Client()));
+  final RoomsRepository roomsRepository = RoomsRepository(roomsApiClient: RoomsApiClient(httpClient: http.Client()));
 
-  final PlanningRoomRepository planningRoomRepository =
-      PlanningRoomRepository();
+  final PlanningRoomRepository planningRoomRepository = PlanningRoomRepository();
 
-  final AuthRepository authRepository =
-      AuthRepository(authApiClient: AuthApiClient(httpClient: http.Client()));
+  final AuthRepository authRepository = AuthRepository(authApiClient: AuthApiClient(httpClient: http.Client()));
 
   final LobbyRepository lobbyRepository = LobbyRepository();
 
   // ignore: close_sinks
-  final webSocketBloc =
-      WebSocketBloc(channel: channel, webSocketRepository: webSocketRepository);
+  final webSocketBloc = WebSocketBloc(channel: channel, webSocketRepository: webSocketRepository);
   // ignore: close_sinks
-  final roomsBloc =
-      LobbyBloc(webSocketBloc: webSocketBloc, lobbyRepository: lobbyRepository);
+  final roomsBloc = LobbyBloc(webSocketBloc: webSocketBloc, lobbyRepository: lobbyRepository);
   // ignore: close_sinks
-  final loginBloc =
-      LoginBloc(webSocketBloc: webSocketBloc, authRepository: authRepository);
+  final loginBloc = LoginBloc(webSocketBloc: webSocketBloc, authRepository: authRepository);
   // ignore: close_sinks
-  final planningRoomBloc = PlanningRoomBloc(
-      webSocketBloc: webSocketBloc,
-      planningRoomRepository: planningRoomRepository);
+  final planningRoomBloc =
+      PlanningRoomBloc(webSocketBloc: webSocketBloc, planningRoomRepository: planningRoomRepository);
   // ignore: close_sinks
-  final roomConnectionBloc =
-      RoomConnectionBloc(roomsRepository: roomsRepository);
+  final roomConnectionBloc = RoomConnectionBloc(roomsRepository: roomsRepository);
   // ignore: close_sinks
   final registerBloc = RegisterBloc(authRepository: authRepository);
   // ignore: close_sinks
@@ -142,8 +134,7 @@ class App extends StatelessWidget {
             create: (context) => webSocketBloc,
           ),
           BlocProvider<LoginBloc>(
-            create: (context) => LoginBloc(
-                webSocketBloc: webSocketBloc, authRepository: authRepository),
+            create: (context) => LoginBloc(webSocketBloc: webSocketBloc, authRepository: authRepository),
           ),
           BlocProvider<RegisterBloc>(
             create: (context) => RegisterBloc(authRepository: authRepository),
@@ -184,14 +175,31 @@ class _AppViewState extends State<AppView> {
   Widget build(BuildContext context) {
     final title = 'Skram';
     var localizationDelegate = LocalizedApp.of(context).delegate;
+    final ThemeData theme = ThemeData();
     return MaterialApp(
         title: title,
         themeMode: ThemeMode.dark,
         theme: ThemeData(
           brightness: Brightness.dark,
+          appBarTheme: AppBarTheme(
+              backgroundColor: Color(0xFFE07A5F), toolbarTextStyle: TextStyle(color: CustomColors.textDark)),
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: Color(0xFF292B3D),
+            
+          ),
           primaryColor: Color(0xFF292B3D),
-          accentColor: Color(0xFFE07A5F),
-          buttonColor: Color(0xFFE07A5F),
+          colorScheme: theme.colorScheme.copyWith(
+            brightness: Brightness.dark,
+            secondary: Color(0xFFE07A5F),
+          ),
+          buttonTheme: ButtonThemeData(
+            colorScheme: theme.colorScheme.copyWith(
+              primary: Color(0xFFE07A5F),
+            ),
+            buttonColor: Color(
+              0xFFE07A5F,
+            ),
+          ),
           scaffoldBackgroundColor: Color(0xFF3D405B),
           cardColor: Color(0xFFE07A5F),
           dialogBackgroundColor: Color(0xFF3D405B),

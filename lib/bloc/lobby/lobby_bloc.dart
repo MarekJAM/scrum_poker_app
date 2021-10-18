@@ -25,7 +25,7 @@ class LobbyBloc extends Bloc<LobbyEvent, LobbyState> {
         _webSocketBloc = webSocketBloc,
         _lobbyRepository = lobbyRepository,
         super(LobbyInitial()) {
-    webSocketSubscription = _webSocketBloc.listen((state) {
+    webSocketSubscription = _webSocketBloc.stream.listen((state) {
       if (state is WSMessageLoaded && state.message is LobbyStatus) {
         add(LobbyStatusLoadedE(state.message));
       }

@@ -24,7 +24,6 @@ class _BottomCardsBarState extends State<BottomCardsBar>
     return Positioned(
       bottom: 0,
       child: AnimatedSize(
-        vsync: this,
         duration: Duration(milliseconds: 450),
         curve: Curves.linear,
         child: BlocBuilder<PlanningRoomBloc, PlanningRoomState>(

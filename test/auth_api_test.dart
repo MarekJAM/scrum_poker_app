@@ -41,7 +41,7 @@ void main() {
         when(mockedResponse.body).thenReturn('{"token": "token"}');
 
         when(httpClient.post(
-          "http://127.0.0.1/auth/login",
+          Uri.parse("http://127.0.0.1/auth/login"),
           headers: requestHeaders,
           body: OutgoingMessage.createLoginMessage("testname", "password"),
         )).thenAnswer((_) => Future.value(mockedResponse));
@@ -59,7 +59,7 @@ void main() {
         when(mockedResponse.statusCode).thenReturn(404);
 
         when(httpClient.post(
-          "http://127.0.0.1/auth/login",
+          Uri.parse("http://127.0.0.1/auth/login"),
           headers: requestHeaders,
           body: OutgoingMessage.createLoginMessage(
             "testname",
@@ -82,7 +82,7 @@ void main() {
         when(mockedResponse.body).thenReturn('{"token": "token"}');
 
         when(httpClient.post(
-          "http://127.0.0.1/auth/login/guest",
+          Uri.parse("http://127.0.0.1/auth/login/guest"),
           headers: requestHeaders,
           body: OutgoingMessage.createLoginAsGuestMessage("testname"),
         )).thenAnswer((_) => Future.value(mockedResponse));
@@ -99,7 +99,7 @@ void main() {
         when(mockedResponse.statusCode).thenReturn(404);
 
         when(httpClient.post(
-          "http://127.0.0.1/auth/login/guest",
+          Uri.parse("http://127.0.0.1/auth/login/guest"),
           headers: requestHeaders,
           body: OutgoingMessage.createLoginAsGuestMessage(
             "testname",
@@ -120,7 +120,7 @@ void main() {
         when(mockedResponse.statusCode).thenReturn(201);
 
         when(httpClient.post(
-          "http://127.0.0.1/auth/register",
+          Uri.parse("http://127.0.0.1/auth/register"),
           headers: requestHeaders,
           body: OutgoingMessage.createRegisterMessage(
             "testname",
@@ -147,7 +147,7 @@ void main() {
         when(mockedResponse.statusCode).thenReturn(404);
 
         when(httpClient.post(
-          "http://127.0.0.1/auth/register",
+          Uri.parse("http://127.0.0.1/auth/register"),
           headers: requestHeaders,
           body: OutgoingMessage.createRegisterMessage(
             "testname",
@@ -178,7 +178,7 @@ void main() {
             .thenReturn('{"question": "testQuestion", "token": "token"}');
 
         when(httpClient.post(
-          "http://127.0.0.1/auth/recovery",
+          Uri.parse("http://127.0.0.1/auth/recovery"),
           headers: requestHeaders,
           body: OutgoingMessage.createGetRecoveryTokenMessage(
             "testname",
@@ -203,7 +203,7 @@ void main() {
         when(mockedResponse.statusCode).thenReturn(404);
 
         when(httpClient.post(
-          "http://127.0.0.1/auth/recovery",
+          Uri.parse("http://127.0.0.1/auth/recovery"),
           headers: requestHeaders,
           body: OutgoingMessage.createGetRecoveryTokenMessage(
             "testname",
@@ -225,7 +225,7 @@ void main() {
         when(mockedResponse.body).thenReturn('{"token": "token"}');
 
         when(httpClient.post(
-          "http://127.0.0.1/auth/recovery/answer",
+          Uri.parse("http://127.0.0.1/auth/recovery/answer"),
           headers: requestHeadersWithToken,
           body: OutgoingMessage.createSendRecoveryAnswerMessage(
             "answer",
@@ -248,7 +248,7 @@ void main() {
         when(mockedResponse.statusCode).thenReturn(404);
 
         when(httpClient.post(
-          "http://127.0.0.1/auth/recovery/answer",
+          Uri.parse("http://127.0.0.1/auth/recovery/answer"),
           headers: requestHeadersWithToken,
           body: OutgoingMessage.createSendRecoveryAnswerMessage(
             "answer",
@@ -272,7 +272,7 @@ void main() {
         when(mockedResponse.statusCode).thenReturn(401);
 
         when(httpClient.patch(
-          "http://127.0.0.1/auth/recovery/password",
+          Uri.parse("http://127.0.0.1/auth/recovery/password"),
           headers: requestHeadersWithToken,
           body: OutgoingMessage.createSendRecoveryPasswordMessage(
             "password",

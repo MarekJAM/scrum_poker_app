@@ -74,7 +74,7 @@ class EstimatesChartState extends State {
                       .estimatedTaskInfo.estimatesExpected,
                   width: 150,
                   height: 150,
-                  progressColor: Theme.of(context).accentColor,
+                  progressColor: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ],

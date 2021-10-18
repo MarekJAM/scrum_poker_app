@@ -23,7 +23,7 @@ class AuthApiClient extends ApiClient {
   Future<bool> loginWithCredentials(String username, String password) async {
     http.Response response = await httpClient
         .post(
-          getBaseURL() + '$_loginEndpoint',
+          Uri.parse(getBaseURL() + '$_loginEndpoint'),
           headers: {"Content-Type": "application/json"},
           body: OutgoingMessage.createLoginMessage(username, password),
         )
@@ -46,7 +46,7 @@ class AuthApiClient extends ApiClient {
   Future<bool> loginAsGuest(String username) async {
     http.Response response = await httpClient
         .post(
-          getBaseURL() + '$_loginAsGuestEndpoint',
+          Uri.parse(getBaseURL() + '$_loginAsGuestEndpoint'),
           headers: {"Content-Type": "application/json"},
           body: OutgoingMessage.createLoginAsGuestMessage(username),
         )
@@ -69,7 +69,7 @@ class AuthApiClient extends ApiClient {
   Future<bool> register(String username, String password, String securityQuestion, String answer) async {
     http.Response response = await httpClient
         .post(
-          getBaseURL() + '$_registerEndpoint',
+          Uri.parse(getBaseURL() + '$_registerEndpoint'),
           headers: {"Content-Type": "application/json"},
           body: OutgoingMessage.createRegisterMessage(username, password, securityQuestion, answer),
         )
@@ -87,7 +87,7 @@ class AuthApiClient extends ApiClient {
 
   Future<RecoveryMessage> recoverStepOne(String username) async {
     http.Response response = await httpClient
-        .post(getBaseURL() + '$_authRecoveryStepOne',
+        .post(Uri.parse(getBaseURL() + '$_authRecoveryStepOne'),
             headers: {"Content-Type": "application/json"},
             body: OutgoingMessage.createGetRecoveryTokenMessage(username))
         .timeout(
@@ -105,7 +105,7 @@ class AuthApiClient extends ApiClient {
   Future<String> recoverStepTwo(String token, String answer) async {
     http.Response response = await httpClient
         .post(
-          getBaseURL() + '$_authRecoveryStepTwo',
+          Uri.parse(getBaseURL() + '$_authRecoveryStepTwo'),
           headers: getRequestHeaders(token),
           body: OutgoingMessage.createSendRecoveryAnswerMessage(answer),
         )
@@ -124,7 +124,7 @@ class AuthApiClient extends ApiClient {
   Future<void> recoverStepThree(String token, String password) async {
     http.Response response = await httpClient
         .patch(
-          getBaseURL() + '$_authRecoveryStepThree',
+          Uri.parse(getBaseURL() + '$_authRecoveryStepThree'),
           headers: getRequestHeaders(token),
           body: OutgoingMessage.createSendRecoveryPasswordMessage(password),
         )

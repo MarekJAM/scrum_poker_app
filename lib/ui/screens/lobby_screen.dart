@@ -103,7 +103,7 @@ class LobbyScreen extends StatelessWidget {
             elevation: 15,
             child: Icon(
               Icons.add,
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).buttonTheme.colorScheme.primary,
               size: 30,
             ),
             onPressed: () {
@@ -211,7 +211,7 @@ class _JoinOptionsColumnState extends State<JoinOptionsColumn> {
                   });
               },
               checkColor: Theme.of(context).scaffoldBackgroundColor,
-              activeColor: Theme.of(context).buttonColor,
+              activeColor: Theme.of(context).buttonTheme.colorScheme.primary,
             ),
             Text('Spectator'),
             Checkbox(
@@ -223,7 +223,7 @@ class _JoinOptionsColumnState extends State<JoinOptionsColumn> {
                   });
               },
               checkColor: Theme.of(context).scaffoldBackgroundColor,
-              activeColor: Theme.of(context).buttonColor,
+              activeColor: Theme.of(context).buttonTheme.colorScheme.primary,
             ),
           ],
         ),

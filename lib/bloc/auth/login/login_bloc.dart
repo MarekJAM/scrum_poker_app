@@ -24,7 +24,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         _webSocketBloc = webSocketBloc,
         _authRepository = authRepository,
         super(LoginInitial()) {
-    webSocketSubscription = _webSocketBloc.listen((state) {
+    webSocketSubscription = _webSocketBloc.stream.listen((state) {
       if (state is WSConnectedToServer) {
         add(LoginConnectedToServerE());
       } else if (state is WSDisconnectedFromServer) {

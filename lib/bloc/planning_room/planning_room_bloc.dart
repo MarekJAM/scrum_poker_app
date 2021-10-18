@@ -25,7 +25,7 @@ class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
         _webSocketBloc = webSocketBloc,
         _planningRoomRepository = planningRoomRepository,
         super(PlanningRoomInitial()) {
-    webSocketSubscription = _webSocketBloc.listen((state) {
+    webSocketSubscription = _webSocketBloc.stream.listen((state) {
       if (state is WSMessageLoaded && state.message is RoomStatus) {
         add(PlanningRoomRoomStatusReceivedE(state.message));
       }

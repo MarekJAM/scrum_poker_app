@@ -27,8 +27,4 @@ class FakeSessionDataSingleton extends Fake implements SessionDataSingleton {
 
   Future<void> setToken(String token) async {}
 
-  @override
-  String getAppVersion() {
-    return "1.0";
-  }
 }

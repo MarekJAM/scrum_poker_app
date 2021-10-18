@@ -28,7 +28,7 @@ class _EstimatorCardState extends State<EstimatorCard> {
         side: widget.card.isAdmin
             ? BorderSide(
                 width: 2,
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
               )
             : BorderSide(
                 width: 2,
@@ -64,7 +64,7 @@ class _EstimatorCardState extends State<EstimatorCard> {
                           AssetPaths.crownIcon,
                           height: 30,
                           color: widget.card.alreadyEstimated
-                              ? Theme.of(context).accentColor
+                              ? Theme.of(context).colorScheme.primary
                               : Theme.of(context).canvasColor,
                         )
                       : widget.estimatedTask.isEmpty
@@ -76,7 +76,7 @@ class _EstimatorCardState extends State<EstimatorCard> {
                               Icons.help_outline,
                               size: 30,
                               color: widget.card.alreadyEstimated
-                                  ? Theme.of(context).accentColor
+                                  ? Theme.of(context).colorScheme.primary
                                   : Theme.of(context).canvasColor,
                             )
                   : Text(

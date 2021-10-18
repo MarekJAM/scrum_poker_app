@@ -37,7 +37,7 @@ void main() {
 
         when(mockedResponse.statusCode).thenReturn(201);
 
-        when(httpClient.put("http://127.0.0.1/rooms/create",
+        when(httpClient.put(Uri.parse("http://127.0.0.1/rooms/create"),
             headers: requestHeaders,
             body: OutgoingMessage.createCreateRoomJsonMsg(
               "testname",
@@ -54,7 +54,7 @@ void main() {
 
         when(mockedResponse.statusCode).thenReturn(404);
 
-        when(httpClient.put("http://127.0.0.1/rooms/create",
+        when(httpClient.put(Uri.parse("http://127.0.0.1/rooms/create"),
             headers: requestHeaders,
             body: OutgoingMessage.createCreateRoomJsonMsg(
               "testname",
@@ -71,7 +71,7 @@ void main() {
 
         when(mockedResponse.statusCode).thenReturn(200);
 
-        when(httpClient.patch("http://127.0.0.1/rooms/connect",
+        when(httpClient.patch(Uri.parse("http://127.0.0.1/rooms/connect"),
             headers: requestHeaders,
             body: OutgoingMessage.createConnectRoomJsonMsg(
               "testname", true
@@ -87,7 +87,7 @@ void main() {
 
         when(mockedResponse.statusCode).thenReturn(404);
 
-        when(httpClient.patch("http://127.0.0.1/rooms/connect",
+        when(httpClient.patch(Uri.parse("http://127.0.0.1/rooms/connect"),
             headers: requestHeaders,
             body: OutgoingMessage.createConnectRoomJsonMsg(
               "testname", true
@@ -105,7 +105,7 @@ void main() {
         when(mockedResponse.statusCode).thenReturn(200);
 
         when(httpClient.patch(
-          "http://127.0.0.1/rooms/disconnect",
+          Uri.parse("http://127.0.0.1/rooms/disconnect"),
           headers: requestHeaders,
         )).thenAnswer((_) => Future.value(mockedResponse));
 
@@ -120,7 +120,7 @@ void main() {
         when(mockedResponse.statusCode).thenReturn(407);
 
         when(httpClient.patch(
-          "http://127.0.0.1/rooms/disconnect",
+          Uri.parse("http://127.0.0.1/rooms/disconnect"),
           headers: requestHeaders,
         )).thenAnswer((_) => Future.value(mockedResponse));
 
@@ -136,7 +136,7 @@ void main() {
         when(mockedResponse.statusCode).thenReturn(200);
 
         when(httpClient.delete(
-          "http://127.0.0.1/rooms/destroy",
+          Uri.parse("http://127.0.0.1/rooms/destroy"),
           headers: requestHeaders,
         )).thenAnswer((_) => Future.value(mockedResponse));
 
@@ -151,7 +151,7 @@ void main() {
         when(mockedResponse.statusCode).thenReturn(407);
 
         when(httpClient.delete(
-          "http://127.0.0.1/rooms/destroy",
+          Uri.parse("http://127.0.0.1/rooms/destroy"),
           headers: requestHeaders,
         )).thenAnswer((_) => Future.value(mockedResponse));
 

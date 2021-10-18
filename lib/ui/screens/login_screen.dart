@@ -136,7 +136,6 @@ class _LoginScreenState extends State<LoginScreen>
                                 },
                               ),
                               AnimatedSize(
-                                vsync: this,
                                 duration: Duration(milliseconds: 450),
                                 curve: Curves.easeInOutBack,
                                 child: Container(
