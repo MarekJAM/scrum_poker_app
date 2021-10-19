@@ -16,62 +16,53 @@ class RecoveryBloc extends Bloc<RecoveryEvent, RecoveryState> {
   RecoveryBloc({@required authRepository})
       : assert(authRepository != null),
         _authRepository = authRepository,
-        super(RecoveryInitial());
+        super(RecoveryInitial()) {
+          on<RecoveryStart>(_onRecoveryStart);
+          on<RecoverySendAnswer>(_onRecoverySendAnswer);
+          on<RecoverySendPassword>(_onRecoverySendPassword);
+        }
 
-  @override
-  Stream<RecoveryState> mapEventToState(
-    RecoveryEvent event,
-  ) async* {
-    if (event is RecoveryStart) {
-      yield* _mapRecoveryStartToState(event);
-    } else if (event is RecoverySendAnswer) {
-      yield* _mapRecoverySendAnswerToState(event);
-    } else if (event is RecoverySendPassword) {
-      yield* _mapRecoverySendPasswordToState(event);
-    }
-  }
-
-  Stream<RecoveryState> _mapRecoveryStartToState(RecoveryStart event) async* {
-    yield RecoveryLoading();
+  void _onRecoveryStart(RecoveryStart event, Emitter<RecoveryState> emit) async {
+    emit(RecoveryLoading());
 
     try {
       var response = await _authRepository.recoverStepOne(event.username);
 
       token = response.token;
 
-      yield RecoveryStepOneDone(response.securityQuestion);
+      emit(RecoveryStepOneDone(response.securityQuestion));
     } catch (e) {
       print(e);
-      yield RecoveryError(message: e.message ?? "Something went wrong.");
+      emit(RecoveryError(message: e.message ?? "Something went wrong."));
     }
   }
 
-  Stream<RecoveryState> _mapRecoverySendAnswerToState(
-      RecoverySendAnswer event) async* {
-    yield RecoveryLoading();
+  void _onRecoverySendAnswer(
+      RecoverySendAnswer event, Emitter<RecoveryState> emit) async {
+    emit(RecoveryLoading());
 
     try {
       token = await _authRepository.recoverStepTwo(event.answer, token);
 
-      yield RecoveryStepTwoDone();
+      emit(RecoveryStepTwoDone());
     } catch (e) {
       print(e);
-      yield RecoveryError(message: e.message ?? "Something went wrong.");
+      emit(RecoveryError(message: e.message ?? "Something went wrong."));
     }
   }
 
-  Stream<RecoveryState> _mapRecoverySendPasswordToState(
-      RecoverySendPassword event) async* {
+  void _onRecoverySendPassword(
+      RecoverySendPassword event, Emitter<RecoveryState> emit) async {
     print(token);
-    yield RecoveryLoading();
+    emit(RecoveryLoading());
 
     try {
       await _authRepository.recoverStepThree(event.password, token);
 
-      yield RecoveryStepThreeDone();
+      emit(RecoveryStepThreeDone());
     } catch (e) {
       print(e);
-      yield RecoveryError(message: e.message ?? "Something went wrong.");
+      emit(RecoveryError(message: e.message ?? "Something went wrong."));
     }
   }
 }

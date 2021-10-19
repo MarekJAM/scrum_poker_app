@@ -30,52 +30,41 @@ class PlanningRoomBloc extends Bloc<PlanningRoomEvent, PlanningRoomState> {
         add(PlanningRoomRoomStatusReceivedE(state.message));
       }
     });
+    on<PlanningRoomRoomStatusReceivedE>(_onPlanningRoomRoomStatusReceivedE);
+    on<PlanningRoomSendEstimateRequestE>(_onPlanningRoomSendEstimateRequestE);
+    on<PlanningRoomSendEstimateE>(_onPlanningRoomSendEstimateE);
   }
 
-  @override
-  Stream<PlanningRoomState> mapEventToState(PlanningRoomEvent event) async* {
-    if (event is PlanningRoomRoomStatusReceivedE) {
-      yield* _mapPlanningRoomRoomStatusReceivedEToState(event);
-    } else if (event is PlanningRoomSendEstimateRequestE) {
-      yield* _mapPlanningRoomSendEstimateRequestEToState(event);
-    } else if (event is PlanningRoomSendEstimateE) {
-      yield* _mapPlanningRoomSendEstimateEToState(event);
-    }
-  }
-
-  Stream<PlanningRoomState> _mapPlanningRoomRoomStatusReceivedEToState(
-      event) async* {
-    yield PlanningRoomRoomStatusLoading();
+  void _onPlanningRoomRoomStatusReceivedE(
+      PlanningRoomRoomStatusReceivedE event, Emitter<PlanningRoomState> emit) async {
+    emit(PlanningRoomRoomStatusLoading());
+    
     try {
       final planningRoomStatusInfo = await _planningRoomRepository.processRoomStatusToUIModel(event.roomStatus);
-      
-      yield PlanningRoomRoomStatusLoaded(
-        planningRoomStatusInfo: planningRoomStatusInfo
-      );
+
+      emit(PlanningRoomRoomStatusLoaded(planningRoomStatusInfo: planningRoomStatusInfo));
     } catch (e) {
       print(e);
-      yield PlanningRoomError(message: "Could not load room status.");
+      emit(PlanningRoomError(message: "Could not load room status."));
     }
   }
 
-  Stream<PlanningRoomState> _mapPlanningRoomSendEstimateRequestEToState(
-      event) async* {
+  void _onPlanningRoomSendEstimateRequestE(
+      PlanningRoomSendEstimateRequestE event, Emitter<PlanningRoomState> emit) async {
     try {
-      _webSocketBloc.add(WSSendMessageE(
-          OutgoingMessage.createRequestEstimateJsonMsg(event.taskNumber)));
+      _webSocketBloc.add(WSSendMessageE(OutgoingMessage.createRequestEstimateJsonMsg(event.taskNumber)));
     } catch (e) {
       print(e);
-      yield PlanningRoomError(message: "Could not send estimate request.");
+      emit(PlanningRoomError(message: "Could not send estimate request."));
     }
   }
 
-  Stream<PlanningRoomState> _mapPlanningRoomSendEstimateEToState(event) async* {
+  void _onPlanningRoomSendEstimateE(PlanningRoomSendEstimateE event, Emitter<PlanningRoomState> emit) async {
     try {
-      _webSocketBloc.add(WSSendMessageE(
-          OutgoingMessage.createEstimateJsonMsg(event.estimate)));
+      _webSocketBloc.add(WSSendMessageE(OutgoingMessage.createEstimateJsonMsg(event.estimate)));
     } catch (e) {
       print(e);
-      yield PlanningRoomError(message: "Could not send estimate.");
+      emit(PlanningRoomError(message: "Could not send estimate."));
     }
   }
 

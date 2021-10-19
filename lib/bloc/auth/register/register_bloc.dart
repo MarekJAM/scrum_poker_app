@@ -15,20 +15,13 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   RegisterBloc({@required authRepository})
       : assert(authRepository != null),
         _authRepository = authRepository,
-        super(RegisterInitial());
-
-  @override
-  Stream<RegisterState> mapEventToState(
-    RegisterEvent event,
-  ) async* {
-    if (event is RegisterSignUpE) {
-      yield* _mapRegisterSignUpEToState(event);
-    }
+        super(RegisterInitial()) {
+    on<RegisterSignUpE>(_onRegisterSignUpE);
   }
 
-  Stream<RegisterState> _mapRegisterSignUpEToState(
-      RegisterSignUpE event) async* {
-    yield RegisterSigningUp();
+  void _onRegisterSignUpE(RegisterSignUpE event, Emitter<RegisterState> emit) async {
+    emit(RegisterSigningUp());
+    
     try {
       await _authRepository.register(
         event.username,
@@ -37,14 +30,13 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         event.answer,
       );
 
-      yield RegisterSignedUp();
+      emit(RegisterSignedUp());
     } on SocketException catch (e) {
       print(e);
-      yield RegisterSignUpError(
-          message: "Could not establish connection with server.");
+      emit(RegisterSignUpError(message: "Could not establish connection with server."));
     } catch (e) {
       print(e);
-      yield RegisterSignUpError(message: e.message);
+      emit(RegisterSignUpError(message: e.message));
     }
   }
 }

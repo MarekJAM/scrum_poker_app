@@ -10,76 +10,61 @@ import '../../data/repositories/rooms_repository.dart';
 part 'room_connection_event.dart';
 part 'room_connection_state.dart';
 
-class RoomConnectionBloc
-    extends Bloc<RoomConnectionEvent, RoomConnectionState> {
+class RoomConnectionBloc extends Bloc<RoomConnectionEvent, RoomConnectionState> {
   final RoomsRepository _roomsRepository;
 
   RoomConnectionBloc({@required RoomsRepository roomsRepository})
       : assert(roomsRepository != null),
         _roomsRepository = roomsRepository,
-        super(RoomConnectionInitial());
-
-  @override
-  Stream<RoomConnectionState> mapEventToState(
-      RoomConnectionEvent event) async* {
-    if (event is RoomConnectionCreateRoomE) {
-      yield* _mapRoomConnectionCreateRoomEToState(event);
-    } else if (event is RoomConnectionConnectToRoomE) {
-      yield* _mapRoomConnectionConnectToRoomEToState(event);
-    } else if (event is RoomConnectionDisconnectFromRoomE) {
-      yield* _mapRoomConnectionDisconnectFromRoomEToState();
-    } else if (event is RoomConnectionDestroyRoomE) {
-      yield* _mapRoomConnectionDestroyRoomEToState();
-    }
+        super(RoomConnectionInitial()) {
+    on<RoomConnectionConnectToRoomE>(_onRoomConnectionConnectToRoomE);
+    on<RoomConnectionCreateRoomE>(_onRoomConnectionCreateRoomE);
+    on<RoomConnectionDisconnectFromRoomE>(_onRoomConnectionDisconnectFromRoomE);
+    on<RoomConnectionDestroyRoomE>(_onRoomConnectionDestroyRoomE);
   }
 
-  Stream<RoomConnectionState> _mapRoomConnectionConnectToRoomEToState(
-      event) async* {
-    yield RoomConnectionConnecting();
+  void _onRoomConnectionConnectToRoomE(RoomConnectionConnectToRoomE event, Emitter<RoomConnectionState> emit) async {
+    emit(RoomConnectionConnecting());
     try {
       await _roomsRepository.connectToRoom(event.roomName, event.asSpectator);
-      yield RoomConnectionConnectedToRoom(roomName: event.roomName);
+      emit(RoomConnectionConnectedToRoom(roomName: event.roomName));
     } catch (e) {
       print(e);
-      yield RoomConnectionError(message: e.message);
+      emit(RoomConnectionError(message: e.message));
     }
   }
 
-  Stream<RoomConnectionState> _mapRoomConnectionCreateRoomEToState(
-      event) async* {
-    yield RoomConnectionConnecting();
+  void _onRoomConnectionCreateRoomE(RoomConnectionCreateRoomE event, Emitter<RoomConnectionState> emit) async {
+    emit(RoomConnectionConnecting());
     try {
       await _roomsRepository.createRoom(event.roomName);
-      yield RoomConnectionConnectedToRoom(roomName: event.roomName);
+      emit(RoomConnectionConnectedToRoom(roomName: event.roomName));
     } catch (e) {
       print(e);
-      yield RoomConnectionError(message: e.message);
+      emit(RoomConnectionError(message: e.message));
     }
   }
 
-  Stream<RoomConnectionState>
-      _mapRoomConnectionDisconnectFromRoomEToState() async* {
-    yield RoomConnectionDisconnectingFromRoom();
+  void _onRoomConnectionDisconnectFromRoomE(
+      RoomConnectionDisconnectFromRoomE event, Emitter<RoomConnectionState> emit) async {
+    emit(RoomConnectionDisconnectingFromRoom());
     try {
       await _roomsRepository.disconnectFromRoom();
-      yield RoomConnectionDisconnectedFromRoom();
+      emit(RoomConnectionDisconnectedFromRoom());
     } catch (e) {
       print(e);
-      yield RoomConnectionDisconnectingFromRoomError(
-          message: "Failed to disconnect from room.");
+      emit(RoomConnectionDisconnectingFromRoomError(message: "Failed to disconnect from room."));
     }
   }
 
-  Stream<RoomConnectionState>
-      _mapRoomConnectionDestroyRoomEToState() async* {
-    yield RoomConnectionDestroyingRoom();
+  void _onRoomConnectionDestroyRoomE(RoomConnectionDestroyRoomE event, Emitter<RoomConnectionState> emit) async {
+    emit(RoomConnectionDestroyingRoom());
     try {
       await _roomsRepository.destroyRoom();
-      yield RoomConnectionDestroyedRoom();
+      emit(RoomConnectionDestroyedRoom());
     } catch (e) {
       print(e);
-      yield RoomConnectionDestroyingRoomError(
-          message: "Failed to destroy the room.");
+      emit(RoomConnectionDestroyingRoomError(message: "Failed to destroy the room."));
     }
   }
 }

@@ -30,24 +30,19 @@ class LobbyBloc extends Bloc<LobbyEvent, LobbyState> {
         add(LobbyStatusLoadedE(state.message));
       }
     });
+    on<LobbyStatusLoadedE>(_onLobbyLoadedE);
   }
 
-  @override
-  Stream<LobbyState> mapEventToState(LobbyEvent event) async* {
-    if (event is LobbyStatusLoadedE) {
-      yield* _mapLobbyLoadedEToState(event);
-    }
-  }
 
-  Stream<LobbyState> _mapLobbyLoadedEToState(event) async* {
-    yield LobbyLoading();
+  void _onLobbyLoadedE(LobbyStatusLoadedE event, Emitter<LobbyState> emit) async {
+    emit(LobbyLoading());
     try {
       final lobbyStatus =
           await _lobbyRepository.processLobbyStatusToUIModel(event.lobbyStatus);
-      yield LobbyStatusLoaded(lobbyStatus: lobbyStatus);
+      emit(LobbyStatusLoaded(lobbyStatus: lobbyStatus));
     } catch (e) {
       print(e);
-      yield LobbyLoadingError(message: "Could not load lobby status.");
+      emit(LobbyLoadingError(message: "Could not load lobby status."));
     }
   }
 

@@ -14,28 +14,17 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
 
   final intentionalCloseCode = 4999;
 
-  WebSocketBloc({@required this.channel, @required this.webSocketRepository})
-      : super(WebSocketInitial());
-
-  @override
-  Stream<WebSocketState> mapEventToState(WebSocketEvent event) async* {
-    if (event is WSConnectToServerE) {
-      yield* _mapConnectToServerToState(event);
-    } else if (event is WSConnectionErrorReceivedE) {
-      yield* _mapConnectionErrorReceivedToState(event);
-    } else if (event is WSMessageReceivedE) {
-      yield* _mapMessageRecievedToState(event);
-    } else if (event is WSSendMessageE) {
-      yield* _mapSendMessageToState(event);
-    } else if (event is WSDisconnectFromServerE) {
-      yield* _mapDisconnectFromServerToState(event);
-    } else if (event is WSDisconnectedFromServerE) {
-      yield* _mapDisconnectedFromServerToState(event);
-    }
+  WebSocketBloc({@required this.channel, @required this.webSocketRepository}) : super(WebSocketInitial()) {
+    on<WSConnectToServerE>(_onConnectToServer);
+    on<WSConnectionErrorReceivedE>(_onConnectionErrorReceived);
+    on<WSDisconnectFromServerE>(_onDisconnectFromServer);
+    on<WSDisconnectedFromServerE>(_onDisconnectedFromServer);
+    on<WSSendMessageE>(_onSendMessage);
+    on<WSMessageReceivedE>(_onMessageRecieved);
   }
 
-  Stream<WebSocketState> _mapConnectToServerToState(event) async* {
-    yield WSConnectingToServer();
+  void _onConnectToServer(WSConnectToServerE event, Emitter<WebSocketState> emit) async {
+    emit(WSConnectingToServer());
     try {
       channel = await webSocketRepository.establishConnection(event.link);
       channel.stream.listen((message) {
@@ -43,27 +32,27 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
       }, onError: (e) {
         print(e);
         add(WSConnectionErrorReceivedE("Could not establish connection."));
-      }, onDone: () {        
+      }, onDone: () {
         var message = channel.closeCode == intentionalCloseCode ? "" : "Disconnected. Check your internet connection";
 
         add(WSDisconnectedFromServerE(message: message));
       });
-      yield WSConnectedToServer(message: "Connected to server");
+      emit(WSConnectedToServer(message: "Connected to server"));
     } catch (e) {
       print(e);
-      yield WSConnectionError(message: "Could not establish connection.");
+      emit(WSConnectionError(message: "Could not establish connection."));
     }
   }
 
-  Stream<WebSocketState> _mapConnectionErrorReceivedToState(event) async* {
+  void _onConnectionErrorReceived(WSConnectionErrorReceivedE event, Emitter<WebSocketState> emit) async {
     try {
-      yield WSConnectionError(message: event.message);
+      emit(WSConnectionError(message: event.message));
     } catch (e) {
       print(e);
     }
   }
 
-  Stream<WebSocketState> _mapDisconnectFromServerToState(event) async* {
+  void _onDisconnectFromServer(WSDisconnectFromServerE event, Emitter<WebSocketState> emit) async {
     try {
       //sending closeCode to distinguish whether user disconnected intentionally or not
       channel.sink.close(intentionalCloseCode);
@@ -72,15 +61,15 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
     }
   }
 
-  Stream<WebSocketState> _mapDisconnectedFromServerToState(event) async* {
+  void _onDisconnectedFromServer(WSDisconnectedFromServerE event, Emitter<WebSocketState> emit) async {
     try {
-      yield WSDisconnectedFromServer(message: event.message);
+      emit(WSDisconnectedFromServer(message: event.message));
     } catch (e) {
       print(e);
     }
   }
 
-  Stream<WebSocketState> _mapSendMessageToState(event) async* {
+  void _onSendMessage(WSSendMessageE event, Emitter<WebSocketState> emit) async {
     try {
       channel.sink.add(event.message);
     } catch (e) {
@@ -88,10 +77,10 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
     }
   }
 
-  Stream<WebSocketState> _mapMessageRecievedToState(event) async* {
-    yield WSMessageLoading();
+  void _onMessageRecieved(WSMessageReceivedE event, Emitter<WebSocketState> emit) async {
+    emit(WSMessageLoading());
     try {
-      yield WSMessageLoaded(message: event.message);
+      emit(WSMessageLoaded(message: event.message));
     } catch (e) {
       print(e);
     }
