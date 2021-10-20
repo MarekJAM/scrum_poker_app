@@ -182,15 +182,22 @@ class _AppViewState extends State<AppView> {
         theme: ThemeData(
           brightness: Brightness.dark,
           appBarTheme: AppBarTheme(
-              backgroundColor: Color(0xFFE07A5F), toolbarTextStyle: TextStyle(color: CustomColors.textDark)),
+            backgroundColor: Color(0xFF292B3D),
+            titleTextStyle: TextStyle(
+              color: CustomColors.buttonLightGrey,
+              fontWeight: FontWeight.w600,
+              fontSize: 20,
+            ),
+            iconTheme: IconThemeData(color: CustomColors.buttonLightGrey),
+          ),
           floatingActionButtonTheme: FloatingActionButtonThemeData(
             backgroundColor: Color(0xFF292B3D),
-            
           ),
           primaryColor: Color(0xFF292B3D),
           colorScheme: theme.colorScheme.copyWith(
             brightness: Brightness.dark,
             secondary: Color(0xFFE07A5F),
+            primary: Color(0xFFE07A5F),
           ),
           buttonTheme: ButtonThemeData(
             colorScheme: theme.colorScheme.copyWith(
@@ -198,6 +205,13 @@ class _AppViewState extends State<AppView> {
             ),
             buttonColor: Color(
               0xFFE07A5F,
+            ),
+          ),
+          inputDecorationTheme: InputDecorationTheme(
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Color(0xFFE07A5F),
+              ),
             ),
           ),
           scaffoldBackgroundColor: Color(0xFF3D405B),
