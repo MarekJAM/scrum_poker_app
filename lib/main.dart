@@ -27,65 +27,58 @@ import 'configurable/custom_colors.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (!kIsWeb) {
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      var screen = await getCurrentScreen();
-      setWindowMinSize(const Size(450, 700));
-      setWindowMaxSize(screen.visibleFrame.size);
-    }
-  }
+  BlocOverrides.runZoned(
+    () async {
+      if (!kIsWeb) {
+        if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+          var screen = await getCurrentScreen();
+          setWindowMinSize(const Size(450, 700));
+          setWindowMaxSize(screen.visibleFrame.size);
+        }
+      }
 
-  var delegate = await LocalizationDelegate.create(
-    fallbackLocale: 'en_US',
-    supportedLocales: ['en_US'],
-  );
+      var delegate = await LocalizationDelegate.create(
+        fallbackLocale: 'en_US',
+        supportedLocales: ['en_US'],
+      );
 
-  if (kDebugMode) {
-    Bloc.observer = SimpleBlocObserver();
-  }
+      WebSocketChannel channel;
+      final webSocketRepository = WebSocketRepository();
 
-  WebSocketChannel channel;
-  final webSocketRepository = WebSocketRepository();
+      final RoomsRepository roomsRepository = RoomsRepository(roomsApiClient: RoomsApiClient(httpClient: http.Client()));
 
-  final RoomsRepository roomsRepository = RoomsRepository(roomsApiClient: RoomsApiClient(httpClient: http.Client()));
+      final PlanningRoomRepository planningRoomRepository = PlanningRoomRepository();
 
-  final PlanningRoomRepository planningRoomRepository = PlanningRoomRepository();
+      final AuthRepository authRepository = AuthRepository(authApiClient: AuthApiClient(httpClient: http.Client()));
 
-  final AuthRepository authRepository = AuthRepository(authApiClient: AuthApiClient(httpClient: http.Client()));
+      final LobbyRepository lobbyRepository = LobbyRepository();
 
-  final LobbyRepository lobbyRepository = LobbyRepository();
+      final webSocketBloc = WebSocketBloc(channel: channel, webSocketRepository: webSocketRepository);
+      final roomsBloc = LobbyBloc(webSocketBloc: webSocketBloc, lobbyRepository: lobbyRepository);
+      final loginBloc = LoginBloc(webSocketBloc: webSocketBloc, authRepository: authRepository);
+      final planningRoomBloc = PlanningRoomBloc(webSocketBloc: webSocketBloc, planningRoomRepository: planningRoomRepository);
+      final roomConnectionBloc = RoomConnectionBloc(roomsRepository: roomsRepository);
+      final registerBloc = RegisterBloc(authRepository: authRepository);
+      final recoveryBloc = RecoveryBloc(authRepository: authRepository);
 
-  // ignore: close_sinks
-  final webSocketBloc = WebSocketBloc(channel: channel, webSocketRepository: webSocketRepository);
-  // ignore: close_sinks
-  final roomsBloc = LobbyBloc(webSocketBloc: webSocketBloc, lobbyRepository: lobbyRepository);
-  // ignore: close_sinks
-  final loginBloc = LoginBloc(webSocketBloc: webSocketBloc, authRepository: authRepository);
-  // ignore: close_sinks
-  final planningRoomBloc =
-      PlanningRoomBloc(webSocketBloc: webSocketBloc, planningRoomRepository: planningRoomRepository);
-  // ignore: close_sinks
-  final roomConnectionBloc = RoomConnectionBloc(roomsRepository: roomsRepository);
-  // ignore: close_sinks
-  final registerBloc = RegisterBloc(authRepository: authRepository);
-  // ignore: close_sinks
-  final recoveryBloc = RecoveryBloc(authRepository: authRepository);
-
-  runApp(
-    LocalizedApp(
-      delegate,
-      App(
-        webSocketBloc: webSocketBloc,
-        roomsBloc: roomsBloc,
-        loginBloc: loginBloc,
-        roomsRepository: roomsRepository,
-        planningRoomBloc: planningRoomBloc,
-        roomConnectionBloc: roomConnectionBloc,
-        authRepository: authRepository,
-        registerBloc: registerBloc,
-        recoveryBloc: recoveryBloc,
-      ),
-    ),
+      runApp(
+        LocalizedApp(
+          delegate,
+          App(
+            webSocketBloc: webSocketBloc,
+            roomsBloc: roomsBloc,
+            loginBloc: loginBloc,
+            roomsRepository: roomsRepository,
+            planningRoomBloc: planningRoomBloc,
+            roomConnectionBloc: roomConnectionBloc,
+            authRepository: authRepository,
+            registerBloc: registerBloc,
+            recoveryBloc: recoveryBloc,
+          ),
+        ),
+      );
+    },
+    blocObserver: kDebugMode ? SimpleBlocObserver() : null,
   );
 }
 
