@@ -432,7 +432,7 @@ class _PopupMenuRoute<T> extends PopupRoute<T> {
     this.showMenuContext,
     this.captureInheritedThemes,
     this.barrierColor,
-  }) : itemSizes = List<Size>(items.length);
+  }) : itemSizes = <Size>[]..length = items.length;
 
   final RelativeRect position;
   final List<PopupMenuEntry<T>> items;

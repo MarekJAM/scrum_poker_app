@@ -76,7 +76,7 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
   final FocusNode focusNode = new FocusNode();
   final StreamController<List<T>> _itemsStream = StreamController();
   final ValueNotifier<bool> _loadingNotifier = ValueNotifier(false);
-  final List<T> _items = List<T>();
+  final List<T> _items = [];
   Debouncer _debouncer;
 
   @override
@@ -251,8 +251,8 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
     //manage offline items
     if (widget.onFind != null && (widget.isFilteredOnline || isFistLoad)) {
       try {
-        final List<T> onlineItems = List();
-        onlineItems.addAll(await widget.onFind(filter) ?? List());
+        final List<T> onlineItems = [];
+        onlineItems.addAll(await widget.onFind(filter) ?? []);
 
         //Remove all old data
         _items.clear();
