@@ -102,7 +102,7 @@ class EstimatesChartState extends State {
                   : "",
               radius: 40,
               titleStyle: TextStyle(
-                color: Theme.of(context).textTheme.bodyText1.color,
+                color: Theme.of(context).textTheme.bodyLarge.color,
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
               ),

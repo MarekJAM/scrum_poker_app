@@ -56,7 +56,7 @@ class CreateRoomScreen extends StatelessWidget {
                                 child: Text(
                                   state.message,
                                   style: TextStyle(
-                                    color: Theme.of(context).errorColor,
+                                    color: Theme.of(context).colorScheme.error,
                                   ),
                                 ),
                               ),

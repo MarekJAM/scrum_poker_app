@@ -179,7 +179,7 @@ class _PlanningScreenState extends State<PlanningScreen>
                 key: Key(Keys.buttonDestroyRoom),
                 leading: Icon(
                   Icons.remove_circle,
-                  color: Theme.of(context).errorColor,
+                  color: Theme.of(context).colorScheme.error,
                 ),
                 title: Text('Destroy room'),
                 onTap: () {

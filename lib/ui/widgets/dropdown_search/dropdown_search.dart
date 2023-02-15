@@ -259,7 +259,7 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
                   _selectedItemAsString(data),
                 )
               : Text(_selectedItemAsString(data),
-                  style: Theme.of(context).textTheme.subtitle1),
+                  style: Theme.of(context).textTheme.titleMedium),
         ),
         if (!widget.showAsSuffixIcons) _manageTrailingIcons(data),
       ],

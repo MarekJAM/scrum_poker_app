@@ -141,7 +141,7 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
                         );
                     }
                     return Scrollbar(
-                      isAlwaysShown: true,
+                      thumbVisibility: true,
                       controller: _scrollController,
                       child: ListView.builder(
                         controller: _scrollController,
